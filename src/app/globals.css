@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* This is a standard CSS rule block */
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  body {
+    @apply bg-ghost-gradient text-white font-sans;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-text-gradient bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  
+  .ghost-btn {
+    @apply relative overflow-hidden bg-transparent border-2 border-ghost-purple text-ghost-purple 
+           px-8 py-3 rounded-full cursor-pointer transition-all duration-300 
+           hover:text-white hover:-translate-y-0.5;
+  }
+  
+  .ghost-btn::before {
+    @apply content-[''] absolute top-0 -left-full w-full h-full bg-card-gradient 
+           transition-all duration-300 -z-10;
+  }
+  
+  .ghost-btn:hover::before {
+    @apply left-0;
+  }
+  
+  .ghost-btn:hover {
+    @apply shadow-lg shadow-ghost-purple/30;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl 
+           hover:shadow-ghost-purple/20 hover:border-ghost-purple/50;
+  }
+  
+  .nav-link {
+    @apply relative text-white/90 hover:text-ghost-purple transition-all duration-300 
+           hover:-translate-y-0.5 px-4 py-2;
+  }
+  
+  .nav-link::before {
+    @apply content-[''] absolute bottom-0 left-1/2 w-0 h-0.5 bg-card-gradient 
+           transition-all duration-300 -translate-x-1/2;
+  }
+  
+  .nav-link:hover::before {
+    @apply w-full;
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animate-delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animate-delay-700 {
+    animation-delay: 0.7s;
+  }
+}
