@@ -6,8 +6,9 @@ import Header from '@/components/ui/Header'
 import Hero from '@/components/ui/Hero'
 import About from '@/components/ui/About'
 import Projects from '@/components/ui/Projects'
-
 import Particles from '@/components/ui/Particles'
+import Contact from '@/components/ui/Contact'
+import Experience from '@/components/ui/Experience'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -26,9 +27,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-ghost-gradient relative overflow-x-hidden">
+      {/* Fondo animado */}
       <Particles />
       <Header />
-      
+
       <div className="relative z-10">
         <motion.div
           initial={{ opacity: 0 }}
@@ -38,22 +40,35 @@ export default function Home() {
           <Hero />
           <About />
           <Projects />
-          
-          
+          <Experience />
+          <Contact />
         </motion.div>
       </div>
-      
-      {/* Scroll to top button */}
+
+      {/* Botón Scroll To Top */}
       <motion.button
-        className="fixed bottom-8 right-8 bg-ghost-purple/20 backdrop-blur-xl border border-ghost-purple/30 
-                   rounded-full p-3 text-ghost-purple hover:bg-ghost-purple hover:text-white 
-                   transition-all duration-300 z-50"
+        type="button"
+        aria-label="Volver arriba"
+        className="fixed bottom-8 right-8 bg-ghost-purple/20 backdrop-blur-xl border 
+                   border-ghost-purple/30 rounded-full p-3 text-ghost-purple 
+                   hover:bg-ghost-purple hover:text-white transition-all 
+                   duration-300 z-50"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          />
         </svg>
       </motion.button>
     </main>

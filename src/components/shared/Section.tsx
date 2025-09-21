@@ -1,6 +1,5 @@
 'use client'
-
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, Variants, easeInOut, easeOut } from "framer-motion"
 import { ReactNode, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -44,29 +43,20 @@ const Section = ({
 
   const getPaddingStyles = () => {
     switch (padding) {
-      case 'sm':
-        return 'py-12 px-4 sm:px-6 lg:px-8'
-      case 'lg':
-        return 'py-32 px-4 sm:px-6 lg:px-8'
-      case 'xl':
-        return 'py-40 px-4 sm:px-6 lg:px-8'
-      case 'none':
-        return ''
-      default:
-        return 'py-20 px-4 sm:px-6 lg:px-8'
+      case 'sm': return 'py-12 px-4 sm:px-6 lg:px-8'
+      case 'lg': return 'py-32 px-4 sm:px-6 lg:px-8'
+      case 'xl': return 'py-40 px-4 sm:px-6 lg:px-8'
+      case 'none': return ''
+      default: return 'py-20 px-4 sm:px-6 lg:px-8'
     }
   }
 
   const getBackgroundStyles = () => {
     switch (background) {
-      case 'gradient':
-        return 'bg-gradient-to-br from-ghost-purple/5 via-transparent to-ghost-pink/5'
-      case 'particles':
-        return 'relative overflow-hidden'
-      case 'none':
-        return ''
-      default:
-        return 'relative'
+      case 'gradient': return 'bg-gradient-to-br from-ghost-purple/5 via-transparent to-ghost-pink/5'
+      case 'particles': return 'relative overflow-hidden'
+      case 'none': return ''
+      default: return 'relative'
     }
   }
 
@@ -85,7 +75,8 @@ const Section = ({
     return widthMap[maxWidth]
   }
 
-  const containerVariants = {
+  // 🔹 Variants tipados y corregidos
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -97,19 +88,19 @@ const Section = ({
     }
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: easeOut // ✅ función en lugar de string
       }
     }
   }
 
-  const titleVariants = {
+  const titleVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.9 },
     visible: {
       opacity: 1,
@@ -117,7 +108,7 @@ const Section = ({
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
+        ease: easeInOut // ✅ función en lugar de string
       }
     }
   }
@@ -170,9 +161,7 @@ const Section = ({
         )}
 
         {/* Section Content */}
-        <motion.div
-          variants={animate ? itemVariants : undefined}
-        >
+        <motion.div variants={animate ? itemVariants : undefined}>
           {children}
         </motion.div>
       </div>
@@ -180,136 +169,6 @@ const Section = ({
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-ghost-purple/30 to-transparent opacity-0 animate-pulse" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
     </motion.section>
-  )
-}
-
-// Section Header Component
-export const SectionHeader = ({
-  title,
-  subtitle,
-  className,
-  centerAlign = true
-}: {
-  title: string
-  subtitle?: string
-  className?: string
-  centerAlign?: boolean
-}) => (
-  <motion.div 
-    className={cn(
-      "mb-16",
-      centerAlign && "text-center",
-      className
-    )}
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-  >
-    <h2 className="text-4xl md:text-5xl font-bold mb-4">
-      <span className="text-gradient">{title}</span>
-    </h2>
-    {subtitle && (
-      <p className={cn(
-        "text-xl text-white/70 leading-relaxed",
-        centerAlign && "max-w-3xl mx-auto"
-      )}>
-        {subtitle}
-      </p>
-    )}
-  </motion.div>
-)
-
-// Section Grid Component
-export const SectionGrid = ({
-  children,
-  columns = { default: 1, md: 2, lg: 3 },
-  gap = 'default',
-  className
-}: {
-  children: ReactNode
-  columns?: {
-    default?: number
-    sm?: number
-    md?: number
-    lg?: number
-    xl?: number
-  }
-  gap?: 'sm' | 'default' | 'lg' | 'xl'
-  className?: string
-}) => {
-  const getGridCols = () => {
-    const colsMap = {
-      1: 'grid-cols-1',
-      2: 'grid-cols-2', 
-      3: 'grid-cols-3',
-      4: 'grid-cols-4'
-    }
-    
-    let classes = colsMap[columns.default || 1]
-    
-    if (columns.sm) classes += ` sm:grid-cols-${columns.sm}`
-    if (columns.md) classes += ` md:grid-cols-${columns.md}`
-    if (columns.lg) classes += ` lg:grid-cols-${columns.lg}`
-    if (columns.xl) classes += ` xl:grid-cols-${columns.xl}`
-    
-    return classes
-  }
-
-  const getGapStyles = () => {
-    switch (gap) {
-      case 'sm': return 'gap-4'
-      case 'lg': return 'gap-12'
-      case 'xl': return 'gap-16'
-      default: return 'gap-8'
-    }
-  }
-
-  return (
-    <div className={cn(
-      "grid",
-      getGridCols(),
-      getGapStyles(),
-      className
-    )}>
-      {children}
-    </div>
-  )
-}
-
-// Section Container Component
-export const SectionContainer = ({
-  children,
-  className,
-  maxWidth = '6xl'
-}: {
-  children: ReactNode
-  className?: string
-  maxWidth?: SectionProps['maxWidth']
-}) => {
-  const getMaxWidthStyles = () => {
-    const widthMap = {
-      'sm': 'max-w-sm',
-      'md': 'max-w-md',
-      'lg': 'max-w-lg', 
-      'xl': 'max-w-xl',
-      '2xl': 'max-w-2xl',
-      '4xl': 'max-w-4xl',
-      '6xl': 'max-w-6xl',
-      '7xl': 'max-w-7xl',
-      'full': 'max-w-full'
-    }
-    return widthMap[maxWidth || '6xl']
-  }
-
-  return (
-    <div className={cn(
-      "mx-auto px-4 sm:px-6 lg:px-8",
-      getMaxWidthStyles(),
-      className
-    )}>
-      {children}
-    </div>
   )
 }
 

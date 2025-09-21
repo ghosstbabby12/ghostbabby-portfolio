@@ -31,7 +31,7 @@ const Hero = () => {
   }
 
   return (
-    <section id="inicio" className="min-h-screen flex items-center justify-center relative pt-16">
+    <section id="home" className="min-h-screen flex items-center justify-center relative pt-16">
       <div className="absolute inset-0 bg-gradient-to-br from-ghost-purple/10 via-transparent to-ghost-pink/10 rounded-full blur-3xl"></div>
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -46,7 +46,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="text-gradient">Desarrollador</span>
+            <span className="text-gradient">Developer</span>
             <br />
             <span className="text-gradient">Full Stack</span>
           </motion.h1>
@@ -100,7 +100,7 @@ const Hero = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Ver Proyectos
+              View Projects
             </motion.button>
             
             <motion.a
@@ -116,7 +116,7 @@ const Hero = () => {
                 }
               }}
             >
-              Contactar
+              Contact me
             </motion.a>
           </motion.div>
         </motion.div>

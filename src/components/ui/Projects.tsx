@@ -10,7 +10,7 @@ const Projects = () => {
       title: "E-Commerce Platform",
       description: "Plataforma de comercio electrónico completa con Next.js, Stripe para pagos, panel administrativo y gestión de inventario.",
       technologies: ["Next.js", "TypeScript", "Stripe", "Prisma", "PostgreSQL"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/ecommerce-project",
       liveUrl: "https://ecommerce-demo.vercel.app",
       featured: true
@@ -20,7 +20,7 @@ const Projects = () => {
       title: "Task Management App",
       description: "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/task-manager",
       liveUrl: "https://taskmanager-demo.vercel.app",
       featured: true
@@ -30,7 +30,7 @@ const Projects = () => {
       title: "Creative Portfolio",
       description: "Sitio web interactivo para artista con galería, efectos 3D, animaciones avanzadas y sistema de contacto.",
       technologies: ["Next.js", "Three.js", "Framer Motion", "GSAP"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/creative-portfolio",
       liveUrl: "https://creative-portfolio-demo.vercel.app",
       featured: false
@@ -40,7 +40,7 @@ const Projects = () => {
       title: "Weather Dashboard",
       description: "Dashboard del clima con datos en tiempo real, gráficos interactivos y predicciones meteorológicas.",
       technologies: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/weather-dashboard",
       liveUrl: "https://weather-dashboard-demo.vercel.app",
       featured: false
@@ -50,7 +50,7 @@ const Projects = () => {
       title: "Social Media Analytics",
       description: "Herramienta de análisis de redes sociales con métricas detalladas, reportes automáticos y visualización de datos.",
       technologies: ["React", "D3.js", "Python", "FastAPI", "Redis"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/social-analytics",
       liveUrl: "https://social-analytics-demo.vercel.app",
       featured: true
@@ -60,7 +60,7 @@ const Projects = () => {
       title: "Learning Management System",
       description: "Plataforma educativa con cursos online, seguimiento de progreso, quizzes interactivos y certificaciones.",
       technologies: ["Next.js", "Supabase", "Stripe", "Video.js", "PDF.js"],
-      image: "/api/placeholder/400/250",
+      image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/lms-platform",
       liveUrl: "https://lms-demo.vercel.app",
       featured: false
@@ -71,9 +71,7 @@ const Projects = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
+      transition: { staggerChildren: 0.2 }
     }
   }
 
@@ -82,15 +80,15 @@ const Projects = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.5
-      }
+      transition: { duration: 0.5 }
     }
   }
 
   return (
-    <section id="proyectos" className="min-h-screen py-20 relative">
+    <section id="projects" className="min-h-screen py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Título */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
@@ -107,6 +105,7 @@ const Projects = () => {
           </p>
         </motion.div>
 
+        {/* Grid de proyectos */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={container}
@@ -118,15 +117,17 @@ const Projects = () => {
             <motion.div
               key={project.id}
               variants={item}
-              className={`glass-effect rounded-xl overflow-hidden card-hover ${
+              className={`rounded-xl overflow-hidden border border-white/10 backdrop-blur-lg bg-white/5 hover:shadow-lg hover:shadow-ghost-purple/20 transition ${
                 project.featured ? 'md:col-span-2 lg:col-span-1' : ''
               }`}
             >
-              {/* Imagen del proyecto */}
-              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-ghost-purple/20 to-ghost-pink/20">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl opacity-50">🚀</div>
-                </div>
+              {/* Imagen */}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={project.image}
+                  alt={`Vista previa de ${project.title}`}
+                  className="object-cover w-full h-full"
+                />
                 {project.featured && (
                   <div className="absolute top-4 right-4 bg-ghost-purple/90 text-white px-3 py-1 rounded-full text-sm font-medium">
                     Destacado
@@ -134,7 +135,7 @@ const Projects = () => {
                 )}
               </div>
 
-              {/* Contenido del proyecto */}
+              {/* Contenido */}
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-3">
                   {project.title}
@@ -155,7 +156,7 @@ const Projects = () => {
                   ))}
                 </div>
 
-                {/* Enlaces */}
+                {/* Links */}
                 <div className="flex gap-4">
                   <motion.a
                     href={project.githubUrl}
@@ -185,7 +186,7 @@ const Projects = () => {
           ))}
         </motion.div>
 
-        {/* CTA para más proyectos */}
+        {/* CTA GitHub */}
         <motion.div
           className="text-center mt-16"
           initial={{ opacity: 0, y: 30 }}
@@ -200,7 +201,7 @@ const Projects = () => {
             href="https://github.com/tuusuario"
             target="_blank"
             rel="noopener noreferrer"
-            className="ghost-btn inline-flex items-center gap-2"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-ghost-purple text-white hover:bg-ghost-pink transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

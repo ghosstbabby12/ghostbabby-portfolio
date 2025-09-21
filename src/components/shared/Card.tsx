@@ -1,16 +1,16 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, Variants, HTMLMotionProps } from 'framer-motion'
 import { ReactNode } from 'react'
 import { easeInOut } from "framer-motion";
 import { cn } from '@/lib/utils'
+import { LucideIcon } from 'lucide-react';
 
 interface CardProps {
   children: ReactNode
   className?: string
   hover?: boolean
   gradient?: string
-  blur?: boolean
   onClick?: () => void
   delay?: number
   variant?: 'default' | 'glass' | 'glow' | 'minimal'
@@ -21,7 +21,6 @@ const Card = ({
   className, 
   hover = true,
   gradient,
-  blur = true,
   onClick,
   delay = 0,
   variant = 'default'
@@ -40,18 +39,7 @@ const Card = ({
     }
   }
 
-  const hoverVariants = {
-    hover: {
-      y: -10,
-      scale: 1.02,
-      transition: {
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    }
-  }
-
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 50,
@@ -65,6 +53,14 @@ const Card = ({
         duration: 0.6,
         delay,
         ease: easeInOut 
+      }
+    },
+    hover: {
+      y: -10,
+      scale: 1.02,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut"
       }
     }
   }
@@ -173,7 +169,7 @@ export const CardIcon = ({
   className,
   size = 24
 }: { 
-  icon: React.ComponentType<any>
+  icon: LucideIcon
   className?: string
   size?: number
 }) => (

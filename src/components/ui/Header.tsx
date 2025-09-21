@@ -17,11 +17,11 @@ const Header = () => {
   }, [])
 
   const navItems = [
-    { href: '#inicio', label: 'Inicio' },
-    { href: '#sobre-mi', label: 'Sobre Mí' },
-    { href: '#proyectos', label: 'Proyectos' },
-    { href: '#experiencia', label: 'Experiencia' },
-    { href: '#contacto', label: 'Contacto' },
+    { href: '#home', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#experience', label: 'Experience' },
+    { href: '#contact', label: 'Contact' },
   ]
 
   const handleNavClick = (href: string) => {
@@ -35,8 +35,8 @@ const Header = () => {
   return (
     <motion.header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black/20 backdrop-blur-xl border-b border-white/10' 
+        isScrolled
+          ? 'bg-black/20 backdrop-blur-xl border-b border-white/10'
           : 'bg-transparent'
       }`}
       initial={{ y: -100, opacity: 0 }}

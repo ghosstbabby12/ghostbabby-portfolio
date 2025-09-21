@@ -56,7 +56,7 @@ const About = () => {
 
   return (
     <section
-      id="sobre-mi"
+      id="about"
       className="min-h-screen flex items-center justify-center py-20"
       ref={ref}
     >
