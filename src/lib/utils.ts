@@ -1,9 +1,9 @@
-import { type ClassValue, clsx } from "clsx"
+// utils.ts
+import clsx, { ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 /**
  * Utility function para combinar clases de Tailwind CSS
- * Combina clsx con tailwind-merge para resolver conflictos de clases
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -16,9 +16,9 @@ export function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '') // Remover caracteres especiales
-    .replace(/[\s_-]+/g, '-') // Reemplazar espacios con guiones
-    .replace(/^-+|-+$/g, '') // Remover guiones al inicio y final
+    .replace(/[^\w\s-]/g, "") // Remover caracteres especiales
+    .replace(/[\s_-]+/g, "-") // Reemplazar espacios con guiones
+    .replace(/^-+|-+$/g, "") // Remover guiones al inicio y final
 }
 
 /**
@@ -31,26 +31,29 @@ export function delay(ms: number): Promise<void> {
 /**
  * Formatear fechas en español
  */
-export function formatDate(date: Date | string, options?: {
-  includeTime?: boolean
-  format?: 'short' | 'medium' | 'long'
-}): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date
-  
-  const { includeTime = false, format = 'medium' } = options || {}
-  
+export function formatDate(
+  date: Date | string,
+  options?: {
+    includeTime?: boolean
+    format?: "short" | "medium" | "long"
+  }
+): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date
+
+  const { includeTime = false, format = "medium" } = options || {}
+
   const formatOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: format === 'short' ? 'short' : format === 'long' ? 'long' : 'short',
-    day: 'numeric',
+    year: "numeric",
+    month: format === "short" ? "short" : format === "long" ? "long" : "short",
+    day: "numeric",
   }
-  
+
   if (includeTime) {
-    formatOptions.hour = '2-digit'
-    formatOptions.minute = '2-digit'
+    formatOptions.hour = "2-digit"
+    formatOptions.minute = "2-digit"
   }
-  
-  return dateObj.toLocaleDateString('es-ES', formatOptions)
+
+  return dateObj.toLocaleDateString("es-ES", formatOptions)
 }
 
 /**
@@ -78,7 +81,7 @@ export function isValidUrl(url: string): boolean {
  */
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
-  return text.slice(0, maxLength).trim() + '...'
+  return text.slice(0, maxLength).trim() + "..."
 }
 
 /**
@@ -86,9 +89,9 @@ export function truncateText(text: string, maxLength: number): string {
  */
 export function capitalize(text: string): string {
   return text
-    .split(' ')
+    .split(" ")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+    .join(" ")
 }
 
 /**
@@ -101,12 +104,15 @@ export function generateId(): string {
 /**
  * Formatear números con separadores de miles
  */
-export function formatNumber(num: number, options?: {
-  locale?: string
-  minimumFractionDigits?: number
-  maximumFractionDigits?: number
-}): string {
-  const { locale = 'es-ES', ...numberOptions } = options || {}
+export function formatNumber(
+  num: number,
+  options?: {
+    locale?: string
+    minimumFractionDigits?: number
+    maximumFractionDigits?: number
+  }
+): string {
+  const { locale = "es-ES", ...numberOptions } = options || {}
   return num.toLocaleString(locale, numberOptions)
 }
 
@@ -114,7 +120,7 @@ export function formatNumber(num: number, options?: {
  * Detectar dispositivo móvil
  */
 export function isMobile(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === "undefined") return false
   return window.innerWidth <= 768
 }
 
@@ -122,8 +128,8 @@ export function isMobile(): boolean {
  * Detectar modo oscuro del sistema
  */
 export function isDarkMode(): boolean {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
+  if (typeof window === "undefined") return false
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
 }
 
 /**
@@ -132,13 +138,13 @@ export function isDarkMode(): boolean {
 export function scrollToElement(elementId: string, offset: number = 0): void {
   const element = document.getElementById(elementId)
   if (!element) return
-  
+
   const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
   const offsetPosition = elementPosition - offset
-  
+
   window.scrollTo({
     top: offsetPosition,
-    behavior: 'smooth'
+    behavior: "smooth",
   })
 }
 
@@ -150,7 +156,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     await navigator.clipboard.writeText(text)
     return true
   } catch (error) {
-    console.error('Error copying to clipboard:', error)
+    console.error("Error copying to clipboard:", error)
     return false
   }
 }
@@ -158,12 +164,12 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 /**
  * Debounce function para optimizar performance
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: any[]) => void>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null
-  
+  let timeout: ReturnType<typeof setTimeout> | null = null
+
   return (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => func(...args), wait)
@@ -173,12 +179,12 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function para limitar ejecuciones
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: any[]) => void>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let inThrottle: boolean = false
-  
+  let inThrottle = false
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args)
@@ -187,5 +193,3 @@ export function throttle<T extends (...args: any[]) => any>(
     }
   }
 }
-
-
