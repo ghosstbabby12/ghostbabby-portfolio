@@ -24,7 +24,7 @@ const Hero = () => {
   ]
 
   const handleScrollToProjects = () => {
-    const element = document.querySelector('#proyectos')
+    const element = document.querySelector('#projects')
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
@@ -95,6 +95,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 1.0 }}
           >
             <motion.button
+              
               onClick={handleScrollToProjects}
               className="ghost-btn text-lg"
               whileHover={{ scale: 1.05 }}
@@ -104,13 +105,13 @@ const Hero = () => {
             </motion.button>
             
             <motion.a
-              href="#contacto"
-              className="ghost-btn text-lg bg-ghost-purple border-ghost-purple text-white"
+              href="#contact"
+              className="ghost-btn text-lg border-ghost-purple text-white"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.preventDefault()
-                const element = document.querySelector('#contacto')
+                const element = document.querySelector('#contact')
                 if (element) {
                   element.scrollIntoView({ behavior: 'smooth' })
                 }
