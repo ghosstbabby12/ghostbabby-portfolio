@@ -1,9 +1,11 @@
-'use client'
+"use client"
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useI18n } from '../../app/providers'
 
 const Hero = () => {
+  const { t } = useI18n()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -57,7 +59,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Creando experiencias digitales excepcionales con código limpio y diseño innovador
+            {t('sections.aboutTitle')}
           </motion.p>
 
           <motion.div
@@ -101,7 +103,7 @@ const Hero = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              View Projects
+              {t('actions.viewProjects')}
             </motion.button>
             
             <motion.a
@@ -117,7 +119,7 @@ const Hero = () => {
                 }
               }}
             >
-              Contact me
+              {t('actions.contactMe')}
             </motion.a>
           </motion.div>
         </motion.div>

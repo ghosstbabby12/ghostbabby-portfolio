@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { ExternalLink, Github } from 'lucide-react'
+import { useI18n } from '../../app/providers'
 
 const Projects = () => {
+  const { t } = useI18n()
   const projects = [
     {
       id: 1,
@@ -97,11 +99,10 @@ const Projects = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-            Mis Proyectos
+            {t('sections.projectsTitle')}
           </h2>
           <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
-            Una selección de proyectos que demuestran mis habilidades en desarrollo web, 
-            desde aplicaciones empresariales hasta experiencias interactivas creativas.
+            {t('projects.description')}
           </p>
         </motion.div>
 
@@ -167,7 +168,7 @@ const Projects = () => {
                     whileTap={{ scale: 0.95 }}
                   >
                     <Github size={18} />
-                    <span>Código</span>
+                      <span>{t('actions.viewProjects') === 'View Projects' ? 'Código' : 'Code'}</span>
                   </motion.a>
                   <motion.a
                     href={project.liveUrl}
@@ -206,7 +207,7 @@ const Projects = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Github size={20} />
-            Ver más en GitHub
+            {t('actions.viewProjects') === 'View Projects' ? 'Ver más en GitHub' : 'View more on GitHub'}
           </motion.a>
         </motion.div>
       </div>

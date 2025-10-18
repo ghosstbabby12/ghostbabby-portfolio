@@ -1,33 +1,32 @@
-'use client'
+"use client"
 
 import { motion, useInView, Variants } from 'framer-motion'
 import { useRef } from 'react'
 import { Target, Lightbulb, Rocket } from 'lucide-react'
+import { useI18n } from '../../app/providers'
 
 const About = () => {
+  const { t } = useI18n()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   const cards = [
     {
       icon: Target,
-      title: "Mi Misión",
-      description:
-        "Transformar ideas innovadoras en soluciones digitales que impacten positivamente la experiencia del usuario y generen valor real para los negocios.",
+      title: t('about.missionTitle'),
+      description: t('about.missionDesc'),
       gradient: "from-blue-500/20 to-purple-500/20",
     },
     {
       icon: Lightbulb,
-      title: "Mi Enfoque",
-      description:
-        "Combino creatividad y tecnología para desarrollar aplicaciones web modernas, escalables y centradas en el usuario, siempre siguiendo las mejores prácticas.",
+      title: t('about.approachTitle'),
+      description: t('about.approachDesc'),
       gradient: "from-purple-500/20 to-pink-500/20",
     },
     {
       icon: Rocket,
-      title: "Mi Pasión",
-      description:
-        "Aprender constantemente nuevas tecnologías y metodologías para mantenerme a la vanguardia del desarrollo web y ofrecer soluciones innovadoras.",
+      title: t('about.passionTitle'),
+      description: t('about.passionDesc'),
       gradient: "from-pink-500/20 to-blue-500/20",
     },
   ]
@@ -70,18 +69,14 @@ const About = () => {
             className="text-4xl md:text-5xl font-bold text-center mb-4"
             variants={itemVariants}
           >
-            <span className="text-gradient">Sobre Mí</span>
+            <span className="text-gradient">{t('sections.aboutTitle')}</span>
           </motion.h2>
 
           <motion.p
             className="text-xl text-white/70 text-center mb-16 max-w-3xl mx-auto"
             variants={itemVariants}
           >
-            Software engineering student with a passion for web development and
-            creating seamless user experiences. Skilled in JavaScript, React,
-            and Node.js, I enjoy turning complex problems into simple, beautiful,
-            and intuitive designs. When I&apos;m not coding, you&apos;ll find me
-            exploring the latest tech trends or hiking in nature.
+            {t('about.missionDesc')}
           </motion.p>
 
           <motion.div className="grid md:grid-cols-3 gap-8">
@@ -118,10 +113,10 @@ const About = () => {
 
           <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
             {[
-              { number: "2+", label: "Años de Experiencia" },
-              { number: "15+", label: "Proyectos Completados" },
-              { number: "10+", label: "Tecnologías Dominadas" },
-              { number: "100%", label: "Clientes Satisfechos" },
+              { number: "2+", label: t('about.stats.exp') },
+              { number: "15+", label: t('about.stats.projects') },
+              { number: "10+", label: t('about.stats.tech') },
+              { number: "100%", label: t('about.stats.clients') },
             ].map((stat, index) => (
               <motion.div
                 key={index}

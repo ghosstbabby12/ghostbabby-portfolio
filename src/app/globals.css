@@ -14,6 +14,68 @@ html {
     @apply bg-ghost-gradient text-white font-sans;
     overflow-x: hidden;
   }
+
+  /* Light theme overrides: the ThemeProvider adds `light` class to <html> */
+  .light {
+    color-scheme: light;
+  }
+
+  /* Use html.light to be extra specific and override tailwind utilities */
+  html.light body {
+    /* Light background + dark text */
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important; /* slate-900 */
+  }
+
+  /* Force common utility overrides in light mode so components using explicit
+     Tailwind utility classes also become light-friendly. Use !important to
+     ensure these override inline utility classes from components. */
+
+  /* Replace dark site gradient with a subtle light gradient */
+  html.light .bg-ghost-gradient,
+  html.light .min-h-screen.bg-ghost-gradient,
+  html.light main.bg-ghost-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #eef2ff 100%) !important;
+    background-image: none !important;
+  }
+
+  /* Common dark background utilities -> light surfaces */
+  html.light .bg-black {
+    background-color: #f8fafc !important;
+  }
+  html.light .bg-black\/40 {
+    background-color: rgba(248,250,252,0.6) !important;
+  }
+  html.light .bg-black\/75 {
+    background-color: rgba(248,250,252,0.85) !important;
+  }
+
+  /* translucent white overlays used as dark glass -> light subtle surfaces */
+  html.light .bg-white\/5 {
+    background-color: rgba(241,245,249,0.9) !important;
+  }
+
+  /* Make text that was white become dark for readability */
+  html.light .text-white,
+  html.light .text-white\/90,
+  html.light .text-white\/80,
+  html.light .text-white\/70,
+  html.light .text-white\/60 {
+    color: #0f172a !important; /* slate-900 */
+  }
+
+  /* Borders and subtle accents */
+  html.light .border-white\/10 {
+    border-color: rgba(15,23,42,0.06) !important; /* very light border */
+  }
+
+  /* Buttons and chips that rely on white/transparent backgrounds */
+
+  /* Note: component-level utility overrides were removed to avoid Tailwind @apply circular deps.
+     The global light-mode adjustments above (text color, backgrounds, borders) will handle most cases.
+     If specific component tweaks are required, prefer explicit CSS properties or move variants into
+     component-level styles within @layer components using safe @apply usage. */
 }
 
 @layer components {

@@ -1,13 +1,15 @@
 'use client'
 import { motion } from "framer-motion"
 import Section from "@/components/shared/Section"
+import { useI18n } from '../../app/providers'
 
 const Contact = () => {
+  const { t } = useI18n()
   return (
     <Section
       id="contact"
-      title="Contáctame"
-      subtitle="¿Tienes una idea, proyecto o colaboración? Escríbeme y lo hablamos 🚀"
+      title={t('sections.contactTitle')}
+      subtitle={t('contact.cta')}
       background="gradient"
       padding="lg"
       centerContent
@@ -21,12 +23,12 @@ const Contact = () => {
         {/* Nombre */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
-            Nombre
+            {t('contact.name')}
           </label>
           <input
             type="text"
             id="name"
-            placeholder="Tu nombre"
+            placeholder={t('contact.placeholderName')}
             className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-ghost-purple"
           />
         </div>
@@ -34,12 +36,12 @@ const Contact = () => {
         {/* Email */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
-            Correo
+            {t('contact.email')}
           </label>
           <input
             type="email"
             id="email"
-            placeholder="tu@email.com"
+            placeholder={t('contact.placeholderEmail')}
             className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-ghost-pink"
           />
         </div>
@@ -47,12 +49,12 @@ const Contact = () => {
         {/* Mensaje */}
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
-            Mensaje
+            {t('contact.message')}
           </label>
           <textarea
             id="message"
             rows={5}
-            placeholder="Escribe tu mensaje..."
+            placeholder={t('contact.placeholderMessage')}
             className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-ghost-blue resize-none"
           />
         </div>
@@ -64,7 +66,7 @@ const Contact = () => {
           whileTap={{ scale: 0.95 }}
           className="w-full py-3 px-6 rounded-xl font-semibold text-lg text-white bg-gradient-to-r from-ghost-purple via-ghost-pink to-ghost-blue shadow-lg hover:shadow-2xl transition-all"
         >
-          Enviar Mensaje
+          {t('contact.submit')}
         </motion.button>
       </motion.form>
     </Section>

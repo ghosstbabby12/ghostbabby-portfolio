@@ -1,12 +1,16 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
+import { useTheme, useI18n } from '../../app/providers'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const { theme, toggleTheme } = useTheme()
+  const { t, lang, toggleLang } = useI18n()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,11 +21,12 @@ const Header = () => {
   }, [])
 
   const navItems = [
-    { href: '#home', label: 'Home' },
-    { href: '#about', label: 'About' },
-    { href: '#projects', label: 'Projects' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#contact', label: 'Contact' },
+    { href: '#home', label: t('nav.home') },
+    { href: '#about', label: t('nav.about') },
+    { href: '#projects', label: t('nav.projects') },
+    { href: '#experience', label: t('nav.experience') },
+    { href: '#mygame', label: t('nav.mygame') },
+    { href: '#contact', label: t('nav.contact') },
   ]
 
   const handleNavClick = (href: string) => {
@@ -53,6 +58,7 @@ const Header = () => {
             <span className="text-2xl">👻</span>
             <span className="text-xl font-bold text-gradient animate-glow">
               Ghost Portfolio
+              By Camila Bastidas
             </span>
           </motion.div>
 
@@ -71,6 +77,29 @@ const Header = () => {
                 {item.label}
               </motion.button>
             ))}
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="ml-3 p-2 rounded-md text-white/90 hover:text-ghost-purple transition-colors"
+              aria-label={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
+              title={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
+            >
+              {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
+            {/* Language toggle */}
+            <button
+              onClick={toggleLang}
+              className="ml-2 px-2 py-1 rounded-md bg-white/5 text-sm text-white/90 hover:bg-white/10 transition-colors"
+              aria-label={t('actions.language')}
+              title={t('actions.language')}
+            >
+              <div className="flex items-center space-x-2">
+                <Globe size={16} />
+                <span className="uppercase">{lang}</span>
+              </div>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -100,8 +129,7 @@ const Header = () => {
                 <motion.button
                   key={item.href}
                   onClick={() => handleNavClick(item.href)}
-                  className="block w-full text-left px-3 py-2 text-white/90 hover:text-ghost-purple 
-                           transition-colors duration-300"
+                  className="block w-full text-left px-3 py-2 text-white/90 hover:text-ghost-purple transition-colors duration-300"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -109,6 +137,26 @@ const Header = () => {
                   {item.label}
                 </motion.button>
               ))}
+
+              {/* Mobile controls */}
+              <div className="flex items-center justify-between px-3 pt-4">
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-md text-white/90 hover:text-ghost-purple transition-colors"
+                >
+                  {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+
+                <button
+                  onClick={toggleLang}
+                  className="px-3 py-1 rounded-md bg-white/5 text-sm text-white/90 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Globe size={16} />
+                    <span className="uppercase">{lang}</span>
+                  </div>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

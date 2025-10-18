@@ -2,6 +2,7 @@
 import { motion } from "framer-motion"
 import Section from "@/components/shared/Section"
 import { Briefcase, GraduationCap } from "lucide-react"
+import { useI18n } from '../../app/providers'
 
 const experiences = [
   {
@@ -34,11 +35,12 @@ const experiences = [
 ]
 
 const Experience = () => {
+  const { t } = useI18n()
   return (
     <Section
       id="experience"
-      title="Experiencia"
-      subtitle="Un recorrido por mi experiencia profesional y académica"
+      title={t('experience.title')}
+      subtitle={t('experience.subtitle')}
       background="default"
       padding="lg"
     >
