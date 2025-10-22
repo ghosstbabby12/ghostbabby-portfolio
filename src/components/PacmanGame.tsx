@@ -1,304 +1,322 @@
-'use client';
+'use client'
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-const tileSize = 20;
+const CELL = 20
+const ROWS = 21
+const COLS = 28
 
-// Laberinto
-const initialMaze: number[][] = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1],
-  [1, 2, 2, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-  [1, 2, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-  [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 2, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1],
-  [1, 2, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1],
-  [1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
-  [3, 3, 3, 3, 1, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 1, 3, 3, 3, 3, 3],
-  [1, 1, 1, 1, 1, 0, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 3, 0, 1, 1, 1, 1, 1, 1],
-  [3, 3, 3, 3, 3, 0, 3, 3, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 3, 0, 3, 3, 3, 3, 3, 3],
-  [1, 1, 1, 1, 1, 0, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 1, 1, 3, 0, 1, 1, 1, 1, 1, 1],
-  [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-  [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-  [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-  [1, 0, 1, 1, 1, 2, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-  [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-];
+export default function PacmanGame() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [score, setScore] = useState(0)
+  const [lives, setLives] = useState(3)
+  const [gameOver, setGameOver] = useState(false)
+  const [won, setWon] = useState(false)
+  const [gameStarted, setGameStarted] = useState(false)
+  const router = useRouter()
 
-const PacmanGame: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mazeRef = useRef<number[][]>(initialMaze.map(row => [...row]));
-  
-  const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
-  const [pacman, setPacman] = useState({ x: 1, y: 1, dir: "RIGHT" });
-  const [nextDir, setNextDir] = useState("RIGHT");
-  
-  const [ghosts, setGhosts] = useState([
-    // Nuevas posiciones iniciales en el centro del laberinto
-    { x: 13, y: 14, color: "red", lastDir: "" },
-    { x: 14, y: 14, color: "cyan", lastDir: "" },
-    { x: 15, y: 14, color: "pink", lastDir: "" },
-  ]);
-
-  const resetGame = () => {
-    mazeRef.current = initialMaze.map(row => [...row]);
-    setScore(0);
-    setGameOver(false);
-    setPacman({ x: 1, y: 1, dir: "RIGHT" });
-    setNextDir("RIGHT");
-    setGhosts([
-      { x: 13, y: 14, color: "red", lastDir: "" },
-      { x: 14, y: 14, color: "cyan", lastDir: "" },
-      { x: 15, y: 14, color: "pink", lastDir: "" },
-    ]);
-  };
+  const map = [
+    "############################",
+    "#............##............#",
+    "#.####.#####.##.#####.####.#",
+    "#.####.#####.##.#####.####.#",
+    "#..........................#",
+    "#.####.##.########.##.####.#",
+    "#......##....##....##......#",
+    "######.##### ## #####.######",
+    "     #.##### ## #####.#     ",
+    "     #.##          ##.#     ",
+    "######.## ###--### ##.######",
+    "      .   #      #   .      ",
+    "######.## ######## ##.######",
+    "     #.##          ##.#     ",
+    "     #.##### ## #####.#     ",
+    "######.##### ## #####.######",
+    "#............##............#",
+    "#.####.#####.##.#####.####.#",
+    "#...##................##...#",
+    "###.##.##.########.##.##.###",
+    "#............##............#",
+    "############################"
+  ]
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx) return
+
+    let pacman = {
+      x: 13,
+      y: 17,
+      dx: 1,
+      dy: 0,
+      nextDx: 1,
+      nextDy: 0,
+      mouth: 0,
+      mouthOpening: true,
+    }
+
+    type Ghost = { x: number; y: number; lastDir: [number, number]; color: string; startX: number; startY: number }
+    const ghosts: Ghost[] = [
+      { x: 13, y: 11, lastDir: [-1, 0], color: '#FF0000', startX: 13, startY: 11 },
+      { x: 14, y: 11, lastDir: [1, 0], color: '#FFB8FF', startX: 14, startY: 11 },
+      { x: 12, y: 11, lastDir: [0, 1], color: '#00FFFF', startX: 12, startY: 11 },
+      { x: 15, y: 11, lastDir: [0, -1], color: '#FFB851', startX: 15, startY: 11 }
+    ]
+
+    let pellets = new Set<string>()
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (map[r][c] === '.') pellets.add(`${r},${c}`)
+      }
+    }
+
+    const canMove = (x: number, y: number) => {
+      const row = Math.floor(y)
+      const col = Math.floor(x)
+      return map[row]?.[col] !== '#'
+    }
+
+    const moveGhost = (g: Ghost) => {
+      const possible: [number, number][] = []
+      const dirs: [number, number][] = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1]
+      ]
+      for (const d of dirs) {
+        const nx = g.x + d[0]
+        const ny = g.y + d[1]
+        if (canMove(nx, ny)) {
+          if (d[0] === -g.lastDir[0] && d[1] === -g.lastDir[1]) continue
+          possible.push(d)
+        }
+      }
+      if (possible.length === 0) {
+        for (const d of dirs) {
+          const nx = g.x + d[0]
+          const ny = g.y + d[1]
+          if (canMove(nx, ny)) possible.push(d)
+        }
+      }
+      if (possible.length > 0) {
+        const pick = possible[Math.floor(Math.random() * possible.length)]
+        g.lastDir = pick
+        g.x += pick[0] * 0.1
+        g.y += pick[1] * 0.1
+      }
+    }
+
+    const resetPositionsAfterHit = () => {
+      pacman.x = 13
+      pacman.y = 17
+      pacman.dx = 1
+      pacman.dy = 0
+      pacman.nextDx = 1
+      pacman.nextDy = 0
+      ghosts.forEach(g => { g.x = g.startX; g.y = g.startY; g.lastDir = [0, -1] })
+    }
+
+    let pausedTicks = 0
+
+    const update = () => {
+      if (pausedTicks > 0) {
+        pausedTicks--
+        return
+      }
+
+      const nextX = pacman.x + pacman.nextDx * 0.1
+      const nextY = pacman.y + pacman.nextDy * 0.1
+      if (canMove(nextX, nextY)) {
+        pacman.dx = pacman.nextDx
+        pacman.dy = pacman.nextDy
+      }
+
+      const newX = pacman.x + pacman.dx * 0.1
+      const newY = pacman.y + pacman.dy * 0.1
+
+      if (canMove(newX, newY)) {
+        pacman.x = newX
+        pacman.y = newY
+      } else {
+        pacman.dx = 0
+        pacman.dy = 0
+      }
+
+      const cellR = Math.floor(pacman.y)
+      const cellC = Math.floor(pacman.x)
+      if (pellets.has(`${cellR},${cellC}`)) {
+        pellets.delete(`${cellR},${cellC}`)
+        setScore((prev) => prev + 10)
+      }
+
+      if (pacman.mouthOpening) {
+        pacman.mouth += 0.05
+        if (pacman.mouth > 0.3) pacman.mouthOpening = false
+      } else {
+        pacman.mouth -= 0.05
+        if (pacman.mouth < 0) pacman.mouthOpening = true
+      }
+
+      ghosts.forEach(g => {
+        if (Math.random() < 0.25) {
+          moveGhost(g)
+        } else {
+          const [ldx, ldy] = g.lastDir
+          const attemptX = g.x + ldx * 0.1
+          const attemptY = g.y + ldy * 0.1
+          if (canMove(attemptX, attemptY)) {
+            g.x = attemptX
+            g.y = attemptY
+          } else {
+            moveGhost(g)
+          }
+        }
+      })
+
+      for (const g of ghosts) {
+        const dist = Math.hypot(g.x - pacman.x, g.y - pacman.y)
+        if (dist < 0.6) {
+          setLives(prev => {
+            const next = prev - 1
+            if (next <= 0) {
+              setGameOver(true)
+            } else {
+              resetPositionsAfterHit()
+              pausedTicks = 12
+            }
+            return next
+          })
+          break
+        }
+      }
+
+      if (pellets.size === 0) {
+        setWon(true)
+        setGameOver(true)
+      }
+    }
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      const currentMaze = mazeRef.current;
-      for (let y = 0; y < currentMaze.length; y++) {
-        for (let x = 0; x < currentMaze[y].length; x++) {
-          if (currentMaze[y][x] === 1) {
-            ctx.fillStyle = "blue";
-            ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-          } else if (currentMaze[y][x] === 2) {
-            ctx.fillStyle = "yellow";
-            ctx.beginPath();
-            ctx.arc(x * tileSize + 10, y * tileSize + 10, 3, 0, Math.PI * 2);
-            ctx.fill();
-          } else if (currentMaze[y][x] === 3) {
-            ctx.fillStyle = "orange";
-            ctx.beginPath();
-            ctx.arc(x * tileSize + 10, y * tileSize + 10, 6, 0, Math.PI * 2);
-            ctx.fill();
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const tile = map[r][c]
+          if (tile === '#') {
+            ctx.strokeStyle = '#00f6ff'
+            ctx.lineWidth = 2
+            ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
+          } else if (pellets.has(`${r},${c}`)) {
+            ctx.fillStyle = 'orange'
+            ctx.beginPath()
+            ctx.arc(
+              c * CELL + CELL / 2,
+              r * CELL + CELL / 2,
+              3,
+              0,
+              Math.PI * 2
+            )
+            ctx.fill()
           }
         }
       }
 
-      ctx.fillStyle = "yellow";
-      ctx.beginPath();
-      let startAngle = 0.25 * Math.PI;
-      let endAngle = 1.75 * Math.PI;
-      if (pacman.dir === "LEFT") {
-        startAngle = 1.25 * Math.PI;
-        endAngle = 0.75 * Math.PI;
-      } else if (pacman.dir === "UP") {
-        startAngle = 1.75 * Math.PI;
-        endAngle = 1.25 * Math.PI;
-      } else if (pacman.dir === "DOWN") {
-        startAngle = 0.75 * Math.PI;
-        endAngle = 0.25 * Math.PI;
-      }
-      ctx.arc(
-        pacman.x * tileSize + 10,
-        pacman.y * tileSize + 10,
-        9,
-        startAngle,
-        endAngle
-      );
-      ctx.lineTo(pacman.x * tileSize + 10, pacman.y * tileSize + 10);
-      ctx.fill();
-
-      ghosts.forEach(g => {
-        ctx.fillStyle = g.color;
-        ctx.beginPath();
-        ctx.arc(g.x * tileSize + 10, g.y * tileSize + 10, 9, Math.PI, 0);
-        ctx.rect(g.x * tileSize + 1, g.y * tileSize + 10, 18, 10);
-        ctx.fill();
-
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.arc(g.x * tileSize + 6, g.y * tileSize + 8, 3, 0, Math.PI * 2);
-        ctx.arc(g.x * tileSize + 14, g.y * tileSize + 8, 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "blue";
-        ctx.beginPath();
-        ctx.arc(g.x * tileSize + 6, g.y * tileSize + 8, 1.5, 0, Math.PI * 2);
-        ctx.arc(g.x * tileSize + 14, g.y * tileSize + 8, 1.5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    };
-
-    draw();
-  }, [pacman, ghosts]);
-
-  useEffect(() => {
-    if (gameOver) return;
-    
-    const interval = setInterval(() => {
-      const currentMaze = mazeRef.current;
-      let newX = pacman.x;
-      let newY = pacman.y;
-
-      let canMove = false;
-      if (nextDir === "UP" && currentMaze[pacman.y - 1][pacman.x] !== 1) {
-        setPacman(p => ({ ...p, dir: "UP" }));
-        canMove = true;
-      } else if (nextDir === "DOWN" && currentMaze[pacman.y + 1][pacman.x] !== 1) {
-        setPacman(p => ({ ...p, dir: "DOWN" }));
-        canMove = true;
-      } else if (nextDir === "LEFT" && currentMaze[pacman.y][pacman.x - 1] !== 1) {
-        setPacman(p => ({ ...p, dir: "LEFT" }));
-        canMove = true;
-      } else if (nextDir === "RIGHT" && currentMaze[pacman.y][pacman.x + 1] !== 1) {
-        setPacman(p => ({ ...p, dir: "RIGHT" }));
-        canMove = true;
+      for (const g of ghosts) {
+        const gx = g.x * CELL + CELL / 2
+        const gy = g.y * CELL + CELL / 2
+        ctx.beginPath()
+        ctx.fillStyle = g.color
+        ctx.arc(gx, gy - 2, CELL / 2 - 2, Math.PI, 0)
+        ctx.lineTo(gx + CELL / 2 - 2, gy + CELL / 2 - 2)
+        ctx.closePath()
+        ctx.fill()
       }
 
-      if (pacman.dir === "UP" && currentMaze[pacman.y - 1][pacman.x] !== 1) newY--;
-      else if (pacman.dir === "DOWN" && currentMaze[pacman.y + 1][pacman.x] !== 1) newY++;
-      else if (pacman.dir === "LEFT" && currentMaze[pacman.y][pacman.x - 1] !== 1) newX--;
-      else if (pacman.dir === "RIGHT" && currentMaze[pacman.y][pacman.x + 1] !== 1) newX++;
+      ctx.fillStyle = 'yellow'
+      const startAngle = pacman.mouth * Math.PI
+      const endAngle = 2 * Math.PI - pacman.mouth * Math.PI
+      const centerX = pacman.x * CELL + CELL / 2
+      const centerY = pacman.y * CELL + CELL / 2
+      ctx.beginPath()
+      ctx.moveTo(centerX, centerY)
+      ctx.arc(centerX, centerY, CELL / 2 - 2, startAngle, endAngle)
+      ctx.closePath()
+      ctx.fill()
+    }
 
-      if (currentMaze[newY][newX] === 2) {
-        currentMaze[newY][newX] = 0;
-        setScore(s => s + 10);
-      } else if (currentMaze[newY][newX] === 3) {
-        currentMaze[newY][newX] = 0;
-        setScore(s => s + 50);
+    let rafId: number | null = null
+    const loop = () => {
+      update()
+      draw()
+      if (!gameOver) rafId = requestAnimationFrame(loop)
+    }
+
+    const handleKey = (e: KeyboardEvent) => {
+      // 🚫 Evitar que la pantalla se desplace
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+        e.preventDefault()
       }
 
-      setPacman(p => ({ ...p, x: newX, y: newY }));
+      if (!gameStarted && !gameOver && !won) setGameStarted(true)
 
-    }, 200);
+      const dir: Record<string, [number, number]> = {
+        ArrowUp: [0, -1],
+        ArrowDown: [0, 1],
+        ArrowLeft: [-1, 0],
+        ArrowRight: [1, 0],
+      }
+      const move = dir[e.key]
+      if (move) {
+        pacman.nextDx = move[0]
+        pacman.nextDy = move[1]
+      }
+    }
 
-    return () => clearInterval(interval);
-  }, [pacman, nextDir, gameOver]);
+    window.addEventListener('keydown', handleKey, { passive: false })
+    loop()
 
-  useEffect(() => {
-    if (gameOver) return;
-
-    const interval = setInterval(() => {
-      setGhosts(prevGhosts =>
-        prevGhosts.map(g => {
-          const currentMaze = mazeRef.current;
-          let newX = g.x;
-          let newY = g.y;
-          let nextDir = g.lastDir;
-
-          // Comportamiento del fantasma rojo (persigue a Pac-Man)
-          if (g.color === "red") {
-            const possibleMoves = [];
-            if (currentMaze[g.y][g.x + 1] !== 1) possibleMoves.push({ x: g.x + 1, y: g.y, dir: "RIGHT" });
-            if (currentMaze[g.y][g.x - 1] !== 1) possibleMoves.push({ x: g.x - 1, y: g.y, dir: "LEFT" });
-            if (currentMaze[g.y + 1][g.x] !== 1) possibleMoves.push({ x: g.x, y: g.y + 1, dir: "DOWN" });
-            if (currentMaze[g.y - 1][g.x] !== 1) possibleMoves.push({ x: g.x, y: g.y - 1, dir: "UP" });
-
-            let bestMove = possibleMoves[0];
-            let minDistance = Infinity;
-
-            possibleMoves.forEach(move => {
-              const distance = Math.sqrt(
-                Math.pow(move.x - pacman.x, 2) + Math.pow(move.y - pacman.y, 2)
-              );
-              if (distance < minDistance) {
-                minDistance = distance;
-                bestMove = move;
-              }
-            });
-
-            if (bestMove) {
-              newX = bestMove.x;
-              newY = bestMove.y;
-              nextDir = bestMove.dir;
-            }
-          } else { // Comportamiento de los otros fantasmas (aleatorio en intersecciones)
-            const possibleMoves = [];
-            if (currentMaze[g.y][g.x + 1] !== 1) possibleMoves.push({ x: g.x + 1, y: g.y, dir: "RIGHT" });
-            if (currentMaze[g.y][g.x - 1] !== 1) possibleMoves.push({ x: g.x - 1, y: g.y, dir: "LEFT" });
-            if (currentMaze[g.y + 1][g.x] !== 1) possibleMoves.push({ x: g.x, y: g.y + 1, dir: "DOWN" });
-            if (currentMaze[g.y - 1][g.x] !== 1) possibleMoves.push({ x: g.x, y: g.y - 1, dir: "UP" });
-            
-            // Si el fantasma está en una intersección (más de 2 opciones) o no tiene un camino definido
-            // o si está en un callejón sin salida (1 opción), cambia de dirección
-            if (possibleMoves.length > 2 || possibleMoves.length === 1 || !g.lastDir) {
-              const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-              newX = randomMove.x;
-              newY = randomMove.y;
-              nextDir = randomMove.dir;
-            } else {
-              // Si no está en una intersección, sigue el camino que ya tenía
-              let currentMove;
-              if (g.lastDir === "RIGHT" && currentMaze[g.y][g.x + 1] !== 1) currentMove = { x: g.x + 1, y: g.y, dir: "RIGHT" };
-              else if (g.lastDir === "LEFT" && currentMaze[g.y][g.x - 1] !== 1) currentMove = { x: g.x - 1, y: g.y, dir: "LEFT" };
-              else if (g.lastDir === "DOWN" && currentMaze[g.y + 1][g.x] !== 1) currentMove = { x: g.x, y: g.y + 1, dir: "DOWN" };
-              else if (g.lastDir === "UP" && currentMaze[g.y - 1][g.x] !== 1) currentMove = { x: g.x, y: g.y - 1, dir: "UP" };
-              
-              if(currentMove) {
-                 newX = currentMove.x;
-                 newY = currentMove.y;
-              } else {
-                 const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-                 newX = randomMove.x;
-                 newY = randomMove.y;
-                 nextDir = randomMove.dir;
-              }
-            }
-          }
-
-          if (newX === pacman.x && newY === pacman.y) {
-            setGameOver(true);
-          }
-
-          return { ...g, x: newX, y: newY, lastDir: nextDir };
-        })
-      );
-    }, 400); // Velocidad moderada de los fantasmas
-
-    return () => clearInterval(interval);
-  }, [pacman, gameOver]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault();
-      if (e.key === "ArrowUp") setNextDir("UP");
-      if (e.key === "ArrowDown") setNextDir("DOWN");
-      if (e.key === "ArrowLeft") setNextDir("LEFT");
-      if (e.key === "ArrowRight") setNextDir("RIGHT");
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    return () => {
+      window.removeEventListener('keydown', handleKey)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
+  }, [gameOver, won])
 
   return (
-    <div className="relative flex flex-col items-center">
-      <h2 className="text-xl font-bold mb-2 text-purple-400">👻 Ghost Arcade</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white select-none overflow-hidden">
+      <h1 className="text-3xl font-bold mb-2 text-yellow-400 tracking-widest">👻 GHOST-MAN</h1>
+      <p className="text-gray-300 mb-2">Puntaje: {score} &nbsp; Vida(s): {lives}</p>
+
       <canvas
         ref={canvasRef}
-        width={initialMaze[0].length * tileSize}
-        height={initialMaze.length * tileSize}
-        style={{ border: "2px solid #444", background: "black" }}
+        width={COLS * CELL}
+        height={ROWS * CELL}
+        className="border-4 border-blue-500 rounded-lg shadow-[0_0_30px_#00f6ff]"
       />
-      <p className="text-white mt-2">Puntos: {score}</p>
-      {gameOver && (
-        <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center">
-          <p className="text-red-500 text-6xl font-bold mb-4 animate-pulse">💀 ¡GAME OVER!</p>
+
+      {won && (
+        <button
+          onClick={() => router.push('/galeria')}
+          className="mt-6 px-6 py-3 text-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full hover:scale-110 transition-all shadow-lg"
+        >
+          Ver galería secreta 👁️
+        </button>
+      )}
+
+      {gameOver && !won && (
+        <div className="mt-6 text-center">
+          <p className="text-red-400 text-2xl mb-2">GAME OVER</p>
           <button
-            onClick={resetGame}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            onClick={() => window.location.reload()}
+            className="mt-2 px-6 py-3 bg-blue-600 text-white rounded"
           >
-            Reiniciar Juego
+            Reiniciar
           </button>
         </div>
       )}
     </div>
-  );
-};
-
-export default PacmanGame;
+  )
+}

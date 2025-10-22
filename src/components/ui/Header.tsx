@@ -57,8 +57,7 @@ const Header = () => {
           >
             <span className="text-2xl">👻</span>
             <span className="text-xl font-bold text-gradient animate-glow">
-              Ghost Portfolio
-              By Camila Bastidas
+            Camila Bastidas
             </span>
           </motion.div>
 
