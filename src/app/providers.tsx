@@ -16,27 +16,21 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark")
 
-  // Initialize from localStorage or system preference
   useEffect(() => {
     try {
       const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null
       if (stored === "light" || stored === "dark") {
         setTheme(stored)
       } else {
-        // Default to dark to preserve current look
         setTheme("dark")
       }
     } catch {}
   }, [])
 
-  // Apply class to <html> for light mode and persist
   useEffect(() => {
     const root = document.documentElement
-    if (theme === "light") {
-      root.classList.add("light")
-    } else {
-      root.classList.remove("light")
-    }
+    if (theme === "light") root.classList.add("light")
+    else root.classList.remove("light")
     try {
       localStorage.setItem("theme", theme)
     } catch {}
@@ -128,6 +122,29 @@ const DICTIONARY = {
         clients: "Clientes Satisfechos",
       }
     },
+    pacman: {
+      title: "👻 GHOST-MAN",
+      score: "Puntaje",
+      lives: "Vidas",
+      cherries: "Cerezas",
+      instructions: "Usa las flechas ⬆️⬇️⬅️➡️ para moverte",
+      galleryButton: "🍒 Galería 👁️✨",
+      won: "¡GANASTE! 🎉",
+      gameOver: "GAME OVER 👻",
+      playAgain: "Jugar de nuevo",
+      retry: "Reintentar"
+    },
+    boo: {
+      title: "👻 GHOST HOUSE",
+      startTip: "¡CUIDADO CON LOS BOOS!",
+      controls: "Usa las flechas para moverte — ⬆️ o ESPACIO para saltar",
+      start: "START"
+    },
+    gallery: {
+      title: "🎭 Galería secreta",
+      description: "Aquí puedes ver las imágenes, recuerdos y momentos desbloqueados al completar el juego.",
+      back: "Volver al inicio"
+    }
   },
   en: {
     nav: {
@@ -188,10 +205,33 @@ const DICTIONARY = {
         clients: "Satisfied Clients",
       }
     },
+    pacman: {
+      title: "👻 GHOST-MAN",
+      score: "Score",
+      lives: "Lives",
+      cherries: "Cherries",
+      instructions: "Use arrows ⬆️⬇️⬅️➡️ to move",
+      galleryButton: "🍒 Gallery 👁️✨",
+      won: "YOU WIN! 🎉",
+      gameOver: "GAME OVER 👻",
+      playAgain: "Play again",
+      retry: "Retry"
+    },
+    boo: {
+      title: "👻 GHOST HOUSE",
+      startTip: "WATCH OUT FOR BOOS!",
+      controls: "Use arrows to move — ⬆️ or SPACE to jump",
+      start: "START"
+    },
+    gallery: {
+      title: "🎭 Secret gallery",
+      description: "Here you can see images, memories and moments unlocked after finishing the game.",
+      back: "Back to home"
+    }
   },
 } as const
 
-function getByPath(obj: any, path: string): string {
+function getByPath(obj: any, path: string): any {
   return path.split(".").reduce((acc: any, key: string) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj)
 }
 
@@ -212,7 +252,6 @@ function I18nProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("lang", lang)
     } catch {}
 
-    // Also update <html lang="...">
     document.documentElement.setAttribute("lang", lang === "en" ? "en" : "es")
   }, [lang])
 
@@ -232,7 +271,6 @@ export function useI18n() {
   return ctx
 }
 
-// Combined Providers
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>

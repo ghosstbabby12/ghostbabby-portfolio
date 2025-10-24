@@ -1,6 +1,10 @@
 'use client'
 
+import { useI18n } from "@/app/providers"
+
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
 
 const CELL = 20
 const ROWS = 22
@@ -13,6 +17,8 @@ export default function PacmanGame() {
   const [gameOver, setGameOver] = useState(false)
   const [won, setWon] = useState(false)
   const [cherries, setCherries] = useState(0)
+  const router = useRouter()
+  const { t } = useI18n()
 
   const map = [
     "############################",
@@ -378,12 +384,13 @@ export default function PacmanGame() {
   }
 
   return (
+    
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white select-none overflow-hidden">
-      <h1 className="text-3xl font-bold mb-2 text-yellow-400 tracking-widest">👻 GHOST-MAN</h1>
+      <h1 className="text-3xl font-bold mb-2 text-yellow-400 tracking-widest">{t('pacman.title')}</h1>
       <div className="flex gap-6 mb-2">
-        <p className="text-gray-300">Puntaje: {score}</p>
-        <p className="text-gray-300">Vidas: {lives}</p>
-        <p className="text-red-400 font-bold">Cerezas: {cherries}/3 🍒</p>
+        <p className="text-gray-300">{t('pacman.score')}: {score}</p>
+        <p className="text-gray-300">{t('pacman.lives')}: {lives}</p>
+        <p className="text-red-400 font-bold">{t('pacman.cherries')}: {cherries}/3 🍒</p>
       </div>
 
       <canvas
@@ -394,15 +401,16 @@ export default function PacmanGame() {
       />
 
       <p className="mt-4 text-gray-400 text-sm animate-pulse">
-        Usa las flechas ⬆️⬇️⬅️➡️ para moverte
+        {t('pacman.instructions')}
       </p>
 
       {cherries === 3 && !gameOver && (
         <button
-          onClick={() => alert('¡Galería secreta desbloqueada!')}
+          
+          onClick={() => router.push('/galeria')}
           className="mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce"
         >
-          🍒 Galería 👁️✨
+          {t('pacman.galleryButton')}
         </button>
       )}
 
@@ -416,7 +424,7 @@ export default function PacmanGame() {
             onClick={handleRestart}
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition transform hover:scale-105"
           >
-            Jugar de nuevo
+            {t('pacman.playAgain')}
           </button>
         </div>
       )}
@@ -429,7 +437,7 @@ export default function PacmanGame() {
             onClick={handleRestart}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105"
           >
-            Reintentar
+            {t('pacman.retry')}
           </button>
         </div>
       )}

@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class', // Permite modo oscuro con clase .dark
   theme: {
     extend: {
       colors: {
@@ -21,54 +22,61 @@ module.exports = {
         'card-gradient': 'linear-gradient(45deg, #667eea, #764ba2)',
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
-        'fadeInUp': 'fadeInUp 0.8s ease-out',
-        'slideIn': 'slideIn 0.5s ease-out',
+        float: 'float 6s ease-in-out infinite',
+        glow: 'glow 2s ease-in-out infinite alternate',
+        fadeInUp: 'fadeInUp 0.8s ease-out',
+        slideIn: 'slideIn 0.5s ease-out',
       },
       keyframes: {
         float: {
-          '0%, 100%': { 
-            transform: 'translateY(0px) rotate(0deg)', 
-            opacity: '0.3' 
+          '0%, 100%': {
+            transform: 'translateY(0) rotate(0deg)',
+            opacity: '0.3',
           },
-          '50%': { 
-            transform: 'translateY(-20px) rotate(180deg)', 
-            opacity: '0.8' 
+          '50%': {
+            transform: 'translateY(-20px) rotate(180deg)',
+            opacity: '0.8',
           },
         },
         glow: {
-          from: { 
-            filter: 'drop-shadow(0 0 5px rgba(102, 126, 234, 0.5))' 
+          '0%': {
+            filter: 'drop-shadow(0 0 5px rgba(102, 126, 234, 0.5))',
           },
-          to: { 
-            filter: 'drop-shadow(0 0 20px rgba(118, 75, 162, 0.8))' 
+          '100%': {
+            filter: 'drop-shadow(0 0 20px rgba(118, 75, 162, 0.8))',
           },
         },
         fadeInUp: {
-          from: {
+          '0%': {
             opacity: '0',
             transform: 'translateY(30px)',
           },
-          to: {
+          '100%': {
             opacity: '1',
             transform: 'translateY(0)',
           },
         },
         slideIn: {
-          from: {
+          '0%': {
             transform: 'translateX(-100%)',
           },
-          to: {
+          '100%': {
             transform: 'translateX(0)',
           },
         },
       },
       backdropBlur: {
-        'xs': '2px',
+        xs: '2px',
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        glow: '0 0 10px rgba(118, 75, 162, 0.6)',
+      },
+      borderRadius: {
+        xl: '1rem',
+        '2xl': '1.5rem',
       },
     },
   },
