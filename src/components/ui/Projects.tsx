@@ -1,95 +1,100 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { ExternalLink, Github } from 'lucide-react'
-import { useI18n } from '../../app/providers'
+import { motion } from "framer-motion";
+import { ExternalLink, Github } from "lucide-react";
+import { useI18n } from "../../app/providers";
 
 const Projects = () => {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const projects = [
     {
       id: 1,
       title: "E-Commerce Platform",
-      description: "Plataforma de comercio electrónico completa con Next.js, Stripe para pagos, panel administrativo y gestión de inventario.",
+      description:
+        "Plataforma de comercio electrónico completa con Next.js, Stripe para pagos, panel administrativo y gestión de inventario.",
       technologies: ["Next.js", "TypeScript", "Stripe", "Prisma", "PostgreSQL"],
       image: "https://placehold.co/400x250/png",
-      githubUrl: "https://github.com/tuusuario/ecommerce-project",
+      githubUrl: "https://github.com/tusuario/ecommerce-project",
       liveUrl: "https://ecommerce-demo.vercel.app",
-      featured: true
+      featured: true,
     },
     {
       id: 2,
       title: "Task Management App",
-      description: "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
+      description:
+        "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
       image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/task-manager",
       liveUrl: "https://taskmanager-demo.vercel.app",
-      featured: true
+      featured: true,
     },
     {
       id: 3,
       title: "Creative Portfolio",
-      description: "Sitio web interactivo para artista con galería, efectos 3D, animaciones avanzadas y sistema de contacto.",
+      description:
+        "Sitio web interactivo para artista con galería, efectos 3D, animaciones avanzadas y sistema de contacto.",
       technologies: ["Next.js", "Three.js", "Framer Motion", "GSAP"],
       image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/creative-portfolio",
       liveUrl: "https://creative-portfolio-demo.vercel.app",
-      featured: false
+      featured: false,
     },
     {
       id: 4,
       title: "Weather Dashboard",
-      description: "Dashboard del clima con datos en tiempo real, gráficos interactivos y predicciones meteorológicas.",
+      description:
+        "Dashboard del clima con datos en tiempo real, gráficos interactivos y predicciones meteorológicas.",
       technologies: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind"],
       image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/weather-dashboard",
       liveUrl: "https://weather-dashboard-demo.vercel.app",
-      featured: false
+      featured: false,
     },
     {
       id: 5,
       title: "Social Media Analytics",
-      description: "Herramienta de análisis de redes sociales con métricas detalladas, reportes automáticos y visualización de datos.",
+      description:
+        "Herramienta de análisis de redes sociales con métricas detalladas, reportes automáticos y visualización de datos.",
       technologies: ["React", "D3.js", "Python", "FastAPI", "Redis"],
       image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/social-analytics",
       liveUrl: "https://social-analytics-demo.vercel.app",
-      featured: true
+      featured: true,
     },
     {
       id: 6,
       title: "Learning Management System",
-      description: "Plataforma educativa con cursos online, seguimiento de progreso, quizzes interactivos y certificaciones.",
+      description:
+        "Plataforma educativa con cursos online, seguimiento de progreso, quizzes interactivos y certificaciones.",
       technologies: ["Next.js", "Supabase", "Stripe", "Video.js", "PDF.js"],
       image: "https://placehold.co/400x250/png",
       githubUrl: "https://github.com/tuusuario/lms-platform",
       liveUrl: "https://lms-demo.vercel.app",
-      featured: false
-    }
-  ]
+      featured: false,
+    },
+  ];
 
   const container = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  }
+      transition: { staggerChildren: 0.2 },
+    },
+  };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 }
-    }
-  }
+      transition: { duration: 0.5 },
+    },
+  };
 
   return (
     <section id="projects" className="min-h-screen py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Título */}
         <motion.div
           className="text-center mb-16"
@@ -99,10 +104,10 @@ const Projects = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-            {t('sections.projectsTitle')}
+            {t("sections.projectsTitle")}
           </h2>
           <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
-            {t('projects.description')}
+            {t("projects.description")}
           </p>
         </motion.div>
 
@@ -119,7 +124,7 @@ const Projects = () => {
               key={project.id}
               variants={item}
               className={`rounded-xl overflow-hidden border border-white/10 backdrop-blur-lg bg-white/5 hover:shadow-lg hover:shadow-ghost-purple/20 transition ${
-                project.featured ? 'md:col-span-2 lg:col-span-1' : ''
+                project.featured ? "md:col-span-2 lg:col-span-1" : ""
               }`}
             >
               {/* Imagen */}
@@ -168,7 +173,11 @@ const Projects = () => {
                     whileTap={{ scale: 0.95 }}
                   >
                     <Github size={18} />
-                      <span>{t('actions.viewProjects') === 'View Projects' ? 'Código' : 'Code'}</span>
+                    <span>
+                      {t("actions.viewProjects") === "View Projects"
+                        ? "Código"
+                        : "Code"}
+                    </span>
                   </motion.a>
                   <motion.a
                     href={project.liveUrl}
@@ -199,7 +208,7 @@ const Projects = () => {
             ¿Interesado en ver más de mi trabajo?
           </p>
           <motion.a
-            href="https://github.com/tuusuario"
+            href="https://github.com/ghosstbabby12"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-ghost-purple text-white hover:bg-ghost-pink transition"
@@ -207,12 +216,14 @@ const Projects = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Github size={20} />
-            {t('actions.viewProjects') === 'View Projects' ? 'Ver más en GitHub' : 'View more on GitHub'}
+            {t("actions.viewProjects") === "View Projects"
+              ? "Ver más en GitHub"
+              : "View more on GitHub"}
           </motion.a>
         </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Projects
+export default Projects;
