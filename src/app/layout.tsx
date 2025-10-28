@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ghost Portfolio | Desarrollador Full Stack',
     description: 'Portfolio personal de desarrollo web',
-    url: 'https://tu-dominio.vercel.app',
+    url: 'https://vercel.com/camila-bastidas-projects',
     siteName: 'Ghost Portfolio',
     images: [
       {

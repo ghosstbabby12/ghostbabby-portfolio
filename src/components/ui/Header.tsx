@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
 import { useTheme, useI18n } from '../../app/providers'
+import Image from 'next/image'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
   const { theme, toggleTheme } = useTheme()
   const { t, lang, toggleLang } = useI18n()
 
@@ -50,14 +50,27 @@ const Header = () => {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Logo con Avatar Sticker */}
           <motion.div
             className="flex items-center space-x-2"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="text-2xl">👻</span>
+            <motion.div
+              className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 shadow-lg"
+              whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/me.jpg"
+                alt="Camila Bastidas Avatar"
+                width={40}
+                height={40}
+                className="object-cover"
+                priority
+              />
+            </motion.div>
             <span className="text-xl font-bold text-gradient animate-glow">
-            Camila Bastidas
+              Camila Bastidas
             </span>
           </motion.div>
 
@@ -145,7 +158,6 @@ const Header = () => {
                 >
                   {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
-
                 <button
                   onClick={toggleLang}
                   className="px-3 py-1 rounded-md bg-white/5 text-sm text-white/90 hover:bg-white/10 transition-colors"

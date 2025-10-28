@@ -414,33 +414,61 @@ export default function PacmanGame() {
         </button>
       )}
 
-      {won && (
-        <div className="mt-6 text-center">
-          <p className="text-green-400 text-2xl mb-4 animate-bounce">¡GANASTE! 🎉</p>
-          {cherries === 3 && (
-            <p className="text-pink-400 text-lg mb-4">¡Obtuviste todas las cerezas! 🍒🍒🍒</p>
-          )}
+      
+        {cherries === 3 && !gameOver && (
           <button
-            onClick={handleRestart}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition transform hover:scale-105"
+            onClick={() => router.push('/galeria')}
+            className="mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce"
           >
-            {t('pacman.playAgain')}
+            {t('pacman.galleryButton')}
           </button>
-        </div>
-      )}
+        )}
 
-      {gameOver && !won && (
-        <div className="mt-6 text-center">
-          <p className="text-red-400 text-2xl mb-4">GAME OVER 👻</p>
-          <p className="text-gray-400 mb-4">Cerezas conseguidas: {cherries}/3 🍒</p>
-          <button
-            onClick={handleRestart}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105"
-          >
-            {t('pacman.retry')}
-          </button>
-        </div>
-      )}
+        {won && (
+          <div className="mt-6 text-center">
+            <p className="text-green-400 text-2xl mb-4 animate-bounce">{t('pacman.won')}</p>
+            {cherries === 3 && (
+              <p className="text-pink-400 text-lg mb-4">{t('pacman.cherries')}: {cherries}/3 🍒</p>
+            )}
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handleRestart}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition transform hover:scale-105"
+              >
+                {t('pacman.playAgain')}
+              </button>
+
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition transform"
+              >
+                {t('gallery.back')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {gameOver && !won && (
+          <div className="mt-6 text-center">
+            <p className="text-red-400 text-2xl mb-4">{t('pacman.gameOver')}</p>
+            <p className="text-gray-400 mb-4">{t('pacman.cherries')}: {cherries}/3 🍒</p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handleRestart}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition transform hover:scale-105"
+              >
+                {t('pacman.retry')}
+              </button>
+
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition transform"
+              >
+                {t('gallery.back')}
+              </button>
+            </div>
+          </div>
+        )}
     </div>
   )
-}
+} 

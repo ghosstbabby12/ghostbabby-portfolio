@@ -9,13 +9,14 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      title: "E-Commerce Platform",
+      title: "Manejo de Promesas + Integración Continua",
       description:
-        "Plataforma de comercio electrónico completa con Next.js, Stripe para pagos, panel administrativo y gestión de inventario.",
-      technologies: ["Next.js", "TypeScript", "Stripe", "Prisma", "PostgreSQL"],
-      image: "https://placehold.co/400x250/png",
-      githubUrl: "https://github.com/tusuario/ecommerce-project",
-      liveUrl: "https://ecommerce-demo.vercel.app",
+        "Este proyecto consiste en una aplicación React sencilla que consume la API pública de usuarios aleatorios y muestra información básica de los usuarios",
+
+      technologies: ["React 18", "Axios", "Jest + React Testing Library", "Jenkins (CI/CD)",],
+      image: "/projects/ReactApp.jpg",
+      githubUrl: "https://github.com/ghosstbabby12/Calidad-de-Software-P2.git",
+      liveUrl: "https://calidad-de-software-p2.vercel.app",
       featured: true,
     },
     {
@@ -25,7 +26,7 @@ const Projects = () => {
         "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
       image: "https://placehold.co/400x250/png",
-      githubUrl: "https://github.com/tuusuario/task-manager",
+      githubUrl: "https://github.com/ghosstbabby12/SecurityNetwork.git",
       liveUrl: "https://taskmanager-demo.vercel.app",
       featured: true,
     },
