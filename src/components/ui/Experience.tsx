@@ -45,8 +45,8 @@ const Experience = () => {
       padding="lg"
     >
       <div className="relative">
-        {/* Línea vertical central */}
-        <div className="absolute left-1/2 top-0 w-1 h-full bg-gradient-to-b from-ghost-purple/40 via-ghost-pink/40 to-ghost-blue/40 transform -translate-x-1/2 rounded-full"></div>
+        
+  
 
         <div className="space-y-16">
           {experiences.map((exp, index) => (

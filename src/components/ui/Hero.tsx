@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -33,16 +33,21 @@ const Hero = () => {
   }
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative pt-16">
+    <section
+      id="home"
+      className="min-h-screen flex flex-col items-center justify-center relative pt-16 overflow-hidden"
+    >
+      {/* Fondo animado suave */}
       <div className="absolute inset-0 bg-gradient-to-br from-ghost-purple/10 via-transparent to-ghost-pink/10 rounded-full blur-3xl"></div>
-      
+
+      {/* Contenido principal */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.h1 
+          <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -53,7 +58,7 @@ const Hero = () => {
             <span className="text-gradient">Full Stack</span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             className="text-lg sm:text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -62,6 +67,7 @@ const Hero = () => {
             {t('sections.aboutTitle')}
           </motion.p>
 
+          {/* Stack de tecnologías */}
           <motion.div
             className="flex flex-wrap justify-center gap-4 mb-10"
             initial={{ opacity: 0, y: 30 }}
@@ -75,8 +81,8 @@ const Hero = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                whileHover={{ 
-                  scale: 1.05, 
+                whileHover={{
+                  scale: 1.05,
                   y: -5,
                   backgroundColor: 'rgba(102, 126, 234, 0.2)',
                   boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
@@ -90,6 +96,7 @@ const Hero = () => {
             ))}
           </motion.div>
 
+          {/* Botones principales */}
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             initial={{ opacity: 0, y: 30 }}
@@ -97,7 +104,6 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 1.0 }}
           >
             <motion.button
-              
               onClick={handleScrollToProjects}
               className="ghost-btn text-lg"
               whileHover={{ scale: 1.05 }}
@@ -105,7 +111,7 @@ const Hero = () => {
             >
               {t('actions.viewProjects')}
             </motion.button>
-            
+
             <motion.a
               href="#contact"
               className="ghost-btn text-lg border-ghost-purple text-white"
@@ -124,7 +130,31 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Elemento interactivo con el mouse */}
+        {/* 🌀 NUEVA SECCIÓN STRUDEL */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.3 }}
+          className="mt-24 w-full flex flex-col items-center"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
+            🎶 Strudel Live Coding
+          </h2>
+          <p className="text-white/70 mb-6 max-w-2xl text-center">
+            Experimenta con música generativa y live coding.  
+            ¡Edita, toca y crea tus propios ritmos en tiempo real!
+          </p>
+
+          <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-lg border border-purple-500/40">
+            <iframe
+              src="https://strudel.tidalcycles.org"
+              title="Strudel REPL"
+              className="w-full h-full"
+            />
+          </div>
+        </motion.div>
+
+        {/* Elemento interactivo del mouse */}
         <motion.div
           className="absolute pointer-events-none"
           style={{
