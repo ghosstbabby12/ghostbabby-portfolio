@@ -46,8 +46,6 @@ const Experience = () => {
     >
       <div className="relative">
         
-  
-
         <div className="space-y-16">
           {experiences.map((exp, index) => (
             <motion.div
