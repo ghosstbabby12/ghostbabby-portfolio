@@ -128,17 +128,45 @@ const DICTIONARY = {
       description: "Una selección de proyectos que demuestran mis habilidades en desarrollo web, desde aplicaciones empresariales hasta experiencias interactivas creativas."
     },
     about: {
-      missionTitle: "Mi Misión",
-      missionDesc: "Transformar ideas innovadoras en soluciones digitales que impacten positivamente la experiencia del usuario y generen valor real para los negocios.",
-      approachTitle: "Mi Enfoque",
-      approachDesc: "Combino creatividad y tecnología para desarrollar aplicaciones web modernas, escalables y centradas en el usuario, siempre siguiendo las mejores prácticas.",
-      passionTitle: "Mi Pasión",
-      passionDesc: "Aprender constantemente nuevas tecnologías y metodologías para mantenerme a la vanguardia del desarrollo web y ofrecer soluciones innovadoras.",
+      title: "Sobre Mí",
+      greeting: "¡Hola! Soy",
+      name: "Camila Bastidas",
+      bio: "Estudiante de Ingeniería de Software de 21 años apasionada por crear experiencias digitales únicas que combinan tecnología, arte y creatividad.",
+      inspiration: "Mi inspiración viene de",
+      tetrisGames: "los juegos retro",
+      inspirationEnd: "que me enseñaron que lo simple puede ser extraordinario.",
+      
+      interestsTitle: "✨ Mis Pasiones",
+      interests: {
+        music: "Música",
+        art: "Arte",
+        cooking: "Cocina",
+        gaming: "Videojuegos",
+        sports: "Deporte",
+        coding: "Programación"
+      },
+      
+      statsTitle: "📊 En Números",
       stats: {
+        age: "Años",
         exp: "Años de Experiencia",
         projects: "Proyectos Completados",
-        tech: "Tecnologías Dominadas",
-        clients: "Clientes Satisfechos",
+        tech: "Tecnologías Dominadas"
+      },
+      
+      cards: {
+        mission: {
+          title: "Mi Misión",
+          description: "Transformar ideas creativas en soluciones digitales que inspiren y generen impacto real en la vida de las personas."
+        },
+        approach: {
+          title: "Mi Enfoque",
+          description: "Combino el pensamiento lógico de la ingeniería con la creatividad del arte para crear experiencias web memorables."
+        },
+        passion: {
+          title: "Mi Pasión",
+          description: "Aprender constantemente, experimentar con nuevas tecnologías y crear proyectos que conecten la nostalgia retro con el futuro digital."
+        }
       }
     },
     pacman: {
@@ -200,7 +228,48 @@ const DICTIONARY = {
         title: "Strudel Live Coding",
         description: "Experience generative music and live coding"
       }
-     },   
+    },
+    about: {
+      title: "About Me",
+      greeting: "Hi! I'm",
+      name: "Camila Bastidas",
+      bio: "21-year-old Software Engineering student passionate about creating unique digital experiences that blend technology, art, and creativity.",
+      inspiration: "My inspiration comes from",
+      tetrisGames: "retro games",
+      inspirationEnd: "that taught me that simplicity can be extraordinary.",
+      
+      interestsTitle: "✨ My Passions",
+      interests: {
+        music: "Music",
+        art: "Art",
+        cooking: "Cooking",
+        gaming: "Gaming",
+        sports: "Sports",
+        coding: "Coding"
+      },
+      
+      statsTitle: "📊 By The Numbers",
+      stats: {
+        age: "Years Old",
+        exp: "Years of Experience",
+        projects: "Completed Projects",
+        tech: "Technologies Mastered"
+      },
+      
+      cards: {
+        mission: {
+          title: "My Mission",
+          description: "Transform creative ideas into digital solutions that inspire and generate real impact on people's lives."
+        },
+        approach: {
+          title: "My Approach",
+          description: "I combine the logical thinking of engineering with the creativity of art to create memorable web experiences."
+        },
+        passion: {
+          title: "My Passion",
+          description: "Constantly learning, experimenting with new technologies, and creating projects that connect retro nostalgia with the digital future."
+        }
+      },
 
     sections: {
       aboutTitle: "About Me",
@@ -228,19 +297,7 @@ const DICTIONARY = {
     projects: {
       description: "A selection of projects that showcase my web development skills, from enterprise apps to interactive creative experiences."
     },
-    about: {
-      missionTitle: "My Mission",
-      missionDesc: "Turning innovative ideas into digital solutions that positively impact user experience and deliver real business value.",
-      approachTitle: "My Approach",
-      approachDesc: "I combine creativity and technology to build modern, scalable, user-centered web applications following best practices.",
-      passionTitle: "My Passion",
-      passionDesc: "Continuously learning new technologies and methodologies to stay at the forefront of web development and deliver innovative solutions.",
-      stats: {
-        exp: "Years of Experience",
-        projects: "Completed Projects",
-        tech: "Technologies Mastered",
-        clients: "Satisfied Clients",
-      }
+    
     },
     pacman: {
       title: "👻 GHOST-MAN",
