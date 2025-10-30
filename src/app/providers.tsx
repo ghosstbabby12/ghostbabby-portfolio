@@ -82,6 +82,25 @@ const DICTIONARY = {
       },
       language: "Idioma",
     },
+
+    hero: {
+      welcome: "¡Bienvenido!",
+
+      title: "Developer Full Stack",
+      intro: {
+        part1: "Mi portafolio es una experiencia interactiva donde puedes ",
+        unlock: "desbloquear niveles",
+        part2: ", descubrir ",
+        hidden: "secciones ocultas",
+        part3: " ver el detalle de mi experiencia laboral y mi proceso de crecimiento. Diviertete!"
+      },
+      builtWith: "Construido con:",
+      strudel: {
+        title: "Strudel Live Coding",
+        description: "Experimenta con música generativa y live coding"
+      }
+    },
+
     sections: {
       aboutTitle: "Sobre Mí",
       projectsTitle: "Mis Proyectos",
@@ -165,6 +184,24 @@ const DICTIONARY = {
       },
       language: "Language",
     },
+
+    hero: {
+      welcome: "Welcome!",
+      title: "Full Stack Developer",
+      intro: {
+        part1: " My portfolio is an interactive experience where you can",
+        unlock: "unlock levels",
+        part2: ", discover ",
+        hidden: "hidden sections",
+        part3: " view details of my work experience and my growth process.. Have fun!"
+      },
+      builtWith: "Built with:",
+      strudel: {
+        title: "Strudel Live Coding",
+        description: "Experience generative music and live coding"
+      }
+     },   
+
     sections: {
       aboutTitle: "About Me",
       projectsTitle: "My Projects",

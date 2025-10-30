@@ -35,124 +35,143 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col items-center justify-center relative pt-16 overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative pt-16 overflow-hidden"
     >
       {/* Fondo animado suave */}
       <div className="absolute inset-0 bg-gradient-to-br from-ghost-purple/10 via-transparent to-ghost-pink/10 rounded-full blur-3xl"></div>
 
-      {/* Contenido principal */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <span className="text-gradient">Developer</span>
-            <br />
-            <span className="text-gradient">Full Stack</span>
-          </motion.h1>
-
-          <motion.p
-            className="text-lg sm:text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            {t('sections.aboutTitle')}
-          </motion.p>
-
-          {/* Stack de tecnologías */}
+      {/* Contenido principal - Grid de 2 columnas */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          
+          {/* COLUMNA IZQUIERDA - Contenido */}
           <motion.div
-            className="flex flex-wrap justify-center gap-4 mb-10"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
           >
-            {techStack.map((tech, index) => (
-              <motion.div
-                key={tech}
-                className="glass-effect rounded-full px-6 py-3 cursor-pointer group"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                whileHover={{
-                  scale: 1.05,
-                  y: -5,
-                  backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                  boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
-                }}
+            {/* Título de bienvenida */}
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-6xl font-bold"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <span className="text-gradient">{t('hero.welcome')}</span>
+              <br />
+              <span className="text-gradient">{t('hero.title')}</span>
+            </motion.h1>
+
+            {/* Introducción breve */}
+            <motion.p
+              className="text-lg text-white/80 leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              {t('hero.intro.part1')}
+              <span className="text-ghost-purple font-semibold">{t('hero.intro.unlock')}</span>
+              {t('hero.intro.part2')}
+              <span className="text-ghost-pink font-semibold">{t('hero.intro.hidden')}</span>
+              {t('hero.intro.part3')}
+            </motion.p>
+
+            {/* Stack de tecnologías */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="space-y-3"
+            >
+              <h3 className="text-xl font-semibold text-white/90">
+                {t('hero.builtWith')}
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {techStack.map((tech, index) => (
+                  <motion.div
+                    key={tech}
+                    className="glass-effect rounded-full px-5 py-2 cursor-pointer group"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                    whileHover={{
+                      scale: 1.05,
+                      y: -5,
+                      backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                      boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="text-sm text-white/90 group-hover:text-white transition-colors duration-300">
+                      {tech}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Botones principales */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 pt-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+            >
+              <motion.button
+                onClick={handleScrollToProjects}
+                className="ghost-btn text-lg"
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="text-white/90 group-hover:text-white transition-colors duration-300">
-                  {tech}
-                </span>
-              </motion.div>
-            ))}
+                {t('actions.viewProjects')}
+              </motion.button>
+
+              <motion.a
+                href="#contact"
+                className="ghost-btn text-lg border-ghost-purple text-white"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  const element = document.querySelector('#contact')
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }}
+              >
+                {t('actions.contactMe')}
+              </motion.a>
+            </motion.div>
           </motion.div>
 
-          {/* Botones principales */}
+          {/* COLUMNA DERECHA - Strudel */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="w-full"
           >
-            <motion.button
-              onClick={handleScrollToProjects}
-              className="ghost-btn text-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {t('actions.viewProjects')}
-            </motion.button>
+            <div className="space-y-4">
+              <div className="text-center lg:text-left">
+                <h2 className="text-2xl md:text-3xl font-bold text-gradient mb-2">
+                  🎶 {t('hero.strudel.title')}
+                </h2>
+                <p className="text-white/70 text-sm md:text-base">
+                  {t('hero.strudel.description')}
+                </p>
+              </div>
 
-            <motion.a
-              href="#contact"
-              className="ghost-btn text-lg border-ghost-purple text-white"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={(e) => {
-                e.preventDefault()
-                const element = document.querySelector('#contact')
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth' })
-                }
-              }}
-            >
-              {t('actions.contactMe')}
-            </motion.a>
+              <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-purple-500/40 hover:border-purple-400/60 transition-colors duration-300">
+                <iframe
+                  src="https://strudel.tidalcycles.org"
+                  title="Strudel REPL"
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
           </motion.div>
-        </motion.div>
-
-        {/* 🌀 NUEVA SECCIÓN STRUDEL */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.3 }}
-          className="mt-24 w-full flex flex-col items-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
-            🎶 Strudel Live Coding
-          </h2>
-          <p className="text-white/70 mb-6 max-w-2xl text-center">
-            Experimenta con música generativa y live coding.  
-            ¡Edita, toca y crea tus propios ritmos en tiempo real!
-          </p>
-
-          <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-lg border border-purple-500/40">
-            <iframe
-              src="https://strudel.tidalcycles.org"
-              title="Strudel REPL"
-              className="w-full h-full"
-            />
-          </div>
-        </motion.div>
+        </div>
 
         {/* Elemento interactivo del mouse */}
         <motion.div
@@ -162,8 +181,8 @@ const Hero = () => {
             top: mousePosition.y - 100,
           }}
           animate={{
-            x: (mousePosition.x - window.innerWidth / 2) * 0.1,
-            y: (mousePosition.y - window.innerHeight / 2) * 0.1,
+            x: (mousePosition.x - (typeof window !== 'undefined' ? window.innerWidth : 1920) / 2) * 0.1,
+            y: (mousePosition.y - (typeof window !== 'undefined' ? window.innerHeight : 1080) / 2) * 0.1,
           }}
           transition={{ type: "spring", stiffness: 50, damping: 10 }}
         >
