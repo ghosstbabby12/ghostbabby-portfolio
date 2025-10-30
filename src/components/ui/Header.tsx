@@ -49,6 +49,7 @@ const Header = () => {
     { href: '#projects', label: t('nav.projects') },
     { href: '#experience', label: t('nav.experience') },
     { href: '#mygame', label: t('nav.mygame') },
+    { href: '#gallery', label: t('nav.gallery') },
     { href: '#contact', label: t('nav.contact') },
   ]
 

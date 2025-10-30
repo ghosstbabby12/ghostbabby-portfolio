@@ -22,7 +22,7 @@ export default function Galeria() {
       gradient: 'from-purple-600 to-pink-600',
       question: '¿Qué comando ejecuta un proyecto Next.js en desarrollo?',
       answer: 'npm run dev',
-      images: ['/galeria/games1.jpg', '/galeria/games2.jpg', '/galeria/games2.jpg']
+      images: ['/galeria/games1.jpg', '/galeria/games2.jpg', '/galeria/games3.jpg']
     },
     {
       title: 'Food',
@@ -78,19 +78,19 @@ export default function Galeria() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white py-16 px-4">
+    <section id="galeria" className="min-h-screen bg-gradient-to-br from-gray-950 via-purple-950 to-indigo-900 text-white py-24 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              My Secret Gallery
+              Galería Interactiva
             </h1>
             <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
           </div>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Cada sección está bloqueada 🔒 Responde correctamente la pregunta de desarrollo web para revelar mis fotos favoritas.
+            Explora mi lado más personal 💫 — cada categoría revela momentos de mi vida si respondes correctamente las preguntas de desarrollo web.
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function Galeria() {
                           type="text"
                           value={inputs[`section-${idx}`] || ''}
                           onChange={(e) => setInputs((prev) => ({ ...prev, [`section-${idx}`]: e.target.value }))}
-                          onKeyPress={(e) => {
+                          onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               handleAnswer(`section-${idx}`, inputs[`section-${idx}`] || '', section.answer)
                             }
@@ -138,7 +138,7 @@ export default function Galeria() {
                           onClick={() => handleAnswer(`section-${idx}`, inputs[`section-${idx}`] || '', section.answer)}
                           className={`w-full py-4 px-8 rounded-xl font-bold text-lg bg-gradient-to-r ${section.gradient} hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl`}
                         >
-                          🔓 Desbloquear Galería
+                          🔓 Desbloquear
                         </button>
                       </div>
                     </div>
@@ -167,16 +167,6 @@ export default function Galeria() {
             )
           })}
         </div>
-
-        {/* Back Button */}
-        <div className="text-center mt-16">
-          <button
-            onClick={() => (window.location.href = '/')}
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl hover:shadow-2xl"
-          >
-            ⬅️ Volver al Inicio
-          </button>
-        </div>
       </div>
 
       <style jsx>{`
@@ -191,6 +181,6 @@ export default function Galeria() {
           }
         }
       `}</style>
-    </div>
+    </section>
   )
 }

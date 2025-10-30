@@ -70,6 +70,7 @@ const DICTIONARY = {
       projects: "Proyectos",
       experience: "Experiencia",
       mygame: "Mi Juego",
+      gallery: "Galería",
       contact: "Contacto",
     },
     actions: {
@@ -108,7 +109,33 @@ const DICTIONARY = {
     },
     experience: {
       title: "Experiencia",
-      subtitle: "Un recorrido por mi experiencia profesional y académica"
+      subtitle: "Mi trayectoria en el desarrollo de software y aprendizaje continuo",
+      items: {
+        student: {
+          title: "Estudiante de Ingeniería de Software",
+          company: "UNIVERSIDAD COOPERATIVA DE COLOMBIA",
+          period: "2021 - Actualidad",
+          description: "Formación académica en desarrollo de software, algoritmos, estructuras de datos, bases de datos y metodologías ágiles. Participación activa en proyectos académicos y competencias de programación."
+        },
+        developer: {
+          title: "Desarrolladora Full Stack",
+          company: "Proyectos Freelance",
+          period: "2023 - Actualidad",
+          description: "Desarrollo de aplicaciones web modernas utilizando Next.js, React, TypeScript y Tailwind CSS. Creación de experiencias interactivas y portafolios gamificados con enfoque en UX/UI."
+        },
+        projects: {
+          title: "Creadora de Proyectos Interactivos",
+          company: "Portfolio Personal",
+          period: "2022 - Actualidad",
+          description: "Diseño y desarrollo de experiencias web únicas inspiradas en videojuegos retro. Implementación de sistemas de gamificación, música generativa con Strudel y elementos interactivos creativos."
+        },
+        achievements: {
+          title: "Logros y Aprendizaje",
+          company: "Desarrollo Continuo",
+          period: "2021 - Actualidad",
+          description: "Dominio de múltiples tecnologías modernas, participación en comunidades de desarrollo, creación de proyectos que combinan arte, música y programación. Inspiración constante de los juegos retro y la cultura gamer."
+        }
+      }
     },
     mygame: {
       title: "Mi Juego",
@@ -194,135 +221,165 @@ const DICTIONARY = {
     }
   },
   en: {
-    nav: {
-      home: "Home",
-      about: "About",
-      projects: "Projects",
-      experience: "Experience",
-      mygame: "My Game",
-      contact: "Contact",
+  nav: {
+    home: "Home",
+    about: "About",
+    projects: "Projects",
+    experience: "Experience",
+    mygame: "My Game",
+    gallery: "Gallery",
+    contact: "Contact",
+  },
+  actions: {
+    viewProjects: "View Projects",
+    contactMe: "Contact me",
+    scrollTop: "Back to top",
+    theme: {
+      light: "Light Mode",
+      dark: "Dark Mode",
     },
-    actions: {
-      viewProjects: "View Projects",
-      contactMe: "Contact me",
-      scrollTop: "Back to top",
-      theme: {
-        light: "Light Mode",
-        dark: "Dark Mode",
-      },
-      language: "Language",
+    language: "Language",
+  },
+  hero: {
+    welcome: "Welcome!",
+    title: "Full Stack Developer",
+    intro: {
+      part1: "This portfolio is a unique interactive experience where you can ",
+      unlock: "unlock levels",
+      part2: ", discover ",
+      hidden: "hidden sections",
+      part3: " and explore my projects in a gamified way. Every visit is an adventure!"
     },
-
-    hero: {
-      welcome: "Welcome!",
-      title: "Full Stack Developer",
-      intro: {
-        part1: " My portfolio is an interactive experience where you can",
-        unlock: "unlock levels",
-        part2: ", discover ",
-        hidden: "hidden sections",
-        part3: " view details of my work experience and my growth process.. Have fun!"
+    builtWith: "Built with:",
+    strudel: {
+      title: "Strudel Live Coding",
+      description: "Experience generative music and live coding"
+    }
+  }, // <-- Esta llave faltaba
+  sections: {
+    aboutTitle: "About Me",
+    projectsTitle: "My Projects",
+    contactTitle: "Contact Me",
+  },
+  experience: {
+    title: "Experience",
+    subtitle: "My journey in software development and continuous learning",
+    items: {
+      student: {
+        title: "Software Engineering Student",
+        company: "UNIVERSIDAD COOPERATIVA DE COLOMBIA",
+        period: "2021 - Present",
+        description: "Academic training in software development, algorithms, data structures, databases and agile methodologies. Active participation in academic projects and programming competitions."
       },
-      builtWith: "Built with:",
-      strudel: {
-        title: "Strudel Live Coding",
-        description: "Experience generative music and live coding"
+      developer: {
+        title: "Full Stack Developer",
+        company: "Freelance Projects",
+        period: "2023 - Present",
+        description: "Development of modern web applications using Next.js, React, TypeScript and Tailwind CSS. Creation of interactive experiences and gamified portfolios with focus on UX/UI."
+      },
+      projects: {
+        title: "Interactive Projects Creator",
+        company: "Personal Portfolio",
+        period: "2022 - Present",
+        description: "Design and development of unique web experiences inspired by retro video games. Implementation of gamification systems, generative music with Strudel and creative interactive elements."
+      },
+      achievements: {
+        title: "Achievements & Learning",
+        company: "Continuous Development",
+        period: "2021 - Present",
+        description: "Mastery of multiple modern technologies, participation in development communities, creation of projects that combine art, music and programming. Constant inspiration from retro games and gamer culture."
       }
-    },
-    about: {
-      title: "About Me",
-      greeting: "Hi! I'm",
-      name: "Camila Bastidas",
-      bio: "21-year-old Software Engineering student passionate about creating unique digital experiences that blend technology, art, and creativity.",
-      inspiration: "My inspiration comes from",
-      tetrisGames: "retro games",
-      inspirationEnd: "that taught me that simplicity can be extraordinary.",
-      
-      interestsTitle: "✨ My Passions",
-      interests: {
-        music: "Music",
-        art: "Art",
-        cooking: "Cooking",
-        gaming: "Gaming",
-        sports: "Sports",
-        coding: "Coding"
-      },
-      
-      statsTitle: "📊 By The Numbers",
-      stats: {
-        age: "Years Old",
-        exp: "Years of Experience",
-        projects: "Completed Projects",
-        tech: "Technologies Mastered"
-      },
-      
-      cards: {
-        mission: {
-          title: "My Mission",
-          description: "Transform creative ideas into digital solutions that inspire and generate real impact on people's lives."
-        },
-        approach: {
-          title: "My Approach",
-          description: "I combine the logical thinking of engineering with the creativity of art to create memorable web experiences."
-        },
-        passion: {
-          title: "My Passion",
-          description: "Constantly learning, experimenting with new technologies, and creating projects that connect retro nostalgia with the digital future."
-        }
-      },
-
-    sections: {
-      aboutTitle: "About Me",
-      projectsTitle: "My Projects",
-      contactTitle: "Contact Me",
-    },
-    experience: {
-      title: "Experience",
-      subtitle: "A journey through my professional and academic experience"
-    },
-    mygame: {
-      title: "My Game",
-      subtitle: "Enjoy an interactive arcade version embedded in my portfolio"
-    },
-    contact: {
-      submit: "Send Message",
-      name: "Name",
-      email: "Email",
-      message: "Message",
-      placeholderName: "Your name",
-      placeholderEmail: "you@email.com",
-      placeholderMessage: "Write your message...",
-      cta: "Got an idea, project or collaboration? Write to me and let's talk 🚀"
-    },
-    projects: {
-      description: "A selection of projects that showcase my web development skills, from enterprise apps to interactive creative experiences."
-    },
-    
-    },
-    pacman: {
-      title: "👻 GHOST-MAN",
-      score: "Score",
-      lives: "Lives",
-      cherries: "Cherries",
-      instructions: "Use arrows ⬆️⬇️⬅️➡️ to move",
-      galleryButton: "🍒 Gallery 👁️✨",
-      won: "YOU WIN! 🎉",
-      gameOver: "GAME OVER 👻",
-      playAgain: "Play again",
-      retry: "Retry"
-    },
-    boo: {
-      title: "👻 GHOST HOUSE",
-      startTip: "WATCH OUT FOR BOOS!",
-      controls: "Use arrows to move — ⬆️ or SPACE to jump",
-      start: "START"
-    },
-    gallery: {
-      title: "🎭 Secret gallery",
-      description: "Here you can see images, memories and moments unlocked after finishing the game.",
-      back: "Back to home"
     }
   },
+  mygame: {
+    title: "My Game",
+    subtitle: "Enjoy an interactive arcade version embedded in my portfolio"
+  },
+  contact: {
+    submit: "Send Message",
+    name: "Name",
+    email: "Email",
+    message: "Message",
+    placeholderName: "Your name",
+    placeholderEmail: "you@email.com",
+    placeholderMessage: "Write your message...",
+    cta: "Got an idea, project or collaboration? Write to me and let's talk 🚀"
+  },
+  projects: {
+    description: "A selection of projects that showcase my web development skills, from enterprise apps to interactive creative experiences."
+  },
+  about: {
+    title: "About Me",
+    greeting: "Hi! I'm",
+    name: "Camila Bastidas",
+    bio: "21-year-old Software Engineering student passionate about creating unique digital experiences that blend technology, art, and creativity.",
+    inspiration: "My inspiration comes from",
+    tetrisGames: "retro games",
+    inspirationEnd: "that taught me that simplicity can be extraordinary.",
+    
+    interestsTitle: "✨ My Passions",
+    interests: {
+      music: "Music",
+      art: "Art",
+      cooking: "Cooking",
+      gaming: "Gaming",
+      sports: "Sports",
+      coding: "Coding"
+    },
+    
+    statsTitle: "📊 By The Numbers",
+    stats: {
+      age: "Years Old",
+      exp: "Years of Experience",
+      projects: "Completed Projects",
+      tech: "Technologies Mastered"
+    },
+    
+    cards: {
+      mission: {
+        title: "My Mission",
+        description: "Transform creative ideas into digital solutions that inspire and generate real impact on people's lives."
+      },
+      approach: {
+        title: "My Approach",
+        description: "I combine the logical thinking of engineering with the creativity of art to create memorable web experiences."
+      },
+      passion: {
+        title: "My Passion",
+        description: "Constantly learning, experimenting with new technologies, and creating projects that connect retro nostalgia with the digital future."
+      }
+    },
+    missionTitle: "My Mission",
+    missionDesc: "Turning innovative ideas into digital solutions that positively impact user experience and deliver real business value.",
+    approachTitle: "My Approach",
+    approachDesc: "I combine creativity and technology to build modern, scalable, user-centered web applications following best practices.",
+    passionTitle: "My Passion",
+    passionDesc: "Continuously learning new technologies and methodologies to stay at the forefront of web development and deliver innovative solutions."
+  },
+  pacman: {
+    title: "👻 GHOST-MAN",
+    score: "Score",
+    lives: "Lives",
+    cherries: "Cherries",
+    instructions: "Use arrows ⬆️⬇️⬅️➡️ to move",
+    galleryButton: "🍒 Gallery 👁️✨",
+    won: "YOU WIN! 🎉",
+    gameOver: "GAME OVER 👻",
+    playAgain: "Play again",
+    retry: "Retry"
+  },
+  boo: {
+    title: "👻 GHOST HOUSE",
+    startTip: "WATCH OUT FOR BOOS!",
+    controls: "Use arrows to move — ⬆️ or SPACE to jump",
+    start: "START"
+  },
+  gallery: {
+    title: "🎭 Secret gallery",
+    description: "Here you can see images, memories and moments unlocked after finishing the game.",
+    back: "Back to home"
+  }
+}
 } as const
 
 function getByPath(obj: any, path: string): any {

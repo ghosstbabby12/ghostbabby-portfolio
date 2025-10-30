@@ -10,6 +10,8 @@ import Particles from '@/components/ui/Particles'
 import Contact from '@/components/ui/Contact'
 import Experience from '@/components/ui/Experience'
 import MyGame from '@/components/ui/MyGame'
+import { useI18n } from './providers'
+import Gallery from '@/components/ui/Gallery'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -43,6 +45,7 @@ export default function Home() {
           <Projects />
           <Experience />
           <MyGame />
+          <Gallery />
           <Contact />
         </motion.div>
       </div>

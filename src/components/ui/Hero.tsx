@@ -129,7 +129,7 @@ const Hero = () => {
 
               <motion.a
                 href="#contact"
-                className="ghost-btn text-lg border-ghost-purple text-white"
+                className="ghost-btn text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
