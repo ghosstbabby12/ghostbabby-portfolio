@@ -11,7 +11,7 @@ interface SectionData {
   key: string
   color: string
   gradient: string
-  answer: string
+  answer: string | string[]
   images: string[]
 }
 
@@ -32,7 +32,7 @@ export default function Galeria() {
       key: 'food',
       color: 'border-pink-500',
       gradient: 'from-pink-600 to-rose-600',
-      answer: 'npm install',
+      answer: ['jsx', 'css'],
       images: ['/galeria/food1.jpg', '/galeria/food2.jpg', '/galeria/food3.jpg']
     },
     {
@@ -46,14 +46,14 @@ export default function Galeria() {
       key: 'trips',
       color: 'border-indigo-500',
       gradient: 'from-indigo-600 to-purple-600',
-      answer: 'pragma',
+      answer: ['tailwind css', 'tailwind', 'tailwindcss'],
       images: ['/galeria/trip2.jpeg', '/galeria/trip4.jpg', '/galeria/food4.jpg']
     },
     {
       key: 'hobbies',
       color: 'border-yellow-500',
       gradient: 'from-yellow-600 to-orange-600',
-      answer: 'page.tsx',
+      answer: 'git',
       images: ['/galeria/hobby1.jpg', '/galeria/hobby.jpg', '/galeria/food5.jpg']
     }
   ]
@@ -61,11 +61,23 @@ export default function Galeria() {
   const [unlocked, setUnlocked] = useState<{ [key: string]: boolean }>({})
   const [inputs, setInputs] = useState<{ [key: string]: string }>({})
 
-  const handleAnswer = (key: string, userAnswer: string, correct: string) => {
+  const handleAnswer = (key: string, userAnswer: string, correct: string | string[]) => {
     const normalized = userAnswer.toLowerCase().trim().replace(/\s+/g, ' ')
-    const correctNormalized = correct.toLowerCase().trim().replace(/\s+/g, ' ')
 
-    if (normalized === correctNormalized) {
+    let isCorrect = false
+
+    if (Array.isArray(correct)) {
+      // Si correct es un array, verifica si la respuesta está en el array
+      isCorrect = correct.some(answer =>
+        normalized === answer.toLowerCase().trim().replace(/\s+/g, ' ')
+      )
+    } else {
+      // Si correct es un string, compara directamente
+      const correctNormalized = correct.toLowerCase().trim().replace(/\s+/g, ' ')
+      isCorrect = normalized === correctNormalized
+    }
+
+    if (isCorrect) {
       setUnlocked((prev) => ({ ...prev, [key]: true }))
       setInputs((prev) => ({ ...prev, [key]: '' }))
     } else {

@@ -237,7 +237,7 @@ const DICTIONARY = {
         food: {
           title: "Food",
           emoji: "🍔",
-          question: "Instala las dependencias del proyecto en React, ¿qué comando usas?"
+          question: "Lenguaje de programación para el frontend web (tres letras)"
         },
         friends: {
           title: "Hommies",
@@ -247,12 +247,12 @@ const DICTIONARY = {
         trips: {
           title: "Trips",
           emoji: "✈️",
-          question: "¿Cuál fue la última empresa que visitamos en el viaje empresarial?"
+          question: "Framework de CSS usado en este proyecto (nombre completo)"
         },
         hobbies: {
           title: "Hobbies",
           emoji: "🎨",
-          question: "¿Qué archivo configura las rutas en Next.js App Router?"
+          question: "Sistema de control de versiones más popular"
         }
       }
     }
@@ -434,7 +434,7 @@ const DICTIONARY = {
       food: {
         title: "Food",
         emoji: "🍔",
-        question: "Install React project dependencies, what command do you use?"
+        question: "Programming language for web frontend (three letters)"
       },
       friends: {
         title: "Hommies",
@@ -444,12 +444,12 @@ const DICTIONARY = {
       trips: {
         title: "Trips",
         emoji: "✈️",
-        question: "What was the last company we visited on the business trip?"
+        question: "CSS framework used in this project (full name)"
       },
       hobbies: {
         title: "Hobbies",
         emoji: "🎨",
-        question: "What file configures routes in Next.js App Router?"
+        question: "Most popular version control system"
       }
     }
   }
