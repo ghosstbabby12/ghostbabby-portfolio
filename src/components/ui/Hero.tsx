@@ -59,8 +59,6 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <span className="text-gradient">{t('hero.welcome')}</span>
-              <br />
-              <span className="text-gradient">{t('hero.title')}</span>
             </motion.h1>
 
             {/* Introducción breve */}
@@ -97,9 +95,7 @@ const Hero = () => {
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                     whileHover={{
                       scale: 1.05,
-                      y: -5,
-                      backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                      boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+                      y: -5
                     }}
                     whileTap={{ scale: 0.95 }}
                   >

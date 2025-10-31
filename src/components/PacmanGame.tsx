@@ -1,6 +1,6 @@
 'use client'
 
-import { useI18n } from "@/app/providers"
+import { useI18n, useTheme } from "@/app/providers"
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -71,6 +71,7 @@ export default function PacmanGame() {
   const [cherries, setCherries] = useState(0)
   const router = useRouter()
   const { t } = useI18n()
+  const { theme } = useTheme()
 
   const map = [
     "----------------------------",
@@ -119,29 +120,29 @@ export default function PacmanGame() {
     }
     
     const ghosts: Ghost[] = [
-      { 
-        position: new Vector2D(13, 11), 
-        velocity: Vector2D.left(), 
-        color: '#FF0000', 
-        startPosition: new Vector2D(13, 11) 
+      {
+        position: new Vector2D(13, 11),
+        velocity: Vector2D.left(),
+        color: theme === 'light' ? '#000000' : '#FF0000',
+        startPosition: new Vector2D(13, 11)
       },
-      { 
-        position: new Vector2D(14, 11), 
-        velocity: Vector2D.right(), 
-        color: '#FFB8FF', 
-        startPosition: new Vector2D(14, 11) 
+      {
+        position: new Vector2D(14, 11),
+        velocity: Vector2D.right(),
+        color: theme === 'light' ? '#FFB6C1' : '#FFB8FF',
+        startPosition: new Vector2D(14, 11)
       },
-      { 
-        position: new Vector2D(12, 11), 
-        velocity: Vector2D.down(), 
-        color: '#00FFFF', 
-        startPosition: new Vector2D(12, 11) 
+      {
+        position: new Vector2D(12, 11),
+        velocity: Vector2D.down(),
+        color: theme === 'light' ? '#FFC0CB' : '#00FFFF',
+        startPosition: new Vector2D(12, 11)
       },
-      { 
-        position: new Vector2D(15, 11), 
-        velocity: Vector2D.up(), 
-        color: '#FFB851', 
-        startPosition: new Vector2D(15, 11) 
+      {
+        position: new Vector2D(15, 11),
+        velocity: Vector2D.up(),
+        color: theme === 'light' ? '#FFD4E5' : '#FFB851',
+        startPosition: new Vector2D(15, 11)
       }
     ]
 
@@ -313,7 +314,8 @@ export default function PacmanGame() {
     }
 
     const draw = () => {
-      ctx.fillStyle = 'black'
+      // Fondo según el tema
+      ctx.fillStyle = theme === 'light' ? '#FFFFFF' : 'black'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       // Dibujar mapa
@@ -321,14 +323,24 @@ export default function PacmanGame() {
         for (let c = 0; c < COLS; c++) {
           const tile = map[r]?.[c] ?? '#'
           if (tile === '#') {
-            ctx.strokeStyle = '#00f6ff'
-            ctx.lineWidth = 2
-            ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
+            if (theme === 'light') {
+              // Modo light: muros rosa pastel con borde
+              ctx.fillStyle = '#FFB6C1'
+              ctx.fillRect(c * CELL, r * CELL, CELL, CELL)
+              ctx.strokeStyle = '#FF69B4'
+              ctx.lineWidth = 2
+              ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
+            } else {
+              // Modo dark: muros azules/cyan
+              ctx.strokeStyle = '#00f6ff'
+              ctx.lineWidth = 2
+              ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
+            }
           } else if (tile === '-') {
-            ctx.fillStyle = '#1a1a2e'
+            ctx.fillStyle = theme === 'light' ? '#FFFFFF' : '#1a1a2e'
             ctx.fillRect(c * CELL, r * CELL, CELL, CELL)
           } else if (pellets.has(`${r},${c}`)) {
-            ctx.fillStyle = '#FFD700'
+            ctx.fillStyle = theme === 'light' ? '#000000' : '#FFD700'
             ctx.beginPath()
             ctx.arc(c * CELL + CELL / 2, r * CELL + CELL / 2, 3, 0, Math.PI * 2)
             ctx.fill()
@@ -374,16 +386,16 @@ export default function PacmanGame() {
         ctx.fill()
         
         // Pupilas mirando en dirección de movimiento
-        ctx.fillStyle = '#000080'
+        ctx.fillStyle = theme === 'light' ? '#000000' : '#000080'
         ctx.beginPath()
         ctx.arc(
-          screenPosition.x - 4 + ghost.velocity.x * 1.5, 
-          screenPosition.y - 3 + ghost.velocity.y * 1.5, 
+          screenPosition.x - 4 + ghost.velocity.x * 1.5,
+          screenPosition.y - 3 + ghost.velocity.y * 1.5,
           2, 0, Math.PI * 2
         )
         ctx.arc(
-          screenPosition.x + 4 + ghost.velocity.x * 1.5, 
-          screenPosition.y - 3 + ghost.velocity.y * 1.5, 
+          screenPosition.x + 4 + ghost.velocity.x * 1.5,
+          screenPosition.y - 3 + ghost.velocity.y * 1.5,
           2, 0, Math.PI * 2
         )
         ctx.fill()
@@ -456,36 +468,46 @@ export default function PacmanGame() {
       window.removeEventListener('keydown', handleKey)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [gameOver, won])
+  }, [gameOver, won, theme])
 
   const handleRestart = () => {
     window.location.reload()
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white select-none overflow-hidden">
-      <h1 className="text-3xl font-bold mb-2 text-yellow-400 tracking-widest">{t('pacman.title')}</h1>
+    <div className={`flex flex-col items-center justify-center min-h-screen select-none overflow-hidden ${
+      theme === 'light' ? 'bg-white text-black' : 'bg-black text-white'
+    }`}>
+      <h1 className={`text-3xl font-bold mb-2 tracking-widest ${
+        theme === 'light' ? 'text-pink-600' : 'text-yellow-400'
+      }`}>{t('pacman.title')}</h1>
       <div className="flex gap-6 mb-2">
-        <p className="text-gray-300">{t('pacman.score')}: {score}</p>
-        <p className="text-gray-300">{t('pacman.lives')}: {lives}</p>
-        <p className="text-red-400 font-bold">{t('pacman.cherries')}: {cherries}/3 🍒</p>
+        <p className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.score')}: {score}</p>
+        <p className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.lives')}: {lives}</p>
+        <p className={`font-bold ${theme === 'light' ? 'text-pink-600' : 'text-red-400'}`}>{t('pacman.cherries')}: {cherries}/3 🍒</p>
       </div>
 
       <canvas
         ref={canvasRef}
         width={COLS * CELL}
         height={ROWS * CELL}
-        className="border-4 border-blue-500 rounded-lg shadow-[0_0_30px_#00f6ff]"
+        className={theme === 'light'
+          ? 'border-4 border-pink-400 rounded-lg shadow-[0_0_30px_rgba(255,182,193,0.5)]'
+          : 'border-4 border-blue-500 rounded-lg shadow-[0_0_30px_#00f6ff]'
+        }
       />
 
-      <p className="mt-4 text-gray-400 text-sm animate-pulse">
+      <p className={`mt-4 text-sm animate-pulse ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
         {t('pacman.instructions')}
       </p>
 
       {cherries === 3 && !gameOver && (
         <button
           onClick={() => router.push('/galeria')}
-          className="mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce"
+          className={theme === 'light'
+            ? 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
+            : 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
+          }
         >
           {t('pacman.galleryButton')}
         </button>

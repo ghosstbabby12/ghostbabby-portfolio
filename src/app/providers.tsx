@@ -86,10 +86,8 @@ const DICTIONARY = {
 
     hero: {
       welcome: "¡Bienvenido!",
-
-      title: "Developer Full Stack",
       intro: {
-        part1: "Mi portafolio es una experiencia interactiva donde puedes ",
+        part1: "Este portafolio es una experiencia interactiva donde puedes ",
         unlock: "desbloquear niveles",
         part2: ", descubrir ",
         hidden: "secciones ocultas",
@@ -278,8 +276,7 @@ const DICTIONARY = {
     language: "Language",
   },
   hero: {
-    welcome: "Welcome!",
-    title: "Full Stack Developer",
+    welcome: "Welcome my portfolio!",
     intro: {
       part1: "This portfolio is a unique interactive experience where you can ",
       unlock: "unlock levels",
@@ -292,7 +289,7 @@ const DICTIONARY = {
       title: "Strudel Live Coding",
       description: "Experience generative music and live coding"
     }
-  }, // <-- Esta llave faltaba
+  },
   sections: {
     aboutTitle: "About Me",
     projectsTitle: "My Projects",
