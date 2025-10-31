@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
 import { useTheme, useI18n } from '../../app/providers'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -12,6 +13,7 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme()
   const { t, lang, toggleLang } = useI18n()
   const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +56,14 @@ const Header = () => {
   ]
 
   const handleNavClick = (href: string) => {
+    // Si es el enlace de galería, redirigir a la página
+    if (href === '#gallery') {
+      router.push('/Galery')
+      setIsMobileMenuOpen(false)
+      return
+    }
+
+    // Para otros enlaces, hacer scroll suave
     const element = document.querySelector(href)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })

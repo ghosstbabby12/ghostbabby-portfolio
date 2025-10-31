@@ -218,6 +218,43 @@ const DICTIONARY = {
       title: "🎭 Galería secreta",
       description: "Aquí puedes ver las imágenes, recuerdos y momentos desbloqueados al completar el juego.",
       back: "Volver al inicio"
+    },
+    interactiveGallery: {
+      title: "Galería Interactiva",
+      subtitle: "Explora mi lado más personal 💫 — cada categoría revela momentos de mi vida si respondes correctamente las preguntas de desarrollo web.",
+      locked: "Sección Bloqueada",
+      unlocked: "Sección Desbloqueada",
+      unlock: "🔓 Desbloquear",
+      placeholder: "Escribe tu respuesta...",
+      wrongAnswer: "❌ Respuesta incorrecta. ¡Inténtalo de nuevo!",
+      backToHome: "Volver al Inicio",
+      categories: {
+        videoGames: {
+          title: "Video Games",
+          emoji: "🎮",
+          question: "Comando para ejecutar un proyecto en Next.js"
+        },
+        food: {
+          title: "Food",
+          emoji: "🍔",
+          question: "Instala las dependencias del proyecto en React, ¿qué comando usas?"
+        },
+        friends: {
+          title: "Hommies",
+          emoji: "👯",
+          question: "¿Qué método HTTP se usa para enviar datos al servidor?"
+        },
+        trips: {
+          title: "Trips",
+          emoji: "✈️",
+          question: "¿Cuál fue la última empresa que visitamos en el viaje empresarial?"
+        },
+        hobbies: {
+          title: "Hobbies",
+          emoji: "🎨",
+          question: "¿Qué archivo configura las rutas en Next.js App Router?"
+        }
+      }
     }
   },
   en: {
@@ -378,6 +415,43 @@ const DICTIONARY = {
     title: "🎭 Secret gallery",
     description: "Here you can see images, memories and moments unlocked after finishing the game.",
     back: "Back to home"
+  },
+  interactiveGallery: {
+    title: "Interactive Gallery",
+    subtitle: "Explore my personal side 💫 — each category reveals moments of my life if you answer the web development questions correctly.",
+    locked: "Locked Section",
+    unlocked: "Unlocked Section",
+    unlock: "🔓 Unlock",
+    placeholder: "Write your answer...",
+    wrongAnswer: "❌ Wrong answer. Try again!",
+    backToHome: "Back to Home",
+    categories: {
+      videoGames: {
+        title: "Video Games",
+        emoji: "🎮",
+        question: "Command to run a Next.js project"
+      },
+      food: {
+        title: "Food",
+        emoji: "🍔",
+        question: "Install React project dependencies, what command do you use?"
+      },
+      friends: {
+        title: "Hommies",
+        emoji: "👯",
+        question: "What HTTP method is used to send data to the server?"
+      },
+      trips: {
+        title: "Trips",
+        emoji: "✈️",
+        question: "What was the last company we visited on the business trip?"
+      },
+      hobbies: {
+        title: "Hobbies",
+        emoji: "🎨",
+        question: "What file configures routes in Next.js App Router?"
+      }
+    }
   }
 }
 } as const

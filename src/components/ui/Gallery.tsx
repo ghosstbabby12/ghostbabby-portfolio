@@ -20,7 +20,7 @@ export default function Galeria() {
       emoji: '🎮',
       color: 'border-purple-500',
       gradient: 'from-purple-600 to-pink-600',
-      question: '¿Qué comando ejecuta un proyecto Next.js en desarrollo?',
+      question: '¿Escribe el comando para ejecutar un proyecto en Next.js',
       answer: 'npm run dev',
       images: ['/galeria/games1.jpg', '/galeria/games2.jpg', '/galeria/games3.jpg']
     },
@@ -38,8 +38,8 @@ export default function Galeria() {
       emoji: '👯',
       color: 'border-blue-500',
       gradient: 'from-blue-600 to-cyan-600',
-      question: '¿Qué significa CSS?',
-      answer: 'cascading style sheets',
+      question: '¿Qué método HTTP se usa para enviar datos al servidor?',
+      answer: 'post',
       images: ['/galeria/hommies1.jpg', '/galeria/hommies2.jpg', '/galeria/hommies3.jpg']
     },
     {
@@ -47,8 +47,8 @@ export default function Galeria() {
       emoji: '✈️',
       color: 'border-indigo-500',
       gradient: 'from-indigo-600 to-purple-600',
-      question: '¿Qué método HTTP se usa para enviar datos al servidor?',
-      answer: 'post',
+      question: '¿ cual Ultima empresa que visitamos en el viaje empresarial?',
+      answer: 'pragma',
       images: ['/galeria/trip1.jpg', '/galeria/trip2.jpg', '/galeria/trip3.jpg']
     },
     {
