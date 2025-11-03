@@ -123,25 +123,25 @@ export default function PacmanGame() {
       {
         position: new Vector2D(13, 11),
         velocity: Vector2D.left(),
-        color: '#FF0000',
+        color: theme === 'light' ? '#000000' : '#FF0000',
         startPosition: new Vector2D(13, 11)
       },
       {
         position: new Vector2D(14, 11),
         velocity: Vector2D.right(),
-        color: '#FFB8FF',
+        color: theme === 'light' ? '#FFB6C1' : '#FFB8FF',
         startPosition: new Vector2D(14, 11)
       },
       {
         position: new Vector2D(12, 11),
         velocity: Vector2D.down(),
-        color: '#00FFFF',
+        color: theme === 'light' ? '#FFC0CB' : '#00FFFF',
         startPosition: new Vector2D(12, 11)
       },
       {
         position: new Vector2D(15, 11),
         velocity: Vector2D.up(),
-        color: '#FFB851',
+        color: theme === 'light' ? '#FFD4E5' : '#FFB851',
         startPosition: new Vector2D(15, 11)
       }
     ]
@@ -377,7 +377,7 @@ export default function PacmanGame() {
         ctx.fill()
         
         // Pupilas mirando en dirección de movimiento
-        ctx.fillStyle = '#000080'
+        ctx.fillStyle = theme === 'light' ? '#000000' : '#000080'
         ctx.beginPath()
         ctx.arc(
           screenPosition.x - 4 + ghost.velocity.x * 1.5,
@@ -520,7 +520,7 @@ export default function PacmanGame() {
 
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition transform"
+              className={`px-6 py-3 rounded-lg hover:scale-105 transition transform ${theme === 'light' ? 'bg-pink-100 text-black border-2 border-pink-300' : 'bg-yellow-400 text-black'}`}
             >
               {t('gallery.back')}
             </button>

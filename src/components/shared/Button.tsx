@@ -7,7 +7,7 @@ import { Loader2, LucideIcon } from 'lucide-react'
 
 interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'disabled'> {
   children: ReactNode
-  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'link'
+  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'home'
   size?: 'sm' | 'default' | 'lg' | 'icon'
   loading?: boolean
   leftIcon?: LucideIcon
@@ -62,6 +62,14 @@ const Button = ({
         return `
           bg-transparent text-ghost-purple hover:text-ghost-pink
           underline-offset-4 hover:underline
+        `
+      case 'home':
+        return `
+          bg-transparent text-white/90 hover:text-white
+          hover:bg-white/10
+          dark:bg-transparent dark:text-white/90 dark:hover:text-white
+          dark:hover:bg-white/10
+          light:bg-gray-200 light:text-gray-800 light:hover:bg-gray-300
         `
       default:
         return `

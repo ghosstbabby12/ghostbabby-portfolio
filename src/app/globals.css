@@ -400,6 +400,15 @@ html {
     transform: translateY(-2px) !important;
   }
 
+  html.light .home-btn {
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+  }
+
+  html.light .home-btn:hover {
+    background-color: #d1d5db !important;
+  }
+
   html.light .tracking-wide {
     letter-spacing: 0.02em !important;
   }
