@@ -85,7 +85,7 @@ const Hero = () => {
               <h3 className="text-xl font-semibold text-white/90">
                 {t('hero.builtWith')}
               </h3>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 justify-center">
                 {techStack.map((tech, index) => (
                   <motion.div
                     key={tech}
@@ -109,7 +109,7 @@ const Hero = () => {
 
             {/* Botones principales */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 pt-4"
+              className="flex flex-col sm:flex-row gap-4 pt-4 justify-center"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
