@@ -41,15 +41,15 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-ghost-purple/10 via-transparent to-ghost-pink/10 rounded-full blur-3xl"></div>
 
       {/* Contenido principal - Grid de 2 columnas */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          
-          {/* COLUMNA IZQUIERDA - Contenido */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="flex items-center justify-center">
+
+          {/* Contenido principal */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-6"
+            className="space-y-6 text-center"
           >
             {/* Título de bienvenida */}
             <motion.h1
@@ -139,33 +139,6 @@ const Hero = () => {
                 {t('actions.contactMe')}
               </motion.a>
             </motion.div>
-          </motion.div>
-
-          {/* COLUMNA DERECHA - Strudel */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="w-full"
-          >
-            <div className="space-y-4">
-              <div className="text-center lg:text-left">
-                <h2 className="text-2xl md:text-3xl font-bold text-gradient mb-2">
-                  🎶 {t('hero.strudel.title')}
-                </h2>
-                <p className="text-white/70 text-sm md:text-base">
-                  {t('hero.strudel.description')}
-                </p>
-              </div>
-
-              <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-purple-500/40 hover:border-purple-400/60 transition-colors duration-300">
-                <iframe
-                  src="https://strudel.tidalcycles.org"
-                  title="Strudel REPL"
-                  className="w-full h-full"
-                />
-              </div>
-            </div>
           </motion.div>
         </div>
 
