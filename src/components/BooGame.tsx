@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 
 const CANVAS_WIDTH = 800
 const CANVAS_HEIGHT = 600
+const WORLD_WIDTH = 4000  // Mapa expandido 5x
 const GRAVITY = 0.6
 const JUMP_FORCE = -12
-const MOVE_SPEED = 4
+const MOVE_SPEED = 5
 
 interface Player {
   x: number
@@ -17,6 +18,9 @@ interface Player {
   height: number
   onGround: boolean
   direction: number
+  walkFrame: number
+  jumpFrame: number
+  isJumping: boolean
 }
 
 interface Boo {
@@ -26,6 +30,11 @@ interface Boo {
   vy: number
   hiding: boolean
   size: number
+  hideProgress: number  // 0 = visible, 1 = escondido
+  blinkTimer: number
+  isBlinking: boolean
+  tongueAnim: number
+  floatOffset: number
 }
 
 interface Coin {
@@ -34,6 +43,17 @@ interface Coin {
   y: number
   collected: boolean
   animation: number
+}
+
+interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  life: number
+  maxLife: number
+  size: number
+  color: string
 }
 
 interface Platform {
@@ -67,11 +87,15 @@ export default function MarioGhostHouse() {
     width: 32,
     height: 40,
     onGround: false,
-    direction: 1
+    direction: 1,
+    walkFrame: 0,
+    jumpFrame: 0,
+    isJumping: false
   })
   const [boos, setBoos] = useState<Boo[]>([])
   const [coins, setCoins] = useState<Coin[]>([])
   const [platforms, setPlatforms] = useState<Platform[]>([])
+  const [particles, setParticles] = useState<Particle[]>([])
   const [keys, setKeys] = useState({ left: false, right: false, jump: false })
   const [cameraX, setCameraX] = useState(0)
   const animationFrame = useRef<number>()
@@ -96,10 +120,17 @@ export default function MarioGhostHouse() {
 
   useEffect(() => {
     const initialPlatforms: Platform[] = [
+      // Piso principal expandido
       { x: 0, y: 500, width: 400, height: 100 },
       { x: 500, y: 500, width: 400, height: 100 },
       { x: 1000, y: 500, width: 400, height: 100 },
       { x: 1500, y: 500, width: 400, height: 100 },
+      { x: 2000, y: 500, width: 400, height: 100 },
+      { x: 2500, y: 500, width: 400, height: 100 },
+      { x: 3000, y: 500, width: 400, height: 100 },
+      { x: 3500, y: 500, width: 500, height: 100 },
+
+      // Plataformas nivel 1 (altura media)
       { x: 200, y: 380, width: 120, height: 20 },
       { x: 400, y: 320, width: 120, height: 20 },
       { x: 600, y: 260, width: 120, height: 20 },
@@ -107,14 +138,41 @@ export default function MarioGhostHouse() {
       { x: 1000, y: 380, width: 120, height: 20 },
       { x: 1200, y: 320, width: 120, height: 20 },
       { x: 1400, y: 260, width: 120, height: 20 },
+      { x: 1600, y: 320, width: 140, height: 20 },
+      { x: 1800, y: 380, width: 120, height: 20 },
+      { x: 2000, y: 320, width: 120, height: 20 },
+      { x: 2200, y: 260, width: 140, height: 20 },
+      { x: 2400, y: 320, width: 120, height: 20 },
+      { x: 2600, y: 380, width: 120, height: 20 },
+      { x: 2800, y: 320, width: 120, height: 20 },
+      { x: 3000, y: 260, width: 140, height: 20 },
+      { x: 3200, y: 320, width: 120, height: 20 },
+      { x: 3400, y: 380, width: 120, height: 20 },
+
+      // Plataformas nivel 2 (altura alta)
+      { x: 300, y: 180, width: 100, height: 20 },
+      { x: 700, y: 150, width: 100, height: 20 },
+      { x: 1100, y: 180, width: 100, height: 20 },
+      { x: 1500, y: 150, width: 100, height: 20 },
+      { x: 1900, y: 180, width: 100, height: 20 },
+      { x: 2300, y: 150, width: 100, height: 20 },
+      { x: 2700, y: 180, width: 100, height: 20 },
+      { x: 3100, y: 150, width: 100, height: 20 },
+      { x: 3500, y: 180, width: 100, height: 20 },
     ]
     setPlatforms(initialPlatforms)
 
     const initialBoos: Boo[] = [
-      { x: 300, y: 300, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 600, y: 200, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 900, y: 350, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 1200, y: 250, vx: 0, vy: 0, hiding: false, size: 35 },
+      { x: 300, y: 300, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 0 },
+      { x: 600, y: 200, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 0.5 },
+      { x: 900, y: 350, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 1 },
+      { x: 1200, y: 250, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 1.5 },
+      { x: 1600, y: 280, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 2 },
+      { x: 2000, y: 250, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 2.5 },
+      { x: 2400, y: 300, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 3 },
+      { x: 2800, y: 200, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 3.5 },
+      { x: 3200, y: 280, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 4 },
+      { x: 3600, y: 250, vx: 0, vy: 0, hiding: false, size: 35, hideProgress: 0, blinkTimer: 0, isBlinking: false, tongueAnim: 0, floatOffset: 4.5 },
     ]
     setBoos(initialBoos)
 
@@ -126,9 +184,32 @@ export default function MarioGhostHouse() {
       { id: 4, x: 1060, y: 340, collected: false, animation: 0 },
       { id: 5, x: 1260, y: 280, collected: false, animation: 0 },
       { id: 6, x: 1460, y: 220, collected: false, animation: 0 },
-      { id: 7, x: 500, y: 450, collected: false, animation: 0 },
-      { id: 8, x: 700, y: 450, collected: false, animation: 0 },
-      { id: 9, x: 1100, y: 450, collected: false, animation: 0 },
+      { id: 7, x: 1660, y: 280, collected: false, animation: 0 },
+      { id: 8, x: 1860, y: 340, collected: false, animation: 0 },
+      { id: 9, x: 2060, y: 280, collected: false, animation: 0 },
+      // Monedas en piso
+      { id: 10, x: 500, y: 450, collected: false, animation: 0 },
+      { id: 11, x: 700, y: 450, collected: false, animation: 0 },
+      { id: 12, x: 1100, y: 450, collected: false, animation: 0 },
+      { id: 13, x: 1500, y: 450, collected: false, animation: 0 },
+      { id: 14, x: 1900, y: 450, collected: false, animation: 0 },
+      { id: 15, x: 2300, y: 450, collected: false, animation: 0 },
+      { id: 16, x: 2700, y: 450, collected: false, animation: 0 },
+      { id: 17, x: 3100, y: 450, collected: false, animation: 0 },
+      { id: 18, x: 3500, y: 450, collected: false, animation: 0 },
+      // Monedas en plataformas altas
+      { id: 19, x: 2260, y: 220, collected: false, animation: 0 },
+      { id: 20, x: 2460, y: 280, collected: false, animation: 0 },
+      { id: 21, x: 2660, y: 340, collected: false, animation: 0 },
+      { id: 22, x: 2860, y: 280, collected: false, animation: 0 },
+      { id: 23, x: 3060, y: 220, collected: false, animation: 0 },
+      { id: 24, x: 3260, y: 280, collected: false, animation: 0 },
+      { id: 25, x: 3460, y: 340, collected: false, animation: 0 },
+      // Monedas en nivel alto
+      { id: 26, x: 350, y: 140, collected: false, animation: 0 },
+      { id: 27, x: 750, y: 110, collected: false, animation: 0 },
+      { id: 28, x: 1150, y: 140, collected: false, animation: 0 },
+      { id: 29, x: 1550, y: 110, collected: false, animation: 0 },
     ]
     setCoins(initialCoins)
 
@@ -202,91 +283,201 @@ export default function MarioGhostHouse() {
 
     let animTime = 0
 
-    const drawMario = (x: number, y: number, dir: number) => {
+    const drawMario = (x: number, y: number, dir: number, walkFrame: number, isJumping: boolean, isMoving: boolean) => {
       const screenX = x - cameraX
-      
+
+      // Sombra dinámica
+      ctx.save()
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
       ctx.beginPath()
-      ctx.ellipse(screenX + 16, y + 40, 12, 4, 0, 0, Math.PI * 2)
+      const shadowScale = isJumping ? 0.7 : 1
+      ctx.ellipse(screenX + 16, y + 41, 12 * shadowScale, 4, 0, 0, Math.PI * 2)
       ctx.fill()
+      ctx.restore()
 
+      // Squash and stretch para salto
+      ctx.save()
+      ctx.translate(screenX + 16, y + 20)
+      if (isJumping && player.vy < 0) {
+        ctx.scale(0.9, 1.1) // Stretch al subir
+      } else if (isJumping && player.vy > 2) {
+        ctx.scale(1.1, 0.9) // Squash al caer
+      }
+      ctx.translate(-(screenX + 16), -(y + 20))
+
+      // Animación de caminar - piernas
+      const legOffset = isMoving ? Math.sin(walkFrame) * 3 : 0
+      const legSwing = isMoving ? Math.sin(walkFrame) * 2 : 0
+
+      // Pierna izquierda
+      ctx.fillStyle = '#0000FF'
+      if (isJumping) {
+        ctx.fillRect(screenX + 10, y + 32, 5, 8)
+      } else {
+        ctx.fillRect(screenX + 10 + (dir > 0 ? legSwing : -legSwing), y + 32, 5, 8)
+        ctx.fillStyle = '#8B4513'
+        ctx.fillRect(screenX + 8 + (dir > 0 ? legSwing : -legSwing), y + 38, 7, 4)
+      }
+
+      // Pierna derecha
+      ctx.fillStyle = '#0000FF'
+      if (isJumping) {
+        ctx.fillRect(screenX + 17, y + 32, 5, 8)
+      } else {
+        ctx.fillRect(screenX + 17 + (dir > 0 ? -legSwing : legSwing), y + 32, 5, 8)
+        ctx.fillStyle = '#8B4513'
+        ctx.fillRect(screenX + 17 + (dir > 0 ? -legSwing : legSwing), y + 38, 7, 4)
+      }
+
+      // Cuerpo principal
       ctx.fillStyle = '#FF0000'
       ctx.fillRect(screenX + 8, y + 16, 16, 16)
       ctx.fillStyle = '#0000FF'
       ctx.fillRect(screenX + 6, y + 18, 20, 14)
+
+      // Botones dorados
       ctx.fillStyle = '#FFD700'
       ctx.beginPath()
       ctx.arc(screenX + 12, y + 22, 2, 0, Math.PI * 2)
       ctx.arc(screenX + 20, y + 22, 2, 0, Math.PI * 2)
       ctx.fill()
+
+      // Brazos con animación
+      const armSwing = isMoving ? Math.sin(walkFrame + Math.PI) * 2 : 0
+      ctx.fillStyle = '#FDBCB4'
+      if (isJumping) {
+        // Brazos arriba al saltar
+        ctx.fillRect(screenX + 2, y + 16, 4, 8)
+        ctx.fillRect(screenX + 26, y + 16, 4, 8)
+      } else {
+        ctx.fillRect(screenX + 4, y + 20 + armSwing, 4, 8)
+        ctx.fillRect(screenX + 24, y + 20 - armSwing, 4, 8)
+      }
+
+      // Cabeza
       ctx.fillStyle = '#FDBCB4'
       ctx.beginPath()
       ctx.arc(screenX + 16, y + 10, 8, 0, Math.PI * 2)
       ctx.fill()
+
+      // Gorra roja
       ctx.fillStyle = '#FF0000'
       ctx.fillRect(screenX + 6, y + 2, 20, 8)
       ctx.beginPath()
       ctx.arc(screenX + 16, y + 6, 10, Math.PI, 0)
       ctx.fill()
+
+      // Logo M
       ctx.fillStyle = '#FFFFFF'
       ctx.font = 'bold 10px Arial'
       ctx.textAlign = 'center'
       ctx.fillText('M', screenX + 16, y + 8)
+
+      // Ojos con dirección
       ctx.fillStyle = '#000000'
       const eyeDir = dir > 0 ? 2 : -2
       ctx.fillRect(screenX + 12 + eyeDir, y + 10, 2, 2)
       ctx.fillRect(screenX + 18 + eyeDir, y + 10, 2, 2)
+
+      // Bigote
       ctx.fillStyle = '#8B4513'
       ctx.fillRect(screenX + 10, y + 14, 12, 2)
-      ctx.fillStyle = '#FDBCB4'
-      ctx.fillRect(screenX + 4, y + 20, 4, 8)
-      ctx.fillRect(screenX + 24, y + 20, 4, 8)
-      ctx.fillStyle = '#0000FF'
-      ctx.fillRect(screenX + 10, y + 32, 5, 8)
-      ctx.fillRect(screenX + 17, y + 32, 5, 8)
-      ctx.fillStyle = '#8B4513'
-      ctx.fillRect(screenX + 8, y + 38, 7, 4)
-      ctx.fillRect(screenX + 17, y + 38, 7, 4)
+
+      ctx.restore()
     }
 
-    const drawBoo = (x: number, y: number, hiding: boolean, size: number) => {
-      const screenX = x - cameraX
-      
-      ctx.fillStyle = '#FFFFFF'
-      ctx.shadowBlur = 15
-      ctx.shadowColor = '#FFFFFF'
+    const drawBoo = (boo: Boo, floatY: number) => {
+      const screenX = boo.x - cameraX
+      const y = floatY
+
+      // Sombra suave
+      ctx.save()
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
       ctx.beginPath()
-      ctx.arc(screenX, y, size, 0, Math.PI * 2)
+      ctx.ellipse(screenX, y + boo.size + 5, boo.size * 0.8, 4, 0, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.restore()
+
+      // Efecto de brillo/glow
+      const glowIntensity = boo.hiding ? 10 : 20
+      ctx.shadowBlur = glowIntensity
+      ctx.shadowColor = '#FFFFFF'
+
+      // Cuerpo principal con transparencia si se está escondiendo
+      const alpha = 1 - (boo.hideProgress * 0.3)
+      ctx.globalAlpha = alpha
+      ctx.fillStyle = '#FFFFFF'
+      ctx.beginPath()
+      ctx.arc(screenX, y, boo.size, 0, Math.PI * 2)
       ctx.fill()
       ctx.shadowBlur = 0
 
+      // Cola del fantasma (3 ondas)
       for (let i = 0; i < 3; i++) {
+        const waveY = y + boo.size + i * 8
+        const waveSize = boo.size * 0.3 - i * 3
+        ctx.fillStyle = '#FFFFFF'
         ctx.beginPath()
-        ctx.arc(screenX + (i - 1) * 12, y + size + i * 8, size * 0.3 - i * 3, 0, Math.PI * 2)
+        ctx.arc(screenX + (i - 1) * 12, waveY, waveSize, 0, Math.PI * 2)
         ctx.fill()
       }
 
-      if (hiding) {
+      // Animación de esconderse/mostrarse
+      if (boo.hideProgress > 0) {
+        // Dibujar manos cubriendo la cara (transición suave)
+        const handProgress = boo.hideProgress
         ctx.fillStyle = '#FFFFFF'
+        ctx.globalAlpha = alpha * handProgress
         ctx.beginPath()
-        ctx.ellipse(screenX - 15, y, 8, 20, -0.3, 0, Math.PI * 2)
-        ctx.ellipse(screenX + 15, y, 8, 20, 0.3, 0, Math.PI * 2)
+        ctx.ellipse(screenX - 15 * handProgress, y, 8, 20, -0.3, 0, Math.PI * 2)
+        ctx.ellipse(screenX + 15 * handProgress, y, 8, 20, 0.3, 0, Math.PI * 2)
         ctx.fill()
-      } else {
-        ctx.fillStyle = '#1a0033'
-        ctx.beginPath()
-        ctx.ellipse(screenX - 10, y - 5, 8, 12, 0, 0, Math.PI * 2)
-        ctx.ellipse(screenX + 10, y - 5, 8, 12, 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = '#FF1493'
-        ctx.beginPath()
-        ctx.arc(screenX - 10, y - 2, 4, 0, Math.PI * 2)
-        ctx.arc(screenX + 10, y - 2, 4, 0, Math.PI * 2)
-        ctx.fill()
+      }
+
+      if (boo.hideProgress < 0.5) {
+        // Dibujar cara solo si no está muy escondido
+        const faceAlpha = 1 - (boo.hideProgress * 2)
+        ctx.globalAlpha = alpha * faceAlpha
+
+        // Ojos con parpadeo
+        if (!boo.isBlinking) {
+          // Ojos oscuros
+          ctx.fillStyle = '#1a0033'
+          ctx.beginPath()
+          const eyeOffsetX = 10
+          const eyeOffsetY = -5
+
+          // Ojos que siguen al jugador
+          const dx = player.x - boo.x
+          const dy = player.y - boo.y
+          const angle = Math.atan2(dy, dx)
+          const lookX = Math.cos(angle) * 2
+          const lookY = Math.sin(angle) * 2
+
+          ctx.ellipse(screenX - eyeOffsetX + lookX, y + eyeOffsetY + lookY, 8, 12, 0, 0, Math.PI * 2)
+          ctx.ellipse(screenX + eyeOffsetX + lookX, y + eyeOffsetY + lookY, 8, 12, 0, 0, Math.PI * 2)
+          ctx.fill()
+
+          // Pupilas brillantes
+          ctx.fillStyle = '#FF1493'
+          ctx.beginPath()
+          ctx.arc(screenX - eyeOffsetX + lookX, y - 2 + lookY, 4, 0, Math.PI * 2)
+          ctx.arc(screenX + eyeOffsetX + lookX, y - 2 + lookY, 4, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          // Parpadeo - ojos cerrados
+          ctx.fillStyle = '#1a0033'
+          ctx.fillRect(screenX - 15, y - 3, 10, 2)
+          ctx.fillRect(screenX + 5, y - 3, 10, 2)
+        }
+
+        // Boca con lengua animada
         ctx.fillStyle = '#8B0000'
         ctx.beginPath()
         ctx.arc(screenX, y + 10, 15, 0, Math.PI)
         ctx.fill()
+
+        // Dientes
         ctx.fillStyle = '#FFFFFF'
         for (let i = 0; i < 4; i++) {
           ctx.beginPath()
@@ -295,7 +486,50 @@ export default function MarioGhostHouse() {
           ctx.lineTo(screenX - 10 + i * 8, y + 18)
           ctx.fill()
         }
+
+        // Lengua animada
+        if (!boo.hiding) {
+          const tongueExtension = Math.sin(boo.tongueAnim) * 5 + 8
+          ctx.fillStyle = '#FF69B4'
+          ctx.beginPath()
+          ctx.ellipse(screenX, y + 15 + tongueExtension / 2, 6, tongueExtension / 2, 0, 0, Math.PI * 2)
+          ctx.fill()
+        }
       }
+
+      ctx.globalAlpha = 1
+      ctx.restore()
+    }
+
+    const createParticles = (x: number, y: number, count: number, color: string) => {
+      const newParticles: Particle[] = []
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count
+        newParticles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * (2 + Math.random() * 3),
+          vy: Math.sin(angle) * (2 + Math.random() * 3) - 2,
+          life: 1,
+          maxLife: 1,
+          size: 3 + Math.random() * 3,
+          color
+        })
+      }
+      setParticles(prev => [...prev, ...newParticles])
+    }
+
+    const drawParticles = () => {
+      particles.forEach(particle => {
+        const screenX = particle.x - cameraX
+        const alpha = particle.life / particle.maxLife
+        ctx.globalAlpha = alpha
+        ctx.fillStyle = particle.color
+        ctx.beginPath()
+        ctx.arc(screenX, particle.y, particle.size, 0, Math.PI * 2)
+        ctx.fill()
+      })
+      ctx.globalAlpha = 1
     }
 
     const animate = () => {
@@ -368,14 +602,21 @@ export default function MarioGhostHouse() {
         return updated
       })
 
+      // Dibujar partículas detrás de todo
+      drawParticles()
+
+      // Dibujar Boos con animación de flotación
       boos.forEach(boo => {
-        drawBoo(boo.x, boo.y + Math.sin(animTime * 2 + boo.x) * 5, boo.hiding, boo.size)
+        const floatY = boo.y + Math.sin(animTime * 2 + boo.floatOffset) * 8
+        drawBoo(boo, floatY)
       })
 
+      // Dibujar Mario con animaciones
+      const isMoving = Math.abs(player.vx) > 0
       if (invincible && Math.floor(animTime * 10) % 2 === 0) {
         ctx.globalAlpha = 0.5
       }
-      drawMario(player.x, player.y, player.direction)
+      drawMario(player.x, player.y, player.direction, player.walkFrame, player.isJumping, isMoving)
       ctx.globalAlpha = 1
 
       ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'
@@ -404,14 +645,25 @@ export default function MarioGhostHouse() {
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
     }
-  }, [gameStarted, gameOver, player, boos, platforms, cameraX, score, time, lives, invincible])
+  }, [gameStarted, gameOver, player, boos, platforms, particles, cameraX, score, time, lives, invincible])
 
   useEffect(() => {
     if (!gameStarted || gameOver) return
 
     const gameLoop = setInterval(() => {
+      // Actualizar partículas
+      setParticles(prev => {
+        return prev.map(p => ({
+          ...p,
+          x: p.x + p.vx,
+          y: p.y + p.vy,
+          vy: p.vy + 0.2, // gravedad
+          life: p.life - 0.02
+        })).filter(p => p.life > 0)
+      })
+
       setPlayer(prev => {
-        let { x, y, vx, vy, onGround, direction } = prev
+        let { x, y, vx, vy, onGround, direction, walkFrame, jumpFrame, isJumping } = prev
 
         if (keys.left) {
           vx = -MOVE_SPEED
@@ -426,14 +678,24 @@ export default function MarioGhostHouse() {
         if (keys.jump && onGround) {
           vy = JUMP_FORCE
           onGround = false
+          isJumping = true
         }
 
         if (!onGround) {
           vy += GRAVITY
+        } else {
+          isJumping = false
         }
 
         x += vx
         y += vy
+
+        // Actualizar animación de caminar
+        if (Math.abs(vx) > 0 && onGround) {
+          walkFrame += 0.3
+        } else {
+          walkFrame = 0
+        }
 
         onGround = false
         platforms.forEach(platform => {
@@ -450,16 +712,19 @@ export default function MarioGhostHouse() {
           }
         })
 
+        // Limitar el mundo
+        x = Math.max(0, Math.min(WORLD_WIDTH - 32, x))
+
         if (y > CANVAS_HEIGHT) {
           setLives(l => {
             const newLives = l - 1
             if (newLives <= 0) setGameOver(true)
             return newLives
           })
-          return { x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1 }
+          return { x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1, walkFrame: 0, jumpFrame: 0, isJumping: false }
         }
 
-        return { x, y, vx, vy, width: 32, height: 40, onGround, direction }
+        return { x, y, vx, vy, width: 32, height: 40, onGround, direction, walkFrame, jumpFrame, isJumping }
       })
 
       setCameraX(Math.max(0, player.x - CANVAS_WIDTH / 3))
@@ -468,22 +733,43 @@ export default function MarioGhostHouse() {
         const dx = player.x - boo.x
         const dy = player.y - boo.y
         const dist = Math.sqrt(dx * dx + dy * dy)
-        
-        const playerLookingAtBoo = 
-          (player.direction > 0 && dx > 0) || 
+
+        const playerLookingAtBoo =
+          (player.direction > 0 && dx > 0) ||
           (player.direction < 0 && dx < 0)
-        
-        const hiding = playerLookingAtBoo && dist < 300
 
-        let { x, y } = boo
+        const shouldHide = playerLookingAtBoo && dist < 300
 
-        if (!hiding && dist < 400) {
-          const speed = 1.5
+        let { x, y, hideProgress, blinkTimer, isBlinking, tongueAnim } = boo
+
+        // Transición suave de esconderse
+        if (shouldHide && hideProgress < 1) {
+          hideProgress = Math.min(1, hideProgress + 0.1)
+        } else if (!shouldHide && hideProgress > 0) {
+          hideProgress = Math.max(0, hideProgress - 0.05)
+        }
+
+        // Movimiento solo cuando no está escondido
+        if (hideProgress < 0.5 && dist < 500) {
+          const speed = 1.8 * (1 - hideProgress)
           x += (dx / dist) * speed
           y += (dy / dist) * speed
         }
 
-        return { ...boo, x, y, hiding }
+        // Animación de la lengua
+        tongueAnim += 0.15
+
+        // Sistema de parpadeo
+        blinkTimer++
+        if (blinkTimer > 120 && !isBlinking) {
+          isBlinking = true
+          blinkTimer = 0
+        } else if (isBlinking && blinkTimer > 10) {
+          isBlinking = false
+          blinkTimer = 0
+        }
+
+        return { ...boo, x, y, hiding: shouldHide, hideProgress, blinkTimer, isBlinking, tongueAnim }
       }))
 
       if (!invincible) {
@@ -501,7 +787,7 @@ export default function MarioGhostHouse() {
               })
               setInvincible(true)
               setTimeout(() => setInvincible(false), 2000)
-              setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0 }))
+              setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0, walkFrame: 0, jumpFrame: 0, isJumping: false }))
             }
           }
         })
@@ -513,9 +799,26 @@ export default function MarioGhostHouse() {
             const dx = coin.x - (player.x + 16)
             const dy = coin.y - (player.y + 20)
             const dist = Math.sqrt(dx * dx + dy * dy)
-            
+
             if (dist < 30) {
               setScore(s => s + 10)
+
+              // Crear partículas doradas al recoger moneda
+              const newParticles: Particle[] = []
+              for (let i = 0; i < 12; i++) {
+                const angle = (Math.PI * 2 * i) / 12
+                newParticles.push({
+                  x: coin.x,
+                  y: coin.y,
+                  vx: Math.cos(angle) * (2 + Math.random() * 3),
+                  vy: Math.sin(angle) * (2 + Math.random() * 3) - 2,
+                  life: 1,
+                  maxLife: 1,
+                  size: 3 + Math.random() * 3,
+                  color: '#FFD700'
+                })
+              }
+              setParticles(p => [...p, ...newParticles])
 
               setTestimonials(prevCards => {
                 const already = prevCards.find(c => c.id === coin.id)?.collected
@@ -548,8 +851,9 @@ export default function MarioGhostHouse() {
     setScore(0)
     setTime(300)
     setLives(3)
-    setPlayer({ x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1 })
+    setPlayer({ x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1, walkFrame: 0, jumpFrame: 0, isJumping: false })
     setInvincible(false)
+    setParticles([])
     setCoins(prev => prev.map(c => ({ ...c, collected: false, animation: 0 })))
   }
 
