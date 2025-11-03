@@ -232,9 +232,7 @@ html {
   }
 
   /* Gradientes de fondo decorativos */
-  html.light .bg-gradient-to-br {
-    background-image: linear-gradient(to bottom right, rgba(250,235,242,0.15), transparent, rgba(252,235,243,0.15)) !important;
-  }
+  /* Nota: No sobrescribir bg-gradient-to-br/bg-gradient-to-b en general porque se usan para arcade machines y otras secciones */
 
   /* Partículas dinámicas */
   html.light .bg-white\/10 {

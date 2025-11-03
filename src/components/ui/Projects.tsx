@@ -9,7 +9,7 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      title: "Manejo de Promesas + Integración Continua",
+      title: "Manejo de Integración Continua",
       description:
         "Este proyecto consiste en una aplicación React sencilla que consume la API pública de usuarios aleatorios y muestra información básica de los usuarios",
 
@@ -26,7 +26,7 @@ const Projects = () => {
         "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
       image: "https://placehold.co/400x250/png",
-      githubUrl: "https://github.com/ghosstbabby12/SecurityNetwork.git",
+      githubUrl: "https://github.com/migueltovarb/ISWDISENO10196-4.git",
       liveUrl: "https://taskmanager-demo.vercel.app",
       featured: true,
     },

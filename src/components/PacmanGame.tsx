@@ -123,25 +123,25 @@ export default function PacmanGame() {
       {
         position: new Vector2D(13, 11),
         velocity: Vector2D.left(),
-        color: theme === 'light' ? '#000000' : '#FF0000',
+        color: '#FF0000',
         startPosition: new Vector2D(13, 11)
       },
       {
         position: new Vector2D(14, 11),
         velocity: Vector2D.right(),
-        color: theme === 'light' ? '#FFB6C1' : '#FFB8FF',
+        color: '#FFB8FF',
         startPosition: new Vector2D(14, 11)
       },
       {
         position: new Vector2D(12, 11),
         velocity: Vector2D.down(),
-        color: theme === 'light' ? '#FFC0CB' : '#00FFFF',
+        color: '#00FFFF',
         startPosition: new Vector2D(12, 11)
       },
       {
         position: new Vector2D(15, 11),
         velocity: Vector2D.up(),
-        color: theme === 'light' ? '#FFD4E5' : '#FFB851',
+        color: '#FFB851',
         startPosition: new Vector2D(15, 11)
       }
     ]
@@ -314,33 +314,24 @@ export default function PacmanGame() {
     }
 
     const draw = () => {
-      // Fondo según el tema
-      ctx.fillStyle = theme === 'light' ? '#FFFFFF' : 'black'
+      // Fondo siempre oscuro para el laberinto
+      ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Dibujar mapa
+      // Dibujar mapa - siempre en modo oscuro
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
           const tile = map[r]?.[c] ?? '#'
           if (tile === '#') {
-            if (theme === 'light') {
-              // Modo light: muros rosa pastel con borde
-              ctx.fillStyle = '#FFB6C1'
-              ctx.fillRect(c * CELL, r * CELL, CELL, CELL)
-              ctx.strokeStyle = '#FF69B4'
-              ctx.lineWidth = 2
-              ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
-            } else {
-              // Modo dark: muros azules/cyan
-              ctx.strokeStyle = '#00f6ff'
-              ctx.lineWidth = 2
-              ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
-            }
+            // Muros azules/cyan
+            ctx.strokeStyle = '#00f6ff'
+            ctx.lineWidth = 2
+            ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
           } else if (tile === '-') {
-            ctx.fillStyle = theme === 'light' ? '#FFFFFF' : '#1a1a2e'
+            ctx.fillStyle = '#1a1a2e'
             ctx.fillRect(c * CELL, r * CELL, CELL, CELL)
           } else if (pellets.has(`${r},${c}`)) {
-            ctx.fillStyle = theme === 'light' ? '#000000' : '#FFD700'
+            ctx.fillStyle = '#FFD700'
             ctx.beginPath()
             ctx.arc(c * CELL + CELL / 2, r * CELL + CELL / 2, 3, 0, Math.PI * 2)
             ctx.fill()
@@ -386,7 +377,7 @@ export default function PacmanGame() {
         ctx.fill()
         
         // Pupilas mirando en dirección de movimiento
-        ctx.fillStyle = theme === 'light' ? '#000000' : '#000080'
+        ctx.fillStyle = '#000080'
         ctx.beginPath()
         ctx.arc(
           screenPosition.x - 4 + ghost.velocity.x * 1.5,

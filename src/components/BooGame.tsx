@@ -556,24 +556,24 @@ export default function MarioGhostHouse() {
   const collectedCount = testimonials.filter(t => t.collected).length
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-black p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white via-pink-50 to-pink-100 dark:from-gray-900 dark:via-purple-900 dark:to-black p-4">
       <div className="mb-4 text-center">
-        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 mb-2">
+        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 dark:from-red-500 dark:via-yellow-500 dark:to-red-500 mb-2">
           👻 GHOST HOUSE
         </h1>
-        <p className="text-yellow-300 text-sm">Recolecta testimonios • {collectedCount}/{testimonialPool.length}</p>
+        <p className="text-pink-600 dark:text-yellow-300 text-sm">Recolecta testimonios • {collectedCount}/{testimonialPool.length}</p>
       </div>
 
       {/* Arcade Console Top - Cards Display - FUERA del canvas */}
-      <div className="w-full max-w-[800px] mb-2 bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl border-4 border-yellow-700 p-3">
+      <div className="w-full max-w-[800px] mb-2 bg-gradient-to-b from-pink-100 to-pink-200 dark:from-gray-800 dark:to-gray-900 rounded-xl border-4 border-pink-400 dark:border-yellow-700 p-3">
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
           {testimonials.map(card => (
             <div
               key={card.id}
               className={`min-w-[100px] flex-shrink-0 p-2 rounded-lg border-2 transition-all duration-300 ${
-                card.collected 
-                  ? 'border-yellow-400 bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg' 
-                  : 'border-gray-600 bg-gray-800 opacity-40'
+                card.collected
+                  ? 'border-pink-400 dark:border-yellow-400 bg-gradient-to-br from-pink-400 to-purple-400 dark:from-purple-600 dark:to-pink-600 shadow-lg'
+                  : 'border-gray-400 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 opacity-40'
               }`}
               title={card.collected ? card.title + ' - ' + card.text : 'Bloqueado'}
             >
@@ -581,11 +581,11 @@ export default function MarioGhostHouse() {
                 <div className="text-3xl mb-1">
                   {card.collected ? card.avatar : '🔒'}
                 </div>
-                <div className="text-xs font-bold text-white truncate">
+                <div className="text-xs font-bold text-gray-800 dark:text-white truncate">
                   {card.collected ? card.title.split(' ')[0] : '???'}
                 </div>
                 {card.collected && (
-                  <div className="text-yellow-400 text-xs mt-1">★★★★★</div>
+                  <div className="text-yellow-600 dark:text-yellow-400 text-xs mt-1">★★★★★</div>
                 )}
               </div>
             </div>
@@ -598,7 +598,7 @@ export default function MarioGhostHouse() {
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={CANVAS_HEIGHT}
-          className="border-8 border-yellow-700 rounded-lg bg-black w-full"
+          className="border-8 border-pink-400 dark:border-yellow-700 rounded-lg bg-black w-full"
           style={{ imageRendering: 'pixelated' }}
         />
 
