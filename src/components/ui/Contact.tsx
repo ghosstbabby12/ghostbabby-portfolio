@@ -23,7 +23,7 @@ const Contact = () => {
   const socialLinks = [
     {
       name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/camila-bastidas-riascos-2574b4363',
+      url: 'https://www.linkedin.com/in/camila-bastidas-2574b4363/',
       icon: Linkedin,
       color: 'hover:text-[#0A66C2]'
     },
@@ -47,7 +47,7 @@ const Contact = () => {
     },
     {
       name: 'X',
-      url: 'https://x.com/tu-usuario',
+      url: 'https://x.com/ghosstbabby',
       icon: XIcon,
       color: 'hover:text-white'
     }
