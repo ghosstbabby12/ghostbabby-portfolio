@@ -137,7 +137,13 @@ const DICTIONARY = {
     },
     mygame: {
       title: "Juego",
-      subtitle: "Disfruta de una versión arcade interactiva integrada en mi portfolio"
+      subtitle: "Disfruta de una versión arcade interactiva integrada en mi portfolio",
+      header: {
+        score: "PUNTAJE",
+        level: "NIVEL",
+        credits: "CRÉDITOS",
+        selectGame: "SELECCIONA UN JUEGO"
+      }
     },
     contact: {
       title: "Contáctame",
@@ -207,13 +213,29 @@ const DICTIONARY = {
       won: "¡GANASTE! 🎉",
       gameOver: "GAME OVER 👻",
       playAgain: "Jugar de nuevo",
-      retry: "Reintentar"
+      retry: "Reintentar",
+      card: {
+        title: "PAC-MAN",
+        description: "Una reinterpretación de la acción clásica arcade, donde cada píxel devorado cuenta para algo más.",
+        pressToStart: "PRESIONA PARA INICIAR",
+        startButton: "START",
+        codeButton: "</> Código",
+        demoButton: "↗ Demo"
+      }
     },
     boo: {
       title: "👻 GHOST HOUSE",
       startTip: "¡CUIDADO CON LOS BOOS!",
       controls: "Usa las flechas para moverte — ⬆️ o ESPACIO para saltar",
-      start: "START"
+      start: "START",
+      card: {
+        title: "BOO MARIO BROS",
+        description: "Un spin-off retrofuturista inspirado en los enemigos de Mario, donde el jugador controla a Boo en un mundo oscuro y brillante.",
+        pressToStart: "PRESIONA PARA INICIAR",
+        startButton: "START",
+        codeButton: "</> Código",
+        demoButton: "↗ Demo"
+      }
     },
     gallery: {
       title: "🎭 Galería secreta",
@@ -330,7 +352,13 @@ const DICTIONARY = {
   },
   mygame: {
     title: "Game",
-    subtitle: "Enjoy an interactive arcade version embedded in my portfolio"
+    subtitle: "Enjoy an interactive arcade version embedded in my portfolio",
+    header: {
+      score: "SCORE",
+      level: "LEVEL",
+      credits: "CREDITS",
+      selectGame: "SELECT GAME"
+    }
   },
   contact: {
     title: "Contact Me",
@@ -406,13 +434,29 @@ const DICTIONARY = {
     won: "YOU WIN! 🎉",
     gameOver: "GAME OVER 👻",
     playAgain: "Play again",
-    retry: "Retry"
+    retry: "Retry",
+    card: {
+      title: "PAC-MAN",
+      description: "A reimagining of the classic arcade action, where every devoured pixel counts for something more.",
+      pressToStart: "PRESS TO START",
+      startButton: "START",
+      codeButton: "</> Code",
+      demoButton: "↗ Demo"
+    }
   },
   boo: {
     title: "👻 GHOST HOUSE",
     startTip: "WATCH OUT FOR BOOS!",
     controls: "Use arrows to move — ⬆️ or SPACE to jump",
-    start: "START"
+    start: "START",
+    card: {
+      title: "BOO MARIO BROS",
+      description: "A retrofuturistic spin-off inspired by Mario's enemies, where the player controls Boo in a dark and bright world.",
+      pressToStart: "PRESS TO START",
+      startButton: "START",
+      codeButton: "</> Code",
+      demoButton: "↗ Demo"
+    }
   },
   gallery: {
     title: "🎭 Secret gallery",
