@@ -52,21 +52,11 @@ const Experience = () => {
       padding="lg"
     >
       <div className="relative">
-        {/* Línea vertical central */}
-        <div
-          className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full opacity-30"
-          style={{
-            background: theme === 'light'
-              ? 'linear-gradient(to bottom, #d5748e, #eaa4ba, #d5748e)'
-              : 'linear-gradient(to bottom, #667eea, #764ba2, #667eea)'
-          }}
-        ></div>
-
         <div className="space-y-16">
           {experiences.map((exp, index) => (
             <motion.div
               key={exp.id}
-              className={`relative flex flex-col md:flex-row items-center gap-8 ${
+              className={`relative flex flex-col md:flex-row items-center gap-8 md:min-h-[200px] ${
                 index % 2 === 0 ? "md:flex-row-reverse" : ""
               }`}
               initial={{ opacity: 0, y: 50 }}
@@ -76,14 +66,14 @@ const Experience = () => {
             >
               {/* Punto de la línea */}
               <motion.div
-                className="absolute left-1/2 w-12 h-12 flex items-center justify-center rounded-full shadow-lg z-20 border-4"
+                className="hidden md:flex absolute left-1/2 w-12 h-12 items-center justify-center rounded-full shadow-lg z-20 border-4"
                 style={{
                   background: theme === 'light'
                     ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
                     : 'linear-gradient(to bottom right, #667eea, #764ba2)',
                   borderColor: theme === 'light' ? '#ffffff' : '#0a0118',
-                  top: '20px',
-                  transform: 'translateX(-50%)'
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)'
                 }}
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 transition={{ duration: 0.5 }}

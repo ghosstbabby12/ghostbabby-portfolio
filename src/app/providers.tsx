@@ -69,7 +69,7 @@ const DICTIONARY = {
       about: "Sobre mí",
       projects: "Proyectos",
       experience: "Experiencia",
-      mygame: "Mi Juego",
+      mygame: "Juego",
       gallery: "Galería",
       contact: "Contacto",
     },
@@ -136,7 +136,7 @@ const DICTIONARY = {
       }
     },
     mygame: {
-      title: "Mi Juego",
+      title: "Juego",
       subtitle: "Disfruta de una versión arcade interactiva integrada en mi portfolio"
     },
     contact: {
@@ -264,7 +264,7 @@ const DICTIONARY = {
     about: "About",
     projects: "Projects",
     experience: "Experience",
-    mygame: "My Game",
+    mygame: "Game",
     gallery: "Gallery",
     contact: "Contact",
   },
@@ -329,7 +329,7 @@ const DICTIONARY = {
     }
   },
   mygame: {
-    title: "My Game",
+    title: "Game",
     subtitle: "Enjoy an interactive arcade version embedded in my portfolio"
   },
   contact: {
