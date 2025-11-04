@@ -136,6 +136,7 @@ const MyGame: React.FC = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    filter: "saturate(1.4) brightness(1.1)",
                   }}
                 >
                   {/* Overlay muy sutil */}
@@ -156,12 +157,15 @@ const MyGame: React.FC = () => {
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
-                <div className="relative bg-gray-900 px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10 }}>
+                <div className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10, backgroundColor: '#1a1a1a' }}>
                   <h3
-                    className="text-lg sm:text-xl md:text-2xl font-bold text-purple-400 mb-2 tracking-wider"
+                    className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-wider"
                     style={{
-                      fontFamily: "monospace",
-                      textShadow: "0 0 10px rgba(216,180,254,1), 0 0 20px rgba(167,139,250,0.8)",
+                      fontFamily: "'Courier New', monospace",
+                      color: "#D8B4FE",
+                      textShadow: "0 0 10px #D8B4FE, 0 0 20px #A78BFA, 2px 2px 0px #000000",
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
                     }}
                   >
                     BOO MARIO BROS
@@ -175,9 +179,13 @@ const MyGame: React.FC = () => {
                   {/* Botón START más grande */}
                   <button
                     onClick={() => setSelectedGame("boo")}
-                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-card-gradient text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-ghost-purple transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-ghost-purple/30"
+                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 transition-all transform hover:scale-105"
                     style={{
                       fontFamily: "monospace",
+                      backgroundColor: "transparent",
+                      color: "#D8B4FE",
+                      borderColor: "#FFFFFF",
+                      borderWidth: "3px",
                     }}
                   >
                     START
@@ -185,12 +193,10 @@ const MyGame: React.FC = () => {
 
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
-                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}>
                       &lt;/&gt; Código
                     </button>
-                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
-                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}>
                       ↗ Demo
                     </button>
                   </div>
@@ -240,6 +246,7 @@ const MyGame: React.FC = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
+                    filter: "saturate(1.4) brightness(1.1)",
                   }}
                 >
                   {/* Overlay muy sutil */}
@@ -247,17 +254,20 @@ const MyGame: React.FC = () => {
                     className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30"
                     style={{ zIndex: 1 }}
                   ></div>
-                  
-                
+
+
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
-                <div className="relative bg-gray-900 px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10 }}>
+                <div className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10, backgroundColor: '#1a1a1a' }}>
                   <h3
-                    className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-400 mb-2 tracking-wider"
+                    className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-wider"
                     style={{
-                      fontFamily: "monospace",
-                      textShadow: "0 0 10px rgba(253,224,71,1), 0 0 20px rgba(234,179,8,0.8)",
+                      fontFamily: "'Courier New', monospace",
+                      color: "#FFD700",
+                      textShadow: "0 0 10px #FFD700, 0 0 20px #FFA500, 2px 2px 0px #000000",
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
                     }}
                   >
                     PAC-MAN
@@ -270,9 +280,13 @@ const MyGame: React.FC = () => {
                   {/* Botón START más grande */}
                   <button
                     onClick={() => setSelectedGame("pacman")}
-                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-card-gradient text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-ghost-purple transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-ghost-purple/30"
+                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 transition-all transform hover:scale-105"
                     style={{
                       fontFamily: "monospace",
+                      backgroundColor: "transparent",
+                      color: "#FFD700",
+                      borderColor: "#FFFFFF",
+                      borderWidth: "3px",
                     }}
                   >
                     START
@@ -280,12 +294,10 @@ const MyGame: React.FC = () => {
 
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
-                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}>
                       &lt;/&gt; Código
                     </button>
-                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
-                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}>
                       ↗ Demo
                     </button>
                   </div>

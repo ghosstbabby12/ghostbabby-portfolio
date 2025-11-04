@@ -3,10 +3,11 @@
 import { motion, useInView, Variants } from 'framer-motion'
 import { useRef } from 'react'
 import { Code2, Music, Gamepad2, Coffee, Dumbbell, Palette, Sparkles, Heart } from 'lucide-react'
-import { useI18n } from '../../app/providers'
+import { useI18n, useTheme } from '../../app/providers'
 
 const About = () => {
   const { t } = useI18n()
+  const { theme } = useTheme()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
@@ -76,11 +77,21 @@ const About = () => {
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-ghost-purple to-ghost-pink flex items-center justify-center">
+                <div
+                  className="w-32 h-32 md:w-40 md:h-40 rounded-full flex items-center justify-center"
+                  style={{
+                    background: theme === 'light'
+                      ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
+                      : 'linear-gradient(to bottom right, #667eea, #764ba2)'
+                  }}
+                >
                   <Sparkles className="w-16 h-16 md:w-20 md:h-20 text-white" />
                 </div>
                 <motion.div
-                  className="absolute -top-2 -right-2 w-8 h-8 bg-ghost-pink rounded-full flex items-center justify-center"
+                  className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{
+                    background: theme === 'light' ? '#eaa4ba' : '#764ba2'
+                  }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
