@@ -169,10 +169,11 @@ const Projects = () => {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-white/70 hover:text-ghost-purple transition-colors duration-300"
+                    className="group relative flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-ghost-purple text-ghost-purple hover:text-white transition-all duration-300 overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
+                    <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     <Github size={18} />
                     <span>
                       {t("actions.viewProjects") === "View Projects"
@@ -184,10 +185,11 @@ const Projects = () => {
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-white/70 hover:text-ghost-pink transition-colors duration-300"
+                    className="group relative flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-ghost-purple text-ghost-purple hover:text-white transition-all duration-300 overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
+                    <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     <ExternalLink size={18} />
                     <span>Demo</span>
                   </motion.a>
@@ -212,7 +214,7 @@ const Projects = () => {
             href="https://github.com/ghosstbabby12"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-ghost-purple text-white hover:bg-ghost-pink transition"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-card-gradient text-white hover:shadow-lg hover:shadow-ghost-purple/30 transition-all"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

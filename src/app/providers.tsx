@@ -140,6 +140,9 @@ const DICTIONARY = {
       subtitle: "Disfruta de una versión arcade interactiva integrada en mi portfolio"
     },
     contact: {
+      title: "Contáctame",
+      subtitle: "¿Tienes una idea, proyecto o colaboración? Escríbeme y lo hablamos 🚀",
+      social: "Sígueme en mis redes sociales",
       submit: "Enviar Mensaje",
       name: "Nombre",
       email: "Correo",
@@ -330,6 +333,9 @@ const DICTIONARY = {
     subtitle: "Enjoy an interactive arcade version embedded in my portfolio"
   },
   contact: {
+    title: "Contact Me",
+    subtitle: "Got an idea, project or collaboration? Write to me and let's talk 🚀",
+    social: "Follow me on social media",
     submit: "Send Message",
     name: "Name",
     email: "Email",

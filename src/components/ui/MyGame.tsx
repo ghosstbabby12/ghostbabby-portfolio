@@ -175,21 +175,22 @@ const MyGame: React.FC = () => {
                   {/* Botón START más grande */}
                   <button
                     onClick={() => setSelectedGame("boo")}
-                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-purple-400 transition-all transform hover:scale-105"
+                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-card-gradient text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-ghost-purple transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-ghost-purple/30"
                     style={{
                       fontFamily: "monospace",
-                      boxShadow: "0 0 20px rgba(167,139,250,0.6)",
                     }}
                   >
                     START
                   </button>
-                  
+
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 bg-gray-800 hover:bg-gray-700 text-white text-xs sm:text-sm rounded-lg border-2 border-gray-600 transition">
+                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
+                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                       &lt;/&gt; Código
                     </button>
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm rounded-lg border-2 border-blue-400 transition">
+                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
+                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                       ↗ Demo
                     </button>
                   </div>
@@ -269,21 +270,22 @@ const MyGame: React.FC = () => {
                   {/* Botón START más grande */}
                   <button
                     onClick={() => setSelectedGame("pacman")}
-                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-pink-600 hover:bg-pink-500 text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-pink-400 transition-all transform hover:scale-105"
+                    className="mb-3 px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 bg-card-gradient text-white font-bold text-base sm:text-lg md:text-xl rounded-full border-3 md:border-4 border-ghost-purple transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-ghost-purple/30"
                     style={{
                       fontFamily: "monospace",
-                      boxShadow: "0 0 20px rgba(236,72,153,0.6)",
                     }}
                   >
                     START
                   </button>
-                  
+
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 bg-gray-800 hover:bg-gray-700 text-white text-xs sm:text-sm rounded-lg border-2 border-gray-600 transition">
+                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
+                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                       &lt;/&gt; Código
                     </button>
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm rounded-lg border-2 border-blue-400 transition">
+                    <button className="group relative px-4 sm:px-5 py-1.5 sm:py-2 border-2 border-ghost-purple text-ghost-purple hover:text-white text-xs sm:text-sm rounded-lg transition-all overflow-hidden">
+                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                       ↗ Demo
                     </button>
                   </div>
@@ -306,24 +308,9 @@ const MyGame: React.FC = () => {
       {selectedGame !== "none" && (
         <button
           onClick={() => setSelectedGame("none")}
-          className="mt-6 sm:mt-8 px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-bold border-2 sm:border-3 md:border-4 transition-all transform hover:scale-105 relative z-10"
+          className="mt-6 sm:mt-8 px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-bold border-2 sm:border-3 md:border-4 border-ghost-purple bg-card-gradient text-white transition-all transform hover:scale-105 relative z-10 hover:shadow-lg hover:shadow-ghost-purple/30"
           style={{
             fontFamily: "monospace",
-            backgroundColor: theme === "light" ? "#fbcfe8" : "#1f2937",
-            color: theme === "light" ? "#831843" : "#ffffff",
-            borderColor: theme === "light" ? "#f9a8d4" : "#4b5563",
-            boxShadow:
-              theme === "light"
-                ? "0 4px 15px rgba(236,72,153,0.3)"
-                : "0 4px 15px rgba(0,0,0,0.5)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor =
-              theme === "light" ? "#f9a8d4" : "#374151";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor =
-              theme === "light" ? "#fbcfe8" : "#1f2937";
           }}
         >
           ⬅️ {tr("gallery.back", "Volver al menú")}

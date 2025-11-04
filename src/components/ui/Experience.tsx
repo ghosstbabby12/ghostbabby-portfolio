@@ -2,10 +2,11 @@
 import { motion } from "framer-motion"
 import Section from "@/components/shared/Section"
 import { Briefcase, GraduationCap, Code, Award } from "lucide-react"
-import { useI18n } from '../../app/providers'
+import { useI18n, useTheme } from '../../app/providers'
 
 const Experience = () => {
   const { t } = useI18n()
+  const { theme } = useTheme()
   
   const experiences = [
     {
@@ -14,7 +15,7 @@ const Experience = () => {
       company: t('experience.items.student.company'),
       period: t('experience.items.student.period'),
       description: t('experience.items.student.description'),
-      icon: <GraduationCap className="w-6 h-6 text-ghost-purple" />
+      icon: <GraduationCap className="w-6 h-6 text-white" />
     },
     {
       id: 2,
@@ -22,7 +23,7 @@ const Experience = () => {
       company: t('experience.items.developer.company'),
       period: t('experience.items.developer.period'),
       description: t('experience.items.developer.description'),
-      icon: <Code className="w-6 h-6 text-ghost-pink" />
+      icon: <Code className="w-6 h-6 text-white" />
     },
     {
       id: 3,
@@ -30,7 +31,7 @@ const Experience = () => {
       company: t('experience.items.projects.company'),
       period: t('experience.items.projects.period'),
       description: t('experience.items.projects.description'),
-      icon: <Briefcase className="w-6 h-6 text-ghost-blue" />
+      icon: <Briefcase className="w-6 h-6 text-white" />
     },
     {
       id: 4,
@@ -38,7 +39,7 @@ const Experience = () => {
       company: t('experience.items.achievements.company'),
       period: t('experience.items.achievements.period'),
       description: t('experience.items.achievements.description'),
-      icon: <Award className="w-6 h-6 text-amber-400" />
+      icon: <Award className="w-6 h-6 text-white" />
     }
   ]
 
@@ -52,8 +53,15 @@ const Experience = () => {
     >
       <div className="relative">
         {/* Línea vertical central */}
-        <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-ghost-purple via-ghost-pink to-ghost-purple opacity-30"></div>
-        
+        <div
+          className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full opacity-30"
+          style={{
+            background: theme === 'light'
+              ? 'linear-gradient(to bottom, #d5748e, #eaa4ba, #d5748e)'
+              : 'linear-gradient(to bottom, #667eea, #764ba2, #667eea)'
+          }}
+        ></div>
+
         <div className="space-y-16">
           {experiences.map((exp, index) => (
             <motion.div
@@ -67,8 +75,16 @@ const Experience = () => {
               viewport={{ once: true, margin: "-100px" }}
             >
               {/* Punto de la línea */}
-              <motion.div 
-                className="absolute left-1/2 transform -translate-x-1/2 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-ghost-purple to-ghost-pink rounded-full shadow-lg z-10 border-4 border-[#0a0118]"
+              <motion.div
+                className="absolute left-1/2 w-12 h-12 flex items-center justify-center rounded-full shadow-lg z-20 border-4"
+                style={{
+                  background: theme === 'light'
+                    ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
+                    : 'linear-gradient(to bottom right, #667eea, #764ba2)',
+                  borderColor: theme === 'light' ? '#ffffff' : '#0a0118',
+                  top: '20px',
+                  transform: 'translateX(-50%)'
+                }}
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 transition={{ duration: 0.5 }}
               >
@@ -80,7 +96,12 @@ const Experience = () => {
 
               {/* Card de experiencia */}
               <motion.div
-                className="w-full md:w-1/2 p-6 rounded-2xl glass-effect border border-white/10 shadow-xl hover:shadow-2xl hover:border-ghost-purple/50 transition-all duration-300 group"
+                className="w-full md:w-1/2 p-6 rounded-2xl glass-effect border shadow-xl hover:shadow-2xl transition-all duration-300 group relative z-10"
+                style={{
+                  borderColor: theme === 'light'
+                    ? 'rgba(213, 116, 142, 0.2)'
+                    : 'rgba(255, 255, 255, 0.1)'
+                }}
                 whileHover={{ y: -5 }}
               >
                 <div className="flex items-start justify-between mb-3">
@@ -88,17 +109,33 @@ const Experience = () => {
                     <h3 className="text-xl font-bold text-white group-hover:text-gradient transition-all duration-300">
                       {exp.title}
                     </h3>
-                    <p className="text-ghost-purple font-medium mt-1">
+                    <p
+                      className="font-medium mt-1"
+                      style={{
+                        color: theme === 'light' ? '#c2185b' : '#667eea'
+                      }}
+                    >
                       {exp.company}
                     </p>
                   </div>
                 </div>
-                
-                <span className="inline-block text-sm text-white/60 bg-white/5 px-3 py-1 rounded-full mb-4">
+
+                <span
+                  className="inline-block text-sm px-3 py-1 rounded-full mb-4"
+                  style={{
+                    color: theme === 'light' ? '#5a5a5a' : 'rgba(255, 255, 255, 0.6)',
+                    backgroundColor: theme === 'light' ? 'rgba(213, 116, 142, 0.1)' : 'rgba(255, 255, 255, 0.05)'
+                  }}
+                >
                   {exp.period}
                 </span>
-                
-                <p className="text-white/70 leading-relaxed">
+
+                <p
+                  className="leading-relaxed"
+                  style={{
+                    color: theme === 'light' ? '#3a3a3a' : 'rgba(255, 255, 255, 0.7)'
+                  }}
+                >
                   {exp.description}
                 </p>
               </motion.div>

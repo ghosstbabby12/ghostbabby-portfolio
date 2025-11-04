@@ -136,7 +136,7 @@ export default function Galeria() {
                         />
                         <button
                           onClick={() => handleAnswer(`section-${idx}`, inputs[`section-${idx}`] || '', section.answer)}
-                          className={`w-full py-4 px-8 rounded-xl font-bold text-lg bg-gradient-to-r ${section.gradient} hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl`}
+                          className="w-full py-4 px-8 rounded-xl font-bold text-lg bg-card-gradient text-white hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl hover:shadow-ghost-purple/30"
                         >
                           🔓 Desbloquear
                         </button>
