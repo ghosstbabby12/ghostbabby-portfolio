@@ -10,17 +10,21 @@ html {
 }
 
 @layer base {
+  /* Estilos base - modo oscuro por defecto */
   body {
     @apply bg-ghost-gradient text-white font-sans;
     overflow-x: hidden;
   }
 
-  /* Light theme overrides: the ThemeProvider adds `light` class to <html> */
-  .light {
+  /* ============================================
+     ESTILOS PARA MODO CLARO (sincronizado con preferencias del sistema)
+     El ThemeProvider detecta automáticamente las preferencias del sistema
+     y aplica la clase .light al elemento <html>
+     ============================================ */
+  html.light {
     color-scheme: light;
   }
 
-  /* Use html.light to be extra specific and override tailwind utilities */
   html.light body {
     /* Light background + dark text */
     background-color: #ffffff !important;
@@ -28,9 +32,10 @@ html {
     color: #000000 !important;
   }
 
-  /* Force common utility overrides in light mode so components using explicit
-     Tailwind utility classes also become light-friendly. Use !important to
-     ensure these override inline utility classes from components. */
+  /* Modo oscuro por defecto */
+  html:not(.light) {
+    color-scheme: dark;
+  }
 
   /* Replace dark site gradient with a subtle light gradient - Rosa pastel suave */
   html.light .bg-ghost-gradient,
@@ -170,33 +175,6 @@ html {
     border-color: #d88aaf !important;
   }
 
-  /* Asegurar que elementos no se queden con estilos de light mode en dark mode */
-  html:not(.light) .bg-white {
-    background-color: transparent !important;
-  }
-
-  /* Revertir cambios de texto blanco en dark mode - Asegurar visibilidad del header */
-  html:not(.light) .text-white,
-  html:not(.light) .text-white\/90,
-  html:not(.light) .text-white\/80,
-  html:not(.light) .text-white\/70,
-  html:not(.light) .text-white\/60 {
-    color: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  /* Revertir cambios de fondos en dark mode */
-  html:not(.light) .bg-black {
-    background-color: #000000 !important;
-  }
-
-  html:not(.light) .bg-black\/40 {
-    background-color: rgba(0,0,0,0.4) !important;
-  }
-
-  html:not(.light) .bg-black\/75 {
-    background-color: rgba(0,0,0,0.75) !important;
-  }
-
   /* Botones verdes se mantienen */
   html.light .bg-green-600 {
     background-color: #16a34a !important;
@@ -231,9 +209,6 @@ html {
     background-color: rgba(245,225,235,0.3) !important;
   }
 
-  /* Gradientes de fondo decorativos */
-  /* Nota: No sobrescribir bg-gradient-to-br/bg-gradient-to-b en general porque se usan para arcade machines y otras secciones */
-
   /* Partículas dinámicas */
   html.light .bg-white\/10 {
     background-color: rgba(245,225,235,0.25) !important;
@@ -254,11 +229,6 @@ html {
   /* Hover states */
   html.light .hover\:text-ghost-purple:hover {
     color: #c2185b !important;
-  }
-
-  /* Scroll to top button */
-  html.light .bg-ghost-purple\/20 {
-    background-color: rgba(240,210,225,0.35) !important;
   }
 
   /* Colores específicos de cyan y azul -> rosa equilibrado */
@@ -436,11 +406,6 @@ html {
       0 2px 3px rgba(213,116,142,0.12) !important;
   }
 
-  /* Revertir cambios de párrafos en dark mode */
-  html:not(.light) p {
-    color: inherit !important;
-  }
-
   /* Preservar colores originales de emojis y símbolos especiales */
   html.light span[role="img"],
   html.light .emoji,
@@ -464,6 +429,41 @@ html {
   html.light .fixed.bottom-8:hover {
     background-color: #c2185b !important;
     color: white !important;
+  }
+
+  /* ============================================
+     ESTILOS PARA MODO OSCURO
+     ============================================ */
+  /* Asegurar que elementos no se queden con estilos de light mode en dark mode */
+  html:not(.light) .bg-white {
+    background-color: transparent !important;
+  }
+
+  /* Revertir cambios de texto blanco en dark mode - Asegurar visibilidad del header */
+  html:not(.light) .text-white,
+  html:not(.light) .text-white\/90,
+  html:not(.light) .text-white\/80,
+  html:not(.light) .text-white\/70,
+  html:not(.light) .text-white\/60 {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Revertir cambios de fondos en dark mode */
+  html:not(.light) .bg-black {
+    background-color: #000000 !important;
+  }
+
+  html:not(.light) .bg-black\/40 {
+    background-color: rgba(0,0,0,0.4) !important;
+  }
+
+  html:not(.light) .bg-black\/75 {
+    background-color: rgba(0,0,0,0.75) !important;
+  }
+
+  /* Revertir cambios de párrafos en dark mode */
+  html:not(.light) p {
+    color: inherit !important;
   }
 
   /* Fix para iframes y elementos especiales que puedan quedar blancos */
