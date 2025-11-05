@@ -14,30 +14,53 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark")
+  // Detectar preferencias del sistema como valor inicial
+  const getSystemTheme = (): Theme => {
+    if (typeof window === "undefined") return "dark"
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
+  }
 
+  const [theme, setTheme] = useState<Theme>(getSystemTheme)
+
+  // Sincronizar con las preferencias del sistema al montar
   useEffect(() => {
-    try {
-      const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null
-      if (stored === "light" || stored === "dark") {
-        setTheme(stored)
-      } else {
-        setTheme("dark")
-      }
-    } catch {}
+    setTheme(getSystemTheme())
   }, [])
 
+  // Escuchar cambios en las preferencias del sistema
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: light)")
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? "light" : "dark")
+    }
+
+    // Agregar listener para cambios en las preferencias del sistema
+    mediaQuery.addEventListener("change", handleChange)
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange)
+    }
+  }, [])
+
+  // Aplicar clase al HTML cuando el tema cambia (para sincronizar con CSS)
   useEffect(() => {
     const root = document.documentElement
-    if (theme === "light") root.classList.add("light")
-    else root.classList.remove("light")
-    try {
-      localStorage.setItem("theme", theme)
-    } catch {}
+    if (theme === "light") {
+      root.classList.add("light")
+    } else {
+      root.classList.remove("light")
+    }
   }, [theme])
 
   const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")) }),
+    () => ({
+      theme,
+      setTheme,
+      toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light"))
+    }),
     [theme]
   )
 
