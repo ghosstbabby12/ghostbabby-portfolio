@@ -4,19 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 
 const CANVAS_WIDTH = 800
 const CANVAS_HEIGHT = 600
-const GRAVITY = 0.6
-const JUMP_FORCE = -12
-const MOVE_SPEED = 4
+const GRAVITY = 0.7
+const JUMP_FORCE = -13
+const MOVE_SPEED = 4.5
+const WORLD_WIDTH = 3500
 
 interface Player {
   x: number
   y: number
   vx: number
   vy: number
-  width: number
-  height: number
-  onGround: boolean
   direction: number
+  animFrame: number
+  onGround: boolean
 }
 
 interface Boo {
@@ -28,12 +28,39 @@ interface Boo {
   size: number
 }
 
-interface Coin {
+interface Block {
   id: number
   x: number
   y: number
+  width: number
+  height: number
+  hit: boolean
+  bouncing: boolean
+  bounceOffset: number
+  testimonial: Testimonial | null
+}
+
+interface Testimonial {
+  id: number
+  name: string
+  role: string
+  text: string
+  avatar: string
+  stars: number
+  x: number
+  y: number
+  vy: number
   collected: boolean
-  animation: number
+  floating: boolean
+}
+
+interface TestimonialData {
+  id: number
+  name: string
+  role: string
+  text: string
+  avatar: string
+  stars: number
 }
 
 interface Platform {
@@ -43,120 +70,110 @@ interface Platform {
   height: number
 }
 
-interface TestimonialCard {
-  id: number
-  title: string
-  text: string
-  collected: boolean
-  avatar: string
-  role: string
-}
-
-export default function MarioGhostHouse() {
+export default function MarioGhostHouseClassic() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [gameStarted, setGameStarted] = useState(false)
   const [gameOver, setGameOver] = useState(false)
+  const [victory, setVictory] = useState(false)
   const [score, setScore] = useState(0)
-  const [time, setTime] = useState(300)
+  const [time, setTime] = useState(200)
   const [lives, setLives] = useState(3)
   const [player, setPlayer] = useState<Player>({
-    x: 100,
-    y: 400,
-    vx: 0,
-    vy: 0,
-    width: 32,
-    height: 40,
-    onGround: false,
-    direction: 1
+    x: 100, y: 400, vx: 0, vy: 0, direction: 1, animFrame: 0, onGround: false
   })
-  const [boos, setBoos] = useState<Boo[]>([])
-  const [coins, setCoins] = useState<Coin[]>([])
+  const [boo, setBoo] = useState<Boo>({
+    x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80
+  })
+  const [blocks, setBlocks] = useState<Block[]>([])
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [platforms, setPlatforms] = useState<Platform[]>([])
   const [keys, setKeys] = useState({ left: false, right: false, jump: false })
   const [cameraX, setCameraX] = useState(0)
-  const animationFrame = useRef<number>()
   const [invincible, setInvincible] = useState(false)
-  const [testimonials, setTestimonials] = useState<TestimonialCard[]>([])
-  const [showCardPopup, setShowCardPopup] = useState<TestimonialCard | null>(null)
+  const [collectedTestimonials, setCollectedTestimonials] = useState<TestimonialData[]>([])
+  const [showTestimonialPopup, setShowTestimonialPopup] = useState<Testimonial | null>(null)
+  const [hitEffect, setHitEffect] = useState<{x: number, y: number, show: boolean}>({x: 0, y: 0, show: false})
+  const animationFrame = useRef<number>()
 
-  const TESTIMONIAL_STORAGE_KEY = 'arcade_testimonials_v1'
+  const GOAL_X = WORLD_WIDTH - 300
 
-  const testimonialPool: TestimonialCard[] = [
-    { id: 0, title: 'Ana García', role: 'CEO', text: 'Increíble experiencia de usuario 👏', collected: false, avatar: '👩‍💼' },
-    { id: 1, title: 'Luis Martínez', role: 'Developer', text: '¡Código limpio y eficiente!', collected: false, avatar: '👨‍💻' },
-    { id: 2, title: 'María López', role: 'Designer', text: 'Diseño impecable y moderno 🎨', collected: false, avatar: '👩‍🎨' },
-    { id: 3, title: 'Diego Ruiz', role: 'Manager', text: 'Profesionalismo en cada detalle', collected: false, avatar: '👨‍💼' },
-    { id: 4, title: 'Sofía Torres', role: 'Marketing', text: 'Creatividad e innovación constante 🎵', collected: false, avatar: '👩‍🚀' },
-    { id: 5, title: 'Pablo Sánchez', role: 'Founder', text: 'Excelente trabajo en equipo', collected: false, avatar: '🧑‍💼' },
-    { id: 6, title: 'Clara Jiménez', role: 'UX Designer', text: 'Interfaz intuitiva y atractiva 😄', collected: false, avatar: '👩‍🔬' },
-    { id: 7, title: 'Jorge Castro', role: 'Architect', text: 'Arquitectura sólida y escalable', collected: false, avatar: '👨‍🏭' },
-    { id: 8, title: 'Irene Vega', role: 'Consultant', text: 'Perfecto para el portfolio profesional', collected: false, avatar: '👩‍⚕️' },
-    { id: 9, title: 'Raúl Mendoza', role: 'Entrepreneur', text: 'Superó todas nuestras expectativas 🙂', collected: false, avatar: '👨‍🚀' },
+  const testimonialData: TestimonialData[] = [
+    { id: 0, name: 'Ana García', role: 'CEO de Tech Solutions', text: '¡Excelente trabajo! Superó todas nuestras expectativas.', avatar: '👩‍💼', stars: 5 },
+    { id: 1, name: 'Carlos Ruiz', role: 'CTO de StartupXYZ', text: 'Código limpio y bien documentado. Muy profesional.', avatar: '👨‍💻', stars: 5 },
+    { id: 2, name: 'María López', role: 'Product Manager', text: 'Entrega a tiempo y comunicación impecable.', avatar: '👩‍🎨', stars: 5 },
+    { id: 3, name: 'Diego Torres', role: 'Lead Developer', text: 'Gran habilidad técnica y trabajo en equipo.', avatar: '👨‍🔧', stars: 5 },
+    { id: 4, name: 'Sofía Martínez', role: 'UX Designer', text: 'Atención al detalle y diseño excepcional.', avatar: '👩‍🎨', stars: 5 },
+    { id: 5, name: 'Luis Fernández', role: 'Founder de AppCo', text: 'Soluciones innovadoras y creativas.', avatar: '👨‍💼', stars: 5 },
+    { id: 6, name: 'Carmen Díaz', role: 'HR Manager', text: 'Profesional, puntual y confiable.', avatar: '👩‍💼', stars: 5 },
+    { id: 7, name: 'Pablo Sánchez', role: 'Senior Engineer', text: 'Arquitectura sólida y escalable.', avatar: '👨‍🔬', stars: 5 },
   ]
 
+  const generateCV = () => {
+    // Descargar el PDF real del CV
+    // Añadimos timestamp para evitar problemas de caché
+    const timestamp = new Date().getTime()
+    const a = document.createElement('a')
+    a.href = `/CV_CAMILA_BASTIDAS.pdf?v=${timestamp}`
+    a.download = 'CV_CAMILA_BASTIDAS.pdf'
+    a.target = '_blank'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
   useEffect(() => {
+    // Plataformas estratégicamente posicionadas para golpear bloques
     const initialPlatforms: Platform[] = [
-      { x: 0, y: 500, width: 400, height: 100 },
-      { x: 500, y: 500, width: 400, height: 100 },
-      { x: 1000, y: 500, width: 400, height: 100 },
-      { x: 1500, y: 500, width: 400, height: 100 },
-      { x: 200, y: 380, width: 120, height: 20 },
-      { x: 400, y: 320, width: 120, height: 20 },
-      { x: 600, y: 260, width: 120, height: 20 },
-      { x: 800, y: 320, width: 120, height: 20 },
-      { x: 1000, y: 380, width: 120, height: 20 },
-      { x: 1200, y: 320, width: 120, height: 20 },
-      { x: 1400, y: 260, width: 120, height: 20 },
+      // Piso principal
+      { x: 0, y: 520, width: 3600, height: 80 },
+      
+      // Plataformas para acceder a bloques (perfectamente alineadas)
+      { x: 280, y: 400, width: 140, height: 20 },
+      { x: 680, y: 400, width: 140, height: 20 },
+      { x: 1080, y: 400, width: 140, height: 20 },
+      { x: 1480, y: 400, width: 140, height: 20 },
+      { x: 1880, y: 400, width: 140, height: 20 },
+      { x: 2280, y: 400, width: 140, height: 20 },
+      { x: 2680, y: 400, width: 140, height: 20 },
+      { x: 3080, y: 400, width: 140, height: 20 },
+      
+      // Plataformas intermedias para navegación
+      { x: 500, y: 460, width: 100, height: 20 },
+      { x: 900, y: 460, width: 100, height: 20 },
+      { x: 1300, y: 460, width: 100, height: 20 },
+      { x: 1700, y: 460, width: 100, height: 20 },
+      { x: 2100, y: 460, width: 100, height: 20 },
+      { x: 2500, y: 460, width: 100, height: 20 },
+      { x: 2900, y: 460, width: 100, height: 20 },
+      
+      // Plataformas altas (opcionales)
+      { x: 400, y: 300, width: 100, height: 20 },
+      { x: 800, y: 280, width: 100, height: 20 },
+      { x: 1200, y: 300, width: 100, height: 20 },
+      { x: 1600, y: 280, width: 100, height: 20 },
+      { x: 2000, y: 300, width: 100, height: 20 },
+      { x: 2400, y: 280, width: 100, height: 20 },
+      { x: 2800, y: 300, width: 100, height: 20 },
     ]
     setPlatforms(initialPlatforms)
 
-    const initialBoos: Boo[] = [
-      { x: 300, y: 300, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 600, y: 200, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 900, y: 350, vx: 0, vy: 0, hiding: false, size: 35 },
-      { x: 1200, y: 250, vx: 0, vy: 0, hiding: false, size: 35 },
-    ]
-    setBoos(initialBoos)
-
-    const initialCoins: Coin[] = [
-      { id: 0, x: 260, y: 340, collected: false, animation: 0 },
-      { id: 1, x: 460, y: 280, collected: false, animation: 0 },
-      { id: 2, x: 660, y: 220, collected: false, animation: 0 },
-      { id: 3, x: 860, y: 280, collected: false, animation: 0 },
-      { id: 4, x: 1060, y: 340, collected: false, animation: 0 },
-      { id: 5, x: 1260, y: 280, collected: false, animation: 0 },
-      { id: 6, x: 1460, y: 220, collected: false, animation: 0 },
-      { id: 7, x: 500, y: 450, collected: false, animation: 0 },
-      { id: 8, x: 700, y: 450, collected: false, animation: 0 },
-      { id: 9, x: 1100, y: 450, collected: false, animation: 0 },
-    ]
-    setCoins(initialCoins)
-
-    try {
-      const raw = localStorage.getItem(TESTIMONIAL_STORAGE_KEY)
-      if (raw) {
-        const saved: TestimonialCard[] = JSON.parse(raw)
-        const merged = testimonialPool.map(p => {
-          const found = saved.find(s => s.id === p.id)
-          return found ? { ...p, collected: found.collected } : p
-        })
-        setTestimonials(merged)
-      } else {
-        setTestimonials(testimonialPool.map(p => ({ ...p })))
-      }
-    } catch {
-      setTestimonials(testimonialPool.map(p => ({ ...p })))
-    }
+    // Bloques perfectamente alineados sobre las plataformas
+    const initialBlocks: Block[] = testimonialData.map((t, i) => ({
+      id: i,
+      x: 330 + (i * 400), // Centrados sobre las plataformas
+      y: 330, // Altura perfecta para golpear desde las plataformas
+      width: 40,
+      height: 40,
+      hit: false,
+      bouncing: false,
+      bounceOffset: 0,
+      testimonial: null
+    }))
+    setBlocks(initialBlocks)
   }, [])
 
   useEffect(() => {
-    try {
-      localStorage.setItem(TESTIMONIAL_STORAGE_KEY, JSON.stringify(testimonials))
-    } catch {}
-  }, [testimonials])
-
-  useEffect(() => {
-    if (!gameStarted || gameOver) return
+    if (!gameStarted || gameOver || victory) return
     const timer = setInterval(() => {
       setTime(t => {
         if (t <= 1) {
@@ -167,7 +184,7 @@ export default function MarioGhostHouse() {
       })
     }, 1000)
     return () => clearInterval(timer)
-  }, [gameStarted, gameOver])
+  }, [gameStarted, gameOver, victory])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -194,7 +211,7 @@ export default function MarioGhostHouse() {
   }, [])
 
   useEffect(() => {
-    if (!gameStarted || gameOver) return
+    if (!gameStarted || gameOver || victory) return
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
@@ -202,200 +219,599 @@ export default function MarioGhostHouse() {
 
     let animTime = 0
 
-    const drawMario = (x: number, y: number, dir: number) => {
+    const drawPeach = (x: number, y: number, dir: number, frame: number) => {
       const screenX = x - cameraX
       
+      ctx.save()
+      
+      // Sombra
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
-      ctx.beginPath()
-      ctx.ellipse(screenX + 16, y + 40, 12, 4, 0, 0, Math.PI * 2)
-      ctx.fill()
+      ctx.fillRect(screenX + 8, y + 40, 16, 4)
 
-      ctx.fillStyle = '#FF0000'
-      ctx.fillRect(screenX + 8, y + 16, 16, 16)
-      ctx.fillStyle = '#0000FF'
-      ctx.fillRect(screenX + 6, y + 18, 20, 14)
-      ctx.fillStyle = '#FFD700'
-      ctx.beginPath()
-      ctx.arc(screenX + 12, y + 22, 2, 0, Math.PI * 2)
-      ctx.arc(screenX + 20, y + 22, 2, 0, Math.PI * 2)
-      ctx.fill()
+      const walkCycle = Math.floor(frame / 6) % 2
+
+      // Vestido (estilo pixel art)
+      ctx.fillStyle = '#FF69B4'
+      ctx.fillRect(screenX + 6, y + 18, 20, 4)
+      ctx.fillRect(screenX + 4, y + 22, 24, 18)
+      
+      // Detalles vestido
+      ctx.fillStyle = '#FF1493'
+      ctx.fillRect(screenX + 4, y + 22, 24, 2)
+      ctx.fillRect(screenX + 4, y + 30, 24, 2)
+      
+      // Brazos
       ctx.fillStyle = '#FDBCB4'
-      ctx.beginPath()
-      ctx.arc(screenX + 16, y + 10, 8, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.fillStyle = '#FF0000'
-      ctx.fillRect(screenX + 6, y + 2, 20, 8)
-      ctx.beginPath()
-      ctx.arc(screenX + 16, y + 6, 10, Math.PI, 0)
-      ctx.fill()
+      ctx.fillRect(screenX + 2, y + 20, 4, 10)
+      ctx.fillRect(screenX + 26, y + 20, 4, 10)
+      
+      // Guantes
       ctx.fillStyle = '#FFFFFF'
-      ctx.font = 'bold 10px Arial'
-      ctx.textAlign = 'center'
-      ctx.fillText('M', screenX + 16, y + 8)
-      ctx.fillStyle = '#000000'
-      const eyeDir = dir > 0 ? 2 : -2
-      ctx.fillRect(screenX + 12 + eyeDir, y + 10, 2, 2)
-      ctx.fillRect(screenX + 18 + eyeDir, y + 10, 2, 2)
-      ctx.fillStyle = '#8B4513'
-      ctx.fillRect(screenX + 10, y + 14, 12, 2)
+      ctx.fillRect(screenX + 2, y + 28, 4, 4)
+      ctx.fillRect(screenX + 26, y + 28, 4, 4)
+      
+      // Cabeza
       ctx.fillStyle = '#FDBCB4'
-      ctx.fillRect(screenX + 4, y + 20, 4, 8)
-      ctx.fillRect(screenX + 24, y + 20, 4, 8)
-      ctx.fillStyle = '#0000FF'
-      ctx.fillRect(screenX + 10, y + 32, 5, 8)
-      ctx.fillRect(screenX + 17, y + 32, 5, 8)
-      ctx.fillStyle = '#8B4513'
-      ctx.fillRect(screenX + 8, y + 38, 7, 4)
-      ctx.fillRect(screenX + 17, y + 38, 7, 4)
+      ctx.fillRect(screenX + 8, y + 4, 16, 16)
+      
+      // Cabello
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(screenX + 6, y + 2, 20, 10)
+      
+      // Corona
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(screenX + 10, y, 12, 4)
+      ctx.fillRect(screenX + 12, y - 2, 2, 2)
+      ctx.fillRect(screenX + 18, y - 2, 2, 2)
+      
+      // Joya corona
+      ctx.fillStyle = '#FF1493'
+      ctx.fillRect(screenX + 15, y, 2, 2)
+      
+      // Ojos
+      ctx.fillStyle = '#000000'
+      ctx.fillRect(screenX + 10 + dir, y + 10, 2, 2)
+      ctx.fillRect(screenX + 18 + dir, y + 10, 2, 2)
+      
+      // Boca
+      ctx.fillStyle = '#FF69B4'
+      ctx.fillRect(screenX + 14, y + 14, 4, 2)
+      
+      // Piernas (animadas)
+      ctx.fillStyle = '#FDBCB4'
+      if (walkCycle === 0) {
+        ctx.fillRect(screenX + 10, y + 38, 4, 6)
+        ctx.fillRect(screenX + 18, y + 38, 4, 6)
+      } else {
+        ctx.fillRect(screenX + 12, y + 38, 4, 6)
+        ctx.fillRect(screenX + 16, y + 38, 4, 6)
+      }
+      
+      // Zapatos
+      ctx.fillStyle = '#FF1493'
+      ctx.fillRect(screenX + 8, y + 42, 6, 4)
+      ctx.fillRect(screenX + 18, y + 42, 6, 4)
+      
+      ctx.restore()
     }
 
-    const drawBoo = (x: number, y: number, hiding: boolean, size: number) => {
+    const drawBigBoo = (x: number, y: number, hiding: boolean, animTime: number) => {
       const screenX = x - cameraX
+      const size = 80
+      const floatY = y + Math.sin(animTime * 2) * 12
       
-      ctx.fillStyle = '#FFFFFF'
-      ctx.shadowBlur = 15
-      ctx.shadowColor = '#FFFFFF'
-      ctx.beginPath()
-      ctx.arc(screenX, y, size, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.shadowBlur = 0
-
-      for (let i = 0; i < 3; i++) {
+      ctx.save()
+      
+      // Múltiples capas de glow para efecto más dramático
+      for (let i = 5; i > 0; i--) {
+        const glowSize = size + i * 15
+        const alpha = hiding ? 0.15 / i : 0.35 / i
+        
+        const glow = ctx.createRadialGradient(screenX, floatY, 0, screenX, floatY, glowSize)
+        glow.addColorStop(0, `rgba(100, 200, 255, ${alpha})`)
+        glow.addColorStop(0.5, `rgba(0, 191, 255, ${alpha * 0.6})`)
+        glow.addColorStop(1, 'rgba(0, 191, 255, 0)')
+        ctx.fillStyle = glow
         ctx.beginPath()
-        ctx.arc(screenX + (i - 1) * 12, y + size + i * 8, size * 0.3 - i * 3, 0, Math.PI * 2)
+        ctx.arc(screenX, floatY, glowSize, 0, Math.PI * 2)
         ctx.fill()
+      }
+      
+      // Sombra del cuerpo
+      ctx.fillStyle = 'rgba(0, 0, 50, 0.4)'
+      ctx.fillRect(screenX - size/2 + 10, floatY - size/2 + 6, size - 16, size)
+      ctx.fillRect(screenX - size/2 + 6, floatY - size/2 + 10, size - 8, size - 8)
+      ctx.fillRect(screenX - size/2 + 2, floatY - size/2 + 14, size, size - 16)
+      
+      // Cuerpo principal con gradiente
+      const bodyColor = hiding ? '#E8E8FF' : '#FFFFFF'
+      ctx.fillStyle = bodyColor
+      
+      // Cuerpo redondeado pixel art mejorado
+      ctx.fillRect(screenX - size/2 + 12, floatY - size/2, size - 24, size)
+      ctx.fillRect(screenX - size/2 + 8, floatY - size/2 + 4, size - 16, size - 8)
+      ctx.fillRect(screenX - size/2 + 4, floatY - size/2 + 8, size - 8, size - 16)
+      ctx.fillRect(screenX - size/2, floatY - size/2 + 12, size, size - 24)
+      
+      // Detalles de iluminación en el cuerpo
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+      ctx.fillRect(screenX - size/2 + 8, floatY - size/2 + 8, size/3, size/3)
+      
+      ctx.fillStyle = 'rgba(200, 220, 255, 0.3)'
+      ctx.fillRect(screenX - size/2 + 4, floatY - size/2 + 12, size - 8, 4)
+      
+      // Cola ondeante mejorada
+      const tailSegments = 6
+      for (let i = 0; i < tailSegments; i++) {
+        const waveX = Math.sin(animTime * 4 + i * 0.6) * 6
+        const tailY = floatY + size/2 + i * 10
+        const tailSize = (size/1.8) - (i * 6)
+        
+        // Sombra de cola
+        ctx.fillStyle = 'rgba(0, 0, 50, 0.2)'
+        ctx.fillRect(screenX - tailSize/2 + waveX + 3, tailY + 2, tailSize, 10)
+        
+        // Segmento de cola
+        ctx.fillStyle = i % 2 === 0 ? '#FFFFFF' : '#F5F5FF'
+        ctx.fillRect(screenX - tailSize/2 + waveX, tailY, tailSize, 10)
+        
+        // Borde del segmento
+        ctx.strokeStyle = '#E0E0FF'
+        ctx.lineWidth = 1
+        ctx.strokeRect(screenX - tailSize/2 + waveX, tailY, tailSize, 10)
+        
+        // Highlight en cola
+        if (i % 2 === 0) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
+          ctx.fillRect(screenX - tailSize/2 + waveX + 2, tailY + 2, tailSize/2, 3)
+        }
       }
 
       if (hiding) {
-        ctx.fillStyle = '#FFFFFF'
-        ctx.beginPath()
-        ctx.ellipse(screenX - 15, y, 8, 20, -0.3, 0, Math.PI * 2)
-        ctx.ellipse(screenX + 15, y, 8, 20, 0.3, 0, Math.PI * 2)
-        ctx.fill()
+        // Manos cubriendo mejoradas
+        for (let hand = -1; hand <= 1; hand += 2) {
+          const handX = screenX + hand * (size/2 + 8)
+          
+          // Sombra de mano
+          ctx.fillStyle = 'rgba(0, 0, 50, 0.3)'
+          ctx.fillRect(handX + (hand > 0 ? 3 : -18), floatY - 12, 16, 28)
+          
+          // Mano
+          ctx.fillStyle = '#FFFFFF'
+          ctx.fillRect(handX + (hand > 0 ? 0 : -15), floatY - 14, 15, 28)
+          
+          // Borde de mano
+          ctx.strokeStyle = '#E0E0FF'
+          ctx.lineWidth = 2
+          ctx.strokeRect(handX + (hand > 0 ? 0 : -15), floatY - 14, 15, 28)
+          
+          // Dedos detallados
+          for (let i = 0; i < 4; i++) {
+            const fingerY = floatY - 18 + i * 8
+            ctx.fillStyle = '#FFFFFF'
+            ctx.fillRect(handX + (hand > 0 ? -3 : 15), fingerY, 8, 6)
+            
+            ctx.fillStyle = '#F0F0FF'
+            ctx.fillRect(handX + (hand > 0 ? -5 : 17), fingerY + 1, 4, 4)
+            
+            // Uñas
+            ctx.fillStyle = 'rgba(200, 200, 255, 0.5)'
+            ctx.fillRect(handX + (hand > 0 ? -6 : 18), fingerY, 3, 2)
+          }
+        }
       } else {
-        ctx.fillStyle = '#1a0033'
-        ctx.beginPath()
-        ctx.ellipse(screenX - 10, y - 5, 8, 12, 0, 0, Math.PI * 2)
-        ctx.ellipse(screenX + 10, y - 5, 8, 12, 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = '#FF1493'
-        ctx.beginPath()
-        ctx.arc(screenX - 10, y - 2, 4, 0, Math.PI * 2)
-        ctx.arc(screenX + 10, y - 2, 4, 0, Math.PI * 2)
-        ctx.fill()
+        // Ojos grandes mejorados
+        const eyeGap = 28
+        
+        for (let side = -1; side <= 1; side += 2) {
+          const eyeX = screenX + side * eyeGap
+          
+          // Sombra del ojo
+          ctx.fillStyle = 'rgba(0, 0, 80, 0.4)'
+          ctx.fillRect(eyeX - 8, floatY - 14, 16, 26)
+          ctx.fillRect(eyeX - 10, floatY - 10, 2, 18)
+          ctx.fillRect(eyeX - 6, floatY - 16, 12, 2)
+          
+          // Blanco del ojo
+          ctx.fillStyle = '#000080'
+          ctx.fillRect(eyeX - 7, floatY - 14, 14, 24)
+          ctx.fillRect(eyeX - 9, floatY - 10, 2, 16)
+          ctx.fillRect(eyeX - 5, floatY - 16, 10, 2)
+          ctx.fillRect(eyeX + 7, floatY - 10, 2, 16)
+          ctx.fillRect(eyeX - 5, floatY + 10, 10, 2)
+          
+          // Iris celeste brillante
+          const irisGradient = ctx.createLinearGradient(eyeX - 6, floatY - 8, eyeX + 6, floatY + 8)
+          irisGradient.addColorStop(0, '#00FFFF')
+          irisGradient.addColorStop(0.5, '#00CED1')
+          irisGradient.addColorStop(1, '#008B8B')
+          ctx.fillStyle = irisGradient
+          ctx.fillRect(eyeX - 6, floatY - 8, 12, 16)
+          
+          // Pupila oscura
+          ctx.fillStyle = '#000040'
+          ctx.fillRect(eyeX - 4, floatY - 4, 8, 12)
+          
+          // Brillos en el iris (múltiples capas)
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+          ctx.fillRect(eyeX - 4, floatY - 6, 3, 4)
+          
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+          ctx.fillRect(eyeX + 2, floatY - 2, 2, 3)
+          
+          ctx.fillStyle = 'rgba(200, 255, 255, 0.7)'
+          ctx.fillRect(eyeX - 1, floatY + 4, 4, 2)
+        }
+        
+        // Cejas malvadas
+        ctx.fillStyle = '#000040'
+        const browWave = Math.sin(animTime * 3) * 2
+        ctx.fillRect(screenX - 34, floatY - 22 + browWave, 12, 4)
+        ctx.fillRect(screenX - 36, floatY - 20 + browWave, 2, 4)
+        ctx.fillRect(screenX + 22, floatY - 22 + browWave, 12, 4)
+        ctx.fillRect(screenX + 34, floatY - 20 + browWave, 2, 4)
+        
+        // Boca grande mejorada
         ctx.fillStyle = '#8B0000'
-        ctx.beginPath()
-        ctx.arc(screenX, y + 10, 15, 0, Math.PI)
-        ctx.fill()
+        ctx.fillRect(screenX - 28, floatY + 14, 56, 20)
+        ctx.fillRect(screenX - 30, floatY + 16, 2, 16)
+        ctx.fillRect(screenX + 28, floatY + 16, 2, 16)
+        ctx.fillRect(screenX - 26, floatY + 12, 4, 4)
+        ctx.fillRect(screenX + 22, floatY + 12, 4, 4)
+        
+        // Interior oscuro de la boca
+        ctx.fillStyle = '#4B0000'
+        ctx.fillRect(screenX - 24, floatY + 18, 48, 14)
+        
+        // Lengua detallada
+        const tongueGradient = ctx.createLinearGradient(screenX - 10, floatY + 22, screenX + 10, floatY + 30)
+        tongueGradient.addColorStop(0, '#FF69B4')
+        tongueGradient.addColorStop(0.5, '#FF1493')
+        tongueGradient.addColorStop(1, '#C71585')
+        ctx.fillStyle = tongueGradient
+        ctx.fillRect(screenX - 10, floatY + 22, 20, 10)
+        
+        // Textura de lengua
+        ctx.fillStyle = 'rgba(255, 105, 180, 0.5)'
+        ctx.fillRect(screenX - 8, floatY + 23, 16, 2)
+        ctx.fillRect(screenX - 6, floatY + 27, 12, 2)
+        
+        // Dientes mejorados con más detalle
         ctx.fillStyle = '#FFFFFF'
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 8; i++) {
+          const toothX = screenX - 26 + i * 7
+          
+          // Diente principal
+          ctx.fillRect(toothX, floatY + 14, 6, 10)
+          
+          // Highlight en diente
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+          ctx.fillRect(toothX + 1, floatY + 15, 2, 6)
+          
+          // Sombra en diente
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+          ctx.fillRect(toothX + 4, floatY + 16, 2, 7)
+          
+          ctx.fillStyle = '#FFFFFF'
+        }
+        
+        // Babas/saliva
+        ctx.fillStyle = 'rgba(150, 255, 255, 0.3)'
+        const droolX = screenX - 20 + Math.sin(animTime * 2) * 15
+        ctx.fillRect(droolX, floatY + 34, 3, 8 + Math.sin(animTime * 3) * 4)
+        ctx.fillRect(droolX + 20, floatY + 34, 3, 6 + Math.cos(animTime * 3) * 3)
+      }
+      
+      // Borde exterior para definición
+      ctx.strokeStyle = hiding ? 'rgba(200, 200, 255, 0.5)' : 'rgba(230, 240, 255, 0.6)'
+      ctx.lineWidth = 2
+      ctx.strokeRect(screenX - size/2, floatY - size/2 + 12, size, size - 24)
+      
+      ctx.restore()
+    }
+
+    const drawBlock = (block: Block) => {
+      const screenX = block.x - cameraX
+      const y = block.y - block.bounceOffset
+      
+      if (block.hit) {
+        // Bloque usado (marrón oscuro)
+        ctx.fillStyle = '#8B4513'
+        ctx.fillRect(screenX, y, block.width, block.height)
+        
+        ctx.fillStyle = '#654321'
+        ctx.fillRect(screenX, y, block.width, 4)
+        ctx.fillRect(screenX, y, 4, block.height)
+        
+        ctx.fillStyle = '#5D4E37'
+        ctx.fillRect(screenX + 4, y + 4, 32, 32)
+        
+        // Grietas
+        ctx.fillStyle = '#3D2E17'
+        ctx.fillRect(screenX + 10, y + 8, 2, 24)
+        ctx.fillRect(screenX + 28, y + 8, 2, 24)
+      } else {
+        // Bloque activo (dorado brillante)
+        const pulse = Math.sin(animTime * 5) * 2
+        
+        ctx.fillStyle = '#FFD700'
+        ctx.shadowBlur = 15 + pulse
+        ctx.shadowColor = '#FFD700'
+        ctx.fillRect(screenX, y, block.width, block.height)
+        ctx.shadowBlur = 0
+        
+        // Bordes 3D
+        ctx.fillStyle = '#FFED4E'
+        ctx.fillRect(screenX, y, block.width, 4)
+        ctx.fillRect(screenX, y, 4, block.height)
+        
+        ctx.fillStyle = '#B8860B'
+        ctx.fillRect(screenX, y + 36, block.width, 4)
+        ctx.fillRect(screenX + 36, y, 4, block.height)
+        
+        // Símbolo ?
+        ctx.fillStyle = '#FFFFFF'
+        ctx.shadowBlur = 5
+        ctx.shadowColor = '#FFFFFF'
+        ctx.font = 'bold 28px monospace'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText('?', screenX + 20, y + 20 + pulse)
+        ctx.shadowBlur = 0
+      }
+    }
+
+    const drawTestimonial = (t: Testimonial) => {
+      const screenX = t.x - cameraX
+      
+      if (t.floating) {
+        // Testimonial flotante con glow
+        ctx.save()
+        ctx.translate(screenX, t.y)
+        
+        // Glow dorado
+        ctx.shadowBlur = 25
+        ctx.shadowColor = '#FFD700'
+        
+        // Carta de testimonial (pixel art)
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(-22, -22, 44, 44)
+        
+        // Borde
+        ctx.strokeStyle = '#FFD700'
+        ctx.lineWidth = 3
+        ctx.strokeRect(-22, -22, 44, 44)
+        
+        ctx.shadowBlur = 0
+        
+        // Barra superior
+        ctx.fillStyle = '#FFD700'
+        ctx.fillRect(-20, -20, 40, 6)
+        
+        // Avatar grande
+        ctx.font = '28px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText(t.avatar, 0, 4)
+        
+        // Estrellas
+        ctx.font = '14px Arial'
+        ctx.fillStyle = '#FFD700'
+        ctx.fillText('⭐'.repeat(t.stars), 0, 18)
+        
+        // Efecto de brillo giratorio
+        const sparkles = 8
+        for (let i = 0; i < sparkles; i++) {
+          const angle = (Date.now() * 0.003 + i * Math.PI * 2 / sparkles)
+          const dist = 35 + Math.sin(Date.now() * 0.005) * 5
+          const sx = Math.cos(angle) * dist
+          const sy = Math.sin(angle) * dist
+          
+          ctx.fillStyle = '#FFD700'
           ctx.beginPath()
-          ctx.moveTo(screenX - 12 + i * 8, y + 10)
-          ctx.lineTo(screenX - 8 + i * 8, y + 10)
-          ctx.lineTo(screenX - 10 + i * 8, y + 18)
+          ctx.arc(sx, sy, 2, 0, Math.PI * 2)
           ctx.fill()
         }
+        
+        ctx.restore()
       }
+    }
+
+    const drawFlag = (animTime: number) => {
+      const screenX = GOAL_X - cameraX
+      const y = 200
+      
+      // Asta (pixel art)
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(screenX, y, 8, 320)
+      
+      // Anillos
+      for (let i = 0; i < 6; i++) {
+        ctx.fillStyle = i % 2 === 0 ? '#FFA500' : '#FFD700'
+        ctx.fillRect(screenX - 2, y + i * 50, 12, 8)
+      }
+      
+      // Bandera ondeante (pixel style)
+      const wave = Math.floor(Math.sin(animTime * 3) * 3)
+      ctx.fillStyle = victory ? '#FFD700' : '#FF69B4'
+      ctx.fillRect(screenX + 8, y + 20, 60 + wave, 50)
+      
+      // Borde bandera
+      ctx.strokeStyle = victory ? '#FFA500' : '#C71585'
+      ctx.lineWidth = 2
+      ctx.strokeRect(screenX + 8, y + 20, 60 + wave, 50)
+      
+      // Estrella
+      ctx.fillStyle = '#FFFFFF'
+      ctx.font = 'bold 32px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('★', screenX + 38, y + 52)
     }
 
     const animate = () => {
       animTime += 0.016
 
-      const bgGradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT)
-      bgGradient.addColorStop(0, '#1a0a2e')
-      bgGradient.addColorStop(0.5, '#16213e')
-      bgGradient.addColorStop(1, '#0f1419')
-      ctx.fillStyle = bgGradient
+      // Fondo oscuro estilo Ghost House
+      ctx.fillStyle = '#000000'
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-
-      ctx.strokeStyle = 'rgba(139, 69, 19, 0.2)'
-      ctx.lineWidth = 2
+      
+      // Patrón de fondo (arquitectura fantasmal)
+      ctx.fillStyle = 'rgba(40, 40, 80, 0.3)'
       for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 15; j++) {
-          const x = i * 40 - (cameraX % 40)
-          const y = j * 40
-          ctx.strokeRect(x, y, 40, 40)
+        const x = (i * 80 - (cameraX * 0.3)) % CANVAS_WIDTH
+        ctx.fillRect(x, 0, 60, CANVAS_HEIGHT)
+      }
+      
+      // Ventanas fantasmales
+      ctx.fillStyle = 'rgba(100, 100, 150, 0.2)'
+      for (let i = 0; i < 10; i++) {
+        const x = (i * 150 - (cameraX * 0.2)) % CANVAS_WIDTH
+        for (let j = 0; j < 3; j++) {
+          ctx.fillRect(x + 20, 50 + j * 150, 40, 60)
         }
       }
 
+      // Plataformas (pixel art)
       platforms.forEach(platform => {
         const screenX = platform.x - cameraX
-        ctx.fillStyle = '#6B4423'
+        
+        // Sombra
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+        ctx.fillRect(screenX + 4, platform.y + 4, platform.width, platform.height)
+        
+        // Base marrón
+        ctx.fillStyle = '#8B7355'
         ctx.fillRect(screenX, platform.y, platform.width, platform.height)
-        ctx.strokeStyle = '#4A2F1A'
-        ctx.lineWidth = 2
-        for (let i = 0; i < platform.width / 40; i++) {
-          for (let j = 0; j < platform.height / 40; j++) {
-            ctx.strokeRect(screenX + i * 40, platform.y + j * 40, 40, 40)
-            ctx.fillStyle = '#8B6432'
-            ctx.fillRect(screenX + i * 40 + 5, platform.y + j * 40 + 5, 10, 10)
-          }
+        
+        // Bordes
+        ctx.fillStyle = '#A0826D'
+        ctx.fillRect(screenX, platform.y, platform.width, 4)
+        ctx.fillRect(screenX, platform.y, 4, platform.height)
+        
+        ctx.fillStyle = '#6B5344'
+        ctx.fillRect(screenX, platform.y + platform.height - 4, platform.width, 4)
+        ctx.fillRect(screenX + platform.width - 4, platform.y, 4, platform.height)
+        
+        // Textura pixel
+        for (let i = 0; i < platform.width / 20; i++) {
+          ctx.fillStyle = i % 2 === 0 ? '#9B7E5F' : '#8B6E4F'
+          ctx.fillRect(screenX + i * 20, platform.y + 6, 18, platform.height - 12)
         }
       })
 
-      setCoins(prevCoins => {
-        const updated = prevCoins.map(c => ({ ...c, animation: c.animation + (c.collected ? 0 : 0.1) }))
-        updated.forEach(coin => {
-          if (!coin.collected) {
-            const screenX = coin.x - cameraX
-            const scale = Math.abs(Math.cos(coin.animation))
-            ctx.save()
-            ctx.translate(screenX, coin.y)
-            const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, 25)
-            glow.addColorStop(0, 'rgba(255, 215, 0, 0.6)')
-            glow.addColorStop(1, 'rgba(255, 215, 0, 0)')
-            ctx.fillStyle = glow
-            ctx.beginPath()
-            ctx.arc(0, 0, 25, 0, Math.PI * 2)
-            ctx.fill()
-            ctx.fillStyle = '#FFD700'
-            ctx.beginPath()
-            ctx.ellipse(0, 0, 18 * scale, 18, 0, 0, Math.PI * 2)
-            ctx.fill()
-            ctx.strokeStyle = '#FFA500'
-            ctx.lineWidth = 3
-            ctx.stroke()
-            if (scale > 0.3) {
-              ctx.fillStyle = '#FFA500'
-              ctx.font = 'bold 20px Arial'
-              ctx.textAlign = 'center'
-              ctx.textBaseline = 'middle'
-              ctx.fillText('10', 0, 0)
-            }
-            ctx.restore()
-          }
-        })
-        return updated
-      })
+      // Bloques
+      blocks.forEach(block => drawBlock(block))
 
-      boos.forEach(boo => {
-        drawBoo(boo.x, boo.y + Math.sin(animTime * 2 + boo.x) * 5, boo.hiding, boo.size)
-      })
+      // Testimonials flotantes (efecto visual)
+      testimonials.forEach(t => drawTestimonial(t))
 
+      // Bandera
+      drawFlag(animTime)
+
+      // Efecto HIT cuando se golpea un bloque
+      if (hitEffect.show) {
+        const screenX = hitEffect.x - cameraX
+        ctx.save()
+        ctx.translate(screenX, hitEffect.y)
+        
+        ctx.shadowBlur = 20
+        ctx.shadowColor = '#FFD700'
+        
+        ctx.fillStyle = '#FFD700'
+        ctx.font = 'bold 24px monospace'
+        ctx.textAlign = 'center'
+        ctx.fillText('HIT!', 0, 0)
+        
+        ctx.fillStyle = '#FFFFFF'
+        ctx.font = 'bold 20px monospace'
+        ctx.fillText('+100', 0, 25)
+        
+        ctx.shadowBlur = 0
+        ctx.restore()
+      }
+
+      // Boo
+      drawBigBoo(boo.x, boo.y, boo.hiding, animTime)
+
+      // Peach
       if (invincible && Math.floor(animTime * 10) % 2 === 0) {
         ctx.globalAlpha = 0.5
       }
-      drawMario(player.x, player.y, player.direction)
+      drawPeach(player.x, player.y, player.direction, player.animFrame)
       ctx.globalAlpha = 1
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'
+      // HUD (estilo SMB)
+      ctx.fillStyle = '#000000'
       ctx.fillRect(0, 0, CANVAS_WIDTH, 50)
+      
       ctx.fillStyle = '#FFFFFF'
-      ctx.font = 'bold 20px Arial'
+      ctx.font = '20px monospace'
       ctx.textAlign = 'left'
-      ctx.fillText('MARIO', 20, 30)
+      ctx.fillText('PEACH', 20, 30)
+      
       ctx.fillStyle = '#FFD700'
-      ctx.fillText('🪙 ' + score, 200, 30)
+      ctx.fillText('★' + score.toString().padStart(6, '0'), 150, 30)
+      
       ctx.fillStyle = '#FFFFFF'
       ctx.textAlign = 'center'
-      ctx.fillText('TIME', CANVAS_WIDTH / 2 - 50, 20)
-      ctx.fillStyle = time < 30 ? '#FF0000' : '#FFFFFF'
-      ctx.font = 'bold 24px Arial'
-      ctx.fillText(String(time), CANVAS_WIDTH / 2 - 50, 42)
-      ctx.fillStyle = '#FF0000'
-      ctx.font = 'bold 20px Arial'
+      ctx.fillText('TIME', CANVAS_WIDTH / 2, 20)
+      ctx.fillText(time.toString().padStart(3, '0'), CANVAS_WIDTH / 2, 40)
+      
+      ctx.fillStyle = '#FF1493'
       ctx.textAlign = 'right'
-      ctx.fillText('❤️ x ' + lives, CANVAS_WIDTH - 20, 30)
+      ctx.fillText('x' + lives, CANVAS_WIDTH - 20, 30)
+      ctx.fillText('👑', CANVAS_WIDTH - 60, 30)
+      
+      // Barra inferior de testimonios recolectados
+      const bottomBarHeight = 80
+      ctx.fillStyle = '#000000'
+      ctx.fillRect(0, CANVAS_HEIGHT - bottomBarHeight, CANVAS_WIDTH, bottomBarHeight)
+      
+      // Borde superior de la barra
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(0, CANVAS_HEIGHT - bottomBarHeight, CANVAS_WIDTH, 3)
+      
+      // Título de la barra
+      ctx.fillStyle = '#FFFFFF'
+      ctx.font = 'bold 16px monospace'
+      ctx.textAlign = 'left'
+      ctx.fillText(`TESTIMONIOS: ${collectedTestimonials.length}/${testimonialData.length}`, 10, CANVAS_HEIGHT - bottomBarHeight + 20)
+      
+      // Mostrar testimonios recolectados
+      collectedTestimonials.forEach((testimonial, index) => {
+        const x = 10 + (index * 90)
+        const y = CANVAS_HEIGHT - bottomBarHeight + 30
+        
+        // Fondo del testimonial
+        ctx.fillStyle = '#1a1a1a'
+        ctx.fillRect(x, y, 85, 45)
+        
+        // Borde
+        ctx.strokeStyle = '#FFD700'
+        ctx.lineWidth = 2
+        ctx.strokeRect(x, y, 85, 45)
+        
+        // Avatar
+        ctx.font = '24px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText(testimonial.avatar, x + 20, y + 25)
+        
+        // Nombre (truncado)
+        ctx.font = '10px monospace'
+        ctx.fillStyle = '#FFFFFF'
+        const firstName = testimonial.name.split(' ')[0]
+        ctx.fillText(firstName.substring(0, 8), x + 55, y + 18)
+        
+        // Estrellas
+        ctx.font = '10px Arial'
+        ctx.fillStyle = '#FFD700'
+        ctx.fillText('⭐'.repeat(testimonial.stars), x + 55, y + 32)
+        
+        // Role (truncado)
+        ctx.font = '8px monospace'
+        ctx.fillStyle = '#AAAAAA'
+        const roleText = testimonial.role.substring(0, 9)
+        ctx.fillText(roleText, x + 55, y + 42)
+      })
 
       animationFrame.current = requestAnimationFrame(animate)
     }
@@ -404,23 +820,54 @@ export default function MarioGhostHouse() {
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
     }
-  }, [gameStarted, gameOver, player, boos, platforms, cameraX, score, time, lives, invincible])
+  }, [gameStarted, gameOver, victory, player, boo, blocks, testimonials, platforms, cameraX, score, time, lives, invincible, collectedTestimonials])
 
   useEffect(() => {
-    if (!gameStarted || gameOver) return
+    if (!gameStarted || gameOver || victory) return
 
     const gameLoop = setInterval(() => {
+      // Actualizar bloques que rebotan
+      setBlocks(prev => prev.map(block => {
+        if (block.bouncing) {
+          const newOffset = block.bounceOffset + 3
+          if (newOffset >= 20) {
+            return { ...block, bouncing: false, bounceOffset: 0 }
+          }
+          return { ...block, bounceOffset: newOffset }
+        }
+        return block
+      }))
+
+      // Actualizar testimonials flotantes (solo animación, ya están recolectados)
+      setTestimonials(prev => prev.map(t => {
+        if (t.floating && !t.collected) {
+          let newY = t.y + t.vy
+          let newVy = t.vy + 0.5
+          
+          // Eliminar si cae fuera
+          if (newY > CANVAS_HEIGHT) {
+            return { ...t, floating: false }
+          }
+          
+          return { ...t, y: newY, vy: newVy }
+        }
+        return t
+      }))
+
       setPlayer(prev => {
-        let { x, y, vx, vy, onGround, direction } = prev
+        let { x, y, vx, vy, direction, animFrame, onGround } = prev
 
         if (keys.left) {
           vx = -MOVE_SPEED
           direction = -1
+          animFrame++
         } else if (keys.right) {
           vx = MOVE_SPEED
           direction = 1
+          animFrame++
         } else {
           vx = 0
+          animFrame = 0
         }
 
         if (keys.jump && onGround) {
@@ -435,20 +882,88 @@ export default function MarioGhostHouse() {
         x += vx
         y += vy
 
+        // Colisiones con plataformas
         onGround = false
         platforms.forEach(platform => {
           if (
             x + 32 > platform.x &&
             x < platform.x + platform.width &&
-            y + 40 >= platform.y &&
-            y + 40 <= platform.y + 20 &&
+            y + 46 >= platform.y &&
+            y + 46 <= platform.y + 25 &&
             vy >= 0
           ) {
-            y = platform.y - 40
+            y = platform.y - 46
             vy = 0
             onGround = true
           }
+          
+          // Golpear desde abajo
+          if (
+            x + 32 > platform.x &&
+            x < platform.x + platform.width &&
+            y <= platform.y + platform.height &&
+            y + 15 >= platform.y + platform.height &&
+            vy < 0
+          ) {
+            y = platform.y + platform.height
+            vy = 0
+          }
         })
+
+        // Golpear bloques desde abajo (física mejorada)
+        blocks.forEach(block => {
+          if (
+            !block.hit &&
+            x + 32 > block.x &&
+            x < block.x + block.width &&
+            y < block.y + block.height &&
+            y + 10 > block.y &&
+            vy < 0
+          ) {
+            setBlocks(prev => prev.map(b => {
+              if (b.id === block.id) {
+                // Crear testimonial flotante
+                const testimonialData_item = testimonialData[b.id]
+                setTestimonials(t => [...t, {
+                  ...testimonialData_item,
+                  x: b.x + 20,
+                  y: b.y - 50,
+                  vy: -8,
+                  collected: false,
+                  floating: true
+                }])
+                
+                // Añadir a testimonios recolectados inmediatamente
+                setCollectedTestimonials(prev => [...prev, testimonialData_item])
+                setScore(s => s + 100)
+                
+                // Mostrar popup
+                setShowTestimonialPopup({
+                  ...testimonialData_item,
+                  x: b.x + 20,
+                  y: b.y - 50,
+                  vy: -8,
+                  collected: false,
+                  floating: true
+                })
+                setTimeout(() => setShowTestimonialPopup(null), 2500)
+                
+                // Mostrar efecto HIT
+                setHitEffect({x: b.x + 20, y: b.y - 30, show: true})
+                setTimeout(() => setHitEffect(prev => ({...prev, show: false})), 500)
+                
+                return { ...b, hit: true, bouncing: true }
+              }
+              return b
+            }))
+            vy = 1 // Rebote hacia abajo
+          }
+        })
+
+        // Victoria
+        if (x >= GOAL_X && !victory) {
+          setVictory(true)
+        }
 
         if (y > CANVAS_HEIGHT) {
           setLives(l => {
@@ -456,141 +971,95 @@ export default function MarioGhostHouse() {
             if (newLives <= 0) setGameOver(true)
             return newLives
           })
-          return { x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1 }
+          return { x: 100, y: 400, vx: 0, vy: 0, direction: 1, animFrame: 0, onGround: false }
         }
 
-        return { x, y, vx, vy, width: 32, height: 40, onGround, direction }
+        return { x, y, vx, vy, direction, animFrame, onGround }
       })
 
-      setCameraX(Math.max(0, player.x - CANVAS_WIDTH / 3))
+      setCameraX(prev => {
+        const targetX = Math.max(0, player.x - CANVAS_WIDTH / 3)
+        const maxCameraX = WORLD_WIDTH - CANVAS_WIDTH
+        return Math.min(maxCameraX, prev + (targetX - prev) * 0.1)
+      })
 
-      setBoos(prev => prev.map(boo => {
-        const dx = player.x - boo.x
-        const dy = player.y - boo.y
+      // IA del Boo grande
+      setBoo(prev => {
+        const dx = player.x + 16 - prev.x
+        const dy = player.y + 23 - prev.y
         const dist = Math.sqrt(dx * dx + dy * dy)
         
         const playerLookingAtBoo = 
           (player.direction > 0 && dx > 0) || 
           (player.direction < 0 && dx < 0)
         
-        const hiding = playerLookingAtBoo && dist < 300
+        const hiding = playerLookingAtBoo && dist < 400
 
-        let { x, y } = boo
+        let { x, y, vx, vy } = prev
 
-        if (!hiding && dist < 400) {
-          const speed = 1.5
-          x += (dx / dist) * speed
-          y += (dy / dist) * speed
+        if (!hiding && dist < 600) {
+          const speed = 2.5
+          const targetVx = (dx / dist) * speed
+          const targetVy = (dy / dist) * speed
+          
+          vx += (targetVx - vx) * 0.1
+          vy += (targetVy - vy) * 0.1
+        } else {
+          vx *= 0.95
+          vy *= 0.95
         }
 
-        return { ...boo, x, y, hiding }
-      }))
+        x += vx
+        y += vy
 
-      if (!invincible) {
-        boos.forEach(boo => {
-          if (!boo.hiding) {
-            const dx = player.x + 16 - boo.x
-            const dy = player.y + 20 - boo.y
-            const dist = Math.sqrt(dx * dx + dy * dy)
-            
-            if (dist < 40) {
-              setLives(l => {
-                const newLives = l - 1
-                if (newLives <= 0) setGameOver(true)
-                return newLives
-              })
-              setInvincible(true)
-              setTimeout(() => setInvincible(false), 2000)
-              setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0 }))
-            }
-          }
-        })
-      }
-
-      setCoins(prev => {
-        return prev.map(coin => {
-          if (!coin.collected) {
-            const dx = coin.x - (player.x + 16)
-            const dy = coin.y - (player.y + 20)
-            const dist = Math.sqrt(dx * dx + dy * dy)
-            
-            if (dist < 30) {
-              setScore(s => s + 10)
-
-              setTestimonials(prevCards => {
-                const already = prevCards.find(c => c.id === coin.id)?.collected
-                if (already) return prevCards
-                const updated = prevCards.map(c => c.id === coin.id ? { ...c, collected: true } : c)
-                const card = updated.find(c => c.id === coin.id)
-                if (card) {
-                  setShowCardPopup(card)
-                  setTimeout(() => setShowCardPopup(null), 3000)
-                }
-                try { localStorage.setItem(TESTIMONIAL_STORAGE_KEY, JSON.stringify(updated)) } catch {}
-                return updated
-              })
-
-              return { ...coin, collected: true }
-            }
-          }
-          return coin
-        })
+        return { ...prev, x, y, vx, vy, hiding }
       })
+
+      // Colisión con Boo
+      if (!invincible) {
+        const dx = player.x + 16 - boo.x
+        const dy = player.y + 23 - boo.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        
+        if (!boo.hiding && dist < 85) {
+          setLives(l => {
+            const newLives = l - 1
+            if (newLives <= 0) setGameOver(true)
+            return newLives
+          })
+          setInvincible(true)
+          setTimeout(() => setInvincible(false), 2000)
+          setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0 }))
+        }
+      }
 
     }, 16)
 
     return () => clearInterval(gameLoop)
-  }, [gameStarted, gameOver, keys, player, boos, platforms, invincible])
+  }, [gameStarted, gameOver, victory, keys, player, boo, blocks, platforms, invincible, testimonialData])
 
   const startGame = () => {
     setGameStarted(true)
     setGameOver(false)
+    setVictory(false)
     setScore(0)
-    setTime(300)
+    setTime(200)
     setLives(3)
-    setPlayer({ x: 100, y: 400, vx: 0, vy: 0, width: 32, height: 40, onGround: false, direction: 1 })
+    setPlayer({ x: 100, y: 400, vx: 0, vy: 0, direction: 1, animFrame: 0, onGround: false })
     setInvincible(false)
-    setCoins(prev => prev.map(c => ({ ...c, collected: false, animation: 0 })))
+    setBlocks(prev => prev.map(b => ({ ...b, hit: false, bouncing: false, bounceOffset: 0 })))
+    setTestimonials([])
+    setCollectedTestimonials([])
+    setBoo({ x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80 })
   }
 
-  const collectedCount = testimonials.filter(t => t.collected).length
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white via-pink-50 to-pink-100 dark:from-gray-900 dark:via-purple-900 dark:to-black p-4">
-      <div className="mb-4 text-center">
-        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 dark:from-red-500 dark:via-yellow-500 dark:to-red-500 mb-2">
-          👻 GHOST HOUSE
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-2 sm:p-4">
+      <div className="mb-3 sm:mb-4 text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-pink-400 mb-1 sm:mb-2" style={{ fontFamily: 'monospace' }}>
+          SUPER PEACH BROS.
         </h1>
-        <p className="text-pink-600 dark:text-yellow-300 text-sm">Recolecta testimonios • {collectedCount}/{testimonialPool.length}</p>
-      </div>
-
-      {/* Arcade Console Top - Cards Display - FUERA del canvas */}
-      <div className="w-full max-w-[800px] mb-2 bg-gradient-to-b from-pink-100 to-pink-200 dark:from-gray-800 dark:to-gray-900 rounded-xl border-4 border-pink-400 dark:border-yellow-700 p-3">
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
-          {testimonials.map(card => (
-            <div
-              key={card.id}
-              className={`min-w-[100px] flex-shrink-0 p-2 rounded-lg border-2 transition-all duration-300 ${
-                card.collected
-                  ? 'border-pink-400 dark:border-yellow-400 bg-gradient-to-br from-pink-400 to-purple-400 dark:from-purple-600 dark:to-pink-600 shadow-lg'
-                  : 'border-gray-400 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 opacity-40'
-              }`}
-              title={card.collected ? card.title + ' - ' + card.text : 'Bloqueado'}
-            >
-              <div className="text-center">
-                <div className="text-3xl mb-1">
-                  {card.collected ? card.avatar : '🔒'}
-                </div>
-                <div className="text-xs font-bold text-gray-800 dark:text-white truncate">
-                  {card.collected ? card.title.split(' ')[0] : '???'}
-                </div>
-                {card.collected && (
-                  <div className="text-yellow-600 dark:text-yellow-400 text-xs mt-1">★★★★★</div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <p className="text-green-400 text-sm sm:text-base md:text-lg" style={{ fontFamily: 'monospace' }}>WORLD 1-1 GHOST HOUSE</p>
       </div>
 
       <div className="relative shadow-2xl w-full max-w-[800px]">
@@ -598,66 +1067,129 @@ export default function MarioGhostHouse() {
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={CANVAS_HEIGHT}
-          className="border-8 border-pink-400 dark:border-yellow-700 rounded-lg bg-black w-full"
+          className="border-4 border-gray-800 bg-black w-full"
           style={{ imageRendering: 'pixelated' }}
         />
 
-        {showCardPopup && (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-bounce">
-            <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl p-6 shadow-2xl border-4 border-yellow-400 max-w-sm">
-              <div className="text-6xl text-center mb-2">{showCardPopup.avatar}</div>
-              <h3 className="text-white font-bold text-xl text-center">{showCardPopup.title}</h3>
-              <p className="text-yellow-300 text-center text-sm mb-2">{showCardPopup.role}</p>
-              <div className="text-yellow-400 text-center text-2xl mb-2">★★★★★</div>
-              <p className="text-white text-center text-sm italic">{showCardPopup.text}</p>
-              <p className="text-green-400 text-center font-bold mt-3 text-lg">+10 PUNTOS!</p>
+        {showTestimonialPopup && (
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-bounce px-4 w-full max-w-[95%] sm:max-w-md">
+            <div className="bg-black rounded-lg p-3 sm:p-4 md:p-6 border-2 sm:border-4 border-yellow-400 shadow-2xl" style={{ fontFamily: 'monospace' }}>
+              <div className="text-center mb-2 sm:mb-3">
+                <div className="text-4xl sm:text-5xl md:text-6xl mb-1 sm:mb-2">{showTestimonialPopup.avatar}</div>
+                <div className="text-yellow-400 text-xl sm:text-2xl md:text-3xl font-bold">¡TESTIMONIAL!</div>
+              </div>
+              <div className="bg-gray-900 p-3 sm:p-4 rounded border-2 border-gray-700">
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-white text-center mb-1">
+                  {showTestimonialPopup.name}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-400 text-center mb-2">
+                  {showTestimonialPopup.role}
+                </p>
+                <p className="text-yellow-400 text-center mb-2 sm:mb-3 text-lg sm:text-xl md:text-2xl">
+                  {'⭐'.repeat(showTestimonialPopup.stars)}
+                </p>
+                <p className="text-white text-center italic text-xs sm:text-sm leading-relaxed">
+                  "{showTestimonialPopup.text}"
+                </p>
+              </div>
+              <div className="text-center mt-3 sm:mt-4">
+                <p className="text-green-400 font-bold text-lg sm:text-xl md:text-2xl">+100 PUNTOS!</p>
+              </div>
             </div>
           </div>
         )}
-        
-        {!gameStarted && !gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 rounded-lg">
-            <div className="text-center space-y-6">
-              <h2 className="text-4xl font-bold text-yellow-400 mb-4">¡RECOLECTA TESTIMONIOS!</h2>
-              <p className="text-white text-lg mb-2">🎮 Usa las flechas para moverte</p>
-              <p className="text-white text-lg mb-2">⬆️ o ESPACIO para saltar</p>
-              <p className="text-yellow-300 text-sm mb-4">Los Boos se esconden cuando los miras 👀</p>
+
+        {!gameStarted && !gameOver && !victory && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 p-4">
+            <div className="text-center space-y-4 sm:space-y-5 md:space-y-6 px-4 sm:px-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg">
+              <h2 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2 sm:mb-4" style={{ fontFamily: 'monospace' }}>
+                INSTRUCCIONES
+              </h2>
+              <div className="bg-gray-900 p-4 sm:p-5 md:p-6 rounded border-2 border-gray-700">
+                <p className="text-white text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                  ⬅️ ➡️ MOVER
+                </p>
+                <p className="text-white text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                  ESPACIO / ⬆️ SALTAR
+                </p>
+                <p className="text-yellow-300 text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                  GOLPEA BLOQUES ? DESDE ABAJO
+                </p>
+                <p className="text-green-300 text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                  RECOLECTA TESTIMONIOS 📜
+                </p>
+                <p className="text-cyan-300 text-base sm:text-lg" style={{ fontFamily: 'monospace' }}>
+                  EVITA AL BOO 👻
+                </p>
+              </div>
               <button
                 onClick={startGame}
-                className="px-12 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white font-bold text-2xl rounded-xl shadow-lg transform hover:scale-105 transition-all border-4 border-yellow-400"
+                className="w-full sm:w-auto px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold text-xl sm:text-2xl rounded border-2 sm:border-4 border-green-400 transition-all hover:scale-105 active:scale-95"
+                style={{ fontFamily: 'monospace' }}
               >
-                START
+                🎮 START
+              </button>
+            </div>
+          </div>
+        )}
+
+        {victory && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 z-50 p-4">
+            <div className="bg-gray-900 p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 border-yellow-400 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-400" style={{ fontFamily: 'monospace' }}>
+                STAGE CLEAR!
+              </h2>
+              <div className="bg-black p-3 sm:p-4 rounded">
+                <p className="text-white text-xl sm:text-2xl md:text-3xl mb-2" style={{ fontFamily: 'monospace' }}>
+                  SCORE: {score}
+                </p>
+                <p className="text-green-400 text-base sm:text-lg md:text-xl" style={{ fontFamily: 'monospace' }}>
+                  TESTIMONIOS: {collectedTestimonials.length}/{testimonialData.length}
+                </p>
+              </div>
+              <button
+                onClick={generateCV}
+                className="w-full px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-base sm:text-lg md:text-xl rounded border-2 sm:border-4 border-blue-400 transition-all hover:scale-105 active:scale-95"
+                style={{ fontFamily: 'monospace' }}
+              >
+                📄 DOWNLOAD CV
+              </button>
+              <button
+                onClick={startGame}
+                className="w-full px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold text-sm sm:text-base md:text-lg rounded border-2 sm:border-4 border-green-400 transition-all hover:scale-105 active:scale-95"
+                style={{ fontFamily: 'monospace' }}
+              >
+                🔄 RETRY
               </button>
             </div>
           </div>
         )}
 
         {gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 rounded-lg">
-            <div className="bg-purple-900 bg-opacity-95 p-10 rounded-2xl border-8 border-yellow-500 text-center space-y-4">
-              <h2 className="text-6xl font-bold text-red-500 mb-4">GAME OVER</h2>
-              <p className="text-yellow-400 text-4xl font-bold mb-2">🪙 {score}</p>
-              <p className="text-purple-300 text-2xl">📝 {collectedCount}/{testimonialPool.length} Cards</p>
-              <p className="text-white text-xl">Tiempo: {time}s</p>
-              {collectedCount === testimonialPool.length && (
-                <div className="bg-yellow-500 text-black p-4 rounded-lg font-bold text-xl animate-pulse mt-4">
-                  🎉 ¡TODOS LOS TESTIMONIOS! 🎉
-                </div>
-              )}
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 p-4">
+            <div className="bg-gray-900 p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 border-red-500 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-red-500" style={{ fontFamily: 'monospace' }}>
+                GAME OVER
+              </h2>
+              <div className="bg-black p-3 sm:p-4 rounded">
+                <p className="text-white text-xl sm:text-2xl md:text-3xl" style={{ fontFamily: 'monospace' }}>
+                  SCORE: {score}
+                </p>
+              </div>
               <button
                 onClick={startGame}
-                className="mt-4 px-10 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white font-bold text-xl rounded-xl transform hover:scale-105 transition-all border-4 border-yellow-400"
+                className="w-full px-6 sm:px-8 md:px-12 py-3 sm:py-3.5 md:py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold text-lg sm:text-xl md:text-2xl rounded border-2 sm:border-4 border-green-400 transition-all hover:scale-105 active:scale-95"
+                style={{ fontFamily: 'monospace' }}
               >
-                TRY AGAIN
+                🔄 CONTINUE
               </button>
             </div>
           </div>
         )}
       </div>
 
-      <div className="mt-6 text-center space-y-2 max-w-2xl">
-        <p className="text-yellow-300 text-sm">💡 TIP: Los Boos se esconden cuando los miras</p>
-        <p className="text-purple-300 text-xs">Las tarjetas se guardan en tu consola arcade</p>
+      <div className="mt-4 sm:mt-6 text-center text-gray-400 px-4" style={{ fontFamily: 'monospace' }}>
+        <p className="text-xs sm:text-sm md:text-base">© 2024 SUPER PEACH BROS.</p>
       </div>
     </div>
   )

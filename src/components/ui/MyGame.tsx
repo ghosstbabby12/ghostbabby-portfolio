@@ -15,6 +15,7 @@ const MyGame: React.FC = () => {
   const [level, setLevel] = useState(8);
   const [credits, setCredits] = useState(5);
   const [isHoveringBoo, setIsHoveringBoo] = useState(false);
+  const [isHoveringPacman, setIsHoveringPacman] = useState(false);
 
   // helper: use translation if exists, otherwise fallback string
   const tr = (key: string, fallback: string) => {
@@ -149,30 +150,41 @@ const MyGame: React.FC = () => {
 
                 {/* Área de imagen superior - más grande */}
                 <div
-                  className="relative w-full flex-1 min-h-[200px] sm:min-h-[250px] md:min-h-[300px] flex items-center justify-center"
+                  className="relative w-full flex-1 min-h-[200px] sm:min-h-[250px] md:min-h-[300px] flex items-center justify-center cursor-pointer transition-all duration-300"
+                  onMouseEnter={() => setIsHoveringBoo(true)}
+                  onMouseLeave={() => setIsHoveringBoo(false)}
                   style={{
-                    backgroundImage: "url(/images/games/boo.jpg)",
+                    backgroundImage: isHoveringBoo
+                      ? "none"
+                      : "url(/images/games/boo.jpg)",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     filter: "saturate(1.4) brightness(1.1)",
+                    backgroundColor: isHoveringBoo ? "#000000" : "transparent",
                   }}
                 >
                   {/* Overlay muy sutil */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30"
-                    style={{ zIndex: 1 }}
-                  ></div>
-                  
-                  {/* Emoji del personaje centrado */}
-                  <div
-                    className="relative z-10 text-6xl sm:text-7xl md:text-8xl"
-                    style={{
-                      filter: "drop-shadow(0 0 30px rgba(255,255,255,0.9))",
-                    }}
-                  >
-                
-                  </div>
+                  {!isHoveringBoo && (
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30"
+                      style={{ zIndex: 1 }}
+                    ></div>
+                  )}
+
+                  {/* GIF animado de Boo al hacer hover */}
+                  {isHoveringBoo && (
+                    <div className="relative z-10 flex items-center justify-center w-full h-full">
+                      <img
+                        src="https://media1.tenor.com/m/TbGh9uzZ8mUAAAAC/king-boo-super-mario.gif"
+                        alt="Boo animated"
+                        className="max-w-[80%] max-h-[80%] object-contain"
+                        style={{
+                          filter: "drop-shadow(0 0 30px rgba(216,180,254,0.9))",
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
@@ -258,22 +270,41 @@ const MyGame: React.FC = () => {
 
                 {/* Área de imagen superior - más grande */}
                 <div
-                  className="relative w-full flex-1 min-h-[200px] sm:min-h-[250px] md:min-h-[300px] flex items-center justify-center"
+                  className="relative w-full flex-1 min-h-[200px] sm:min-h-[250px] md:min-h-[300px] flex items-center justify-center cursor-pointer transition-all duration-300"
+                  onMouseEnter={() => setIsHoveringPacman(true)}
+                  onMouseLeave={() => setIsHoveringPacman(false)}
                   style={{
-                    backgroundImage: "url(/images/games/pacman.jpg)",
+                    backgroundImage: isHoveringPacman
+                      ? "none"
+                      : "url(/images/games/pacman.jpg)",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     filter: "saturate(1.4) brightness(1.1)",
+                    backgroundColor: isHoveringPacman ? "#000000" : "transparent",
                   }}
                 >
                   {/* Overlay muy sutil */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30"
-                    style={{ zIndex: 1 }}
-                  ></div>
+                  {!isHoveringPacman && (
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30"
+                      style={{ zIndex: 1 }}
+                    ></div>
+                  )}
 
-
+                  {/* GIF animado de Pac-Man al hacer hover */}
+                  {isHoveringPacman && (
+                    <div className="relative z-10 flex items-center justify-center w-full h-full">
+                      <img
+                        src="https://i.pinimg.com/originals/72/07/a4/7207a4522bc87de5a1753224a7ddb431.gif"
+                        alt="Pac-Man animated"
+                        className="max-w-[80%] max-h-[80%] object-contain"
+                        style={{
+                          filter: "drop-shadow(0 0 30px rgba(255,215,0,0.9))",
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
