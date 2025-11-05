@@ -3,10 +3,11 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 // THEME
-export type Theme = "dark" | "light"
+export type Theme = "dark" | "light" | "system"
 
 interface ThemeContextValue {
   theme: Theme
+  actualTheme: "dark" | "light" // El tema real aplicado
   setTheme: (t: Theme) => void
   toggleTheme: () => void
 }
@@ -14,31 +15,72 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark")
+  const [theme, setTheme] = useState<Theme>("system")
+  const [actualTheme, setActualTheme] = useState<"dark" | "light">("dark")
 
+  // Detectar y actualizar el tema real según las preferencias
+  useEffect(() => {
+    const updateActualTheme = () => {
+      if (theme === "system") {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+        setActualTheme(prefersDark ? "dark" : "light")
+      } else {
+        setActualTheme(theme)
+      }
+    }
+
+    updateActualTheme()
+
+    // Escuchar cambios en las preferencias del sistema
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+      const handleChange = (e: MediaQueryListEvent) => {
+        setActualTheme(e.matches ? "dark" : "light")
+      }
+
+      mediaQuery.addEventListener("change", handleChange)
+      return () => mediaQuery.removeEventListener("change", handleChange)
+    }
+  }, [theme])
+
+  // Cargar preferencia guardada
   useEffect(() => {
     try {
-      const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null
-      if (stored === "light" || stored === "dark") {
+      const stored = localStorage.getItem("theme") as Theme | null
+      if (stored === "light" || stored === "dark" || stored === "system") {
         setTheme(stored)
       } else {
-        setTheme("dark")
+        setTheme("system") // Por defecto, seguir el sistema
       }
     } catch {}
   }, [])
 
+  // Aplicar tema al DOM
   useEffect(() => {
     const root = document.documentElement
-    if (theme === "light") root.classList.add("light")
-    else root.classList.remove("light")
+    if (actualTheme === "light") {
+      root.classList.add("light")
+    } else {
+      root.classList.remove("light")
+    }
+  }, [actualTheme])
+
+  // Guardar preferencia cuando el usuario la cambia
+  const handleSetTheme = (newTheme: Theme) => {
+    setTheme(newTheme)
     try {
-      localStorage.setItem("theme", theme)
+      localStorage.setItem("theme", newTheme)
     } catch {}
-  }, [theme])
+  }
 
   const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")) }),
-    [theme]
+    () => ({
+      theme,
+      actualTheme,
+      setTheme: handleSetTheme,
+      toggleTheme: () => handleSetTheme(actualTheme === "light" ? "dark" : "light")
+    }),
+    [theme, actualTheme]
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
@@ -159,7 +201,14 @@ const DICTIONARY = {
       cta: "¿Tienes una idea, proyecto o colaboración? Escríbeme y lo hablamos 🚀"
     },
     projects: {
-      description: "Una selección de proyectos que demuestran mis habilidades en desarrollo web, desde aplicaciones empresariales hasta experiencias interactivas creativas."
+      tittle: "Una selección de proyectos que demuestran mis habilidades en desarrollo web, desde aplicaciones empresariales hasta experiencias interactivas creativas.",
+      id : 1,
+      title: "Manejo de Integración Continua",
+      description:
+        "Este proyecto consiste en una aplicación React sencilla que consume la API pública de usuarios aleatorios y muestra información básica de los usuarios",
+    
+    
+    
     },
     about: {
       title: "Sobre Mí",
@@ -203,6 +252,8 @@ const DICTIONARY = {
         }
       }
     },
+
+    
     pacman: {
       title: "👻 GHOST-MAN",
       score: "Puntaje",

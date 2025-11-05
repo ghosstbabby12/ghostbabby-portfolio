@@ -1,7 +1,7 @@
 'use client'
 import { motion } from "framer-motion"
 import Section from "@/components/shared/Section"
-import { useI18n } from '../../app/providers'
+import { useI18n, useTheme } from '../../app/providers'
 import { Linkedin, Github, Instagram } from 'lucide-react'
 
 // Iconos personalizados para X (Twitter) y Vercel
@@ -25,6 +25,7 @@ const SpotifyIcon = () => (
 
 const Contact = () => {
   const { t } = useI18n()
+  const { actualTheme } = useTheme()
 
   const socialLinks = [
     {
@@ -71,7 +72,9 @@ const Contact = () => {
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-ghost-purple via-ghost-pink to-ghost-blue bg-clip-text text-transparent">
           {t('contact.title')}
         </h2>
-        <p className="text-center text-gray-400 mb-12">
+        <p className={`text-center mb-12 ${
+          actualTheme === 'light' ? 'text-gray-600' : 'text-gray-400'
+        }`}>
           {t('contact.subtitle')}
         </p>
 
@@ -84,34 +87,52 @@ const Contact = () => {
         >
           <div>
             {/* Nombre */}
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className={`block text-sm font-medium mb-2 ${
+              actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'
+            }`}>
               {t('contact.name')}
             </label>
             <input
               type="text"
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ghost-purple/50 transition-all"
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 ${
+                actualTheme === 'light'
+                  ? 'bg-white border-purple-300 text-gray-900 placeholder-gray-400 focus:ring-purple-400 focus:border-purple-400'
+                  : 'bg-white/5 border-white/10 text-white placeholder-gray-500 focus:ring-ghost-purple/50'
+              }`}
             />
           </div>
 
           <div>
             {/* Email */}
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className={`block text-sm font-medium mb-2 ${
+              actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'
+            }`}>
               {t('contact.email')}
             </label>
             <input
               type="email"
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ghost-purple/50 transition-all"
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 ${
+                actualTheme === 'light'
+                  ? 'bg-white border-purple-300 text-gray-900 placeholder-gray-400 focus:ring-purple-400 focus:border-purple-400'
+                  : 'bg-white/5 border-white/10 text-white placeholder-gray-500 focus:ring-ghost-purple/50'
+              }`}
             />
           </div>
 
           <div>
             {/* Mensaje */}
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className={`block text-sm font-medium mb-2 ${
+              actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'
+            }`}>
               {t('contact.message')}
             </label>
             <textarea
               rows={5}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ghost-purple/50 transition-all resize-none"
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 resize-none ${
+                actualTheme === 'light'
+                  ? 'bg-white border-purple-300 text-gray-900 placeholder-gray-400 focus:ring-purple-400 focus:border-purple-400'
+                  : 'bg-white/5 border-white/10 text-white placeholder-gray-500 focus:ring-ghost-purple/50'
+              }`}
             />
           </div>
 
@@ -132,9 +153,13 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
           viewport={{ once: true }}
-          className="mt-12 pt-8 border-t border-white/10"
+          className={`mt-12 pt-8 border-t ${
+            actualTheme === 'light' ? 'border-gray-300' : 'border-white/10'
+          }`}
         >
-          <p className="text-center text-gray-400 mb-6 text-sm">
+          <p className={`text-center mb-6 text-sm ${
+            actualTheme === 'light' ? 'text-gray-600' : 'text-gray-400'
+          }`}>
             {t('contact.social') || 'Sígueme en mis redes sociales'}
           </p>
           <div className="flex justify-center items-center gap-4">

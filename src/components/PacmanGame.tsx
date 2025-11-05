@@ -73,7 +73,7 @@ export default function PacmanGame() {
   const [powerUpActive, setPowerUpActive] = useState(false)
   const router = useRouter()
   const { t } = useI18n()
-  const { theme } = useTheme()
+  const { actualTheme } = useTheme()
 
   const map = [
     "############################",
@@ -127,7 +127,7 @@ export default function PacmanGame() {
       {
         position: new Vector2D(13, 10),
         velocity: Vector2D.left(),
-        color: theme === 'light' ? '#000000' : '#FF0000',
+        color: actualTheme === 'light' ? '#000000' : '#FF0000',
         startPosition: new Vector2D(13, 10),
         eaten: false,
         respawnTimer: 0
@@ -135,7 +135,7 @@ export default function PacmanGame() {
       {
         position: new Vector2D(14, 10),
         velocity: Vector2D.right(),
-        color: theme === 'light' ? '#FFB6C1' : '#FFB8FF',
+        color: actualTheme === 'light' ? '#FFB6C1' : '#FFB8FF',
         startPosition: new Vector2D(14, 10),
         eaten: false,
         respawnTimer: 0
@@ -143,7 +143,7 @@ export default function PacmanGame() {
       {
         position: new Vector2D(12, 10),
         velocity: Vector2D.down(),
-        color: theme === 'light' ? '#FFC0CB' : '#00FFFF',
+        color: actualTheme === 'light' ? '#FFC0CB' : '#00FFFF',
         startPosition: new Vector2D(12, 10),
         eaten: false,
         respawnTimer: 0
@@ -151,7 +151,7 @@ export default function PacmanGame() {
       {
         position: new Vector2D(15, 10),
         velocity: Vector2D.up(),
-        color: theme === 'light' ? '#FFD4E5' : '#FFB851',
+        color: actualTheme === 'light' ? '#FFD4E5' : '#FFB851',
         startPosition: new Vector2D(15, 10),
         eaten: false,
         respawnTimer: 0
@@ -441,7 +441,7 @@ export default function PacmanGame() {
           ctx.arc(screenX + 4, screenY - 5, 2, 0, Math.PI * 2)
           ctx.fill()
         } else {
-          ctx.fillStyle = theme === 'light' ? '#000000' : '#000080'
+          ctx.fillStyle = actualTheme === 'light' ? '#000000' : '#000080'
           ctx.beginPath()
           ctx.arc(screenX - 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
           ctx.arc(screenX + 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
@@ -517,7 +517,7 @@ export default function PacmanGame() {
       window.removeEventListener('keydown', handleKey)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [gameOver, won, theme])
+  }, [gameOver, won, actualTheme])
 
   const handleRestart = () => {
     window.location.reload()
@@ -525,15 +525,15 @@ export default function PacmanGame() {
 
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen select-none overflow-hidden ${
-      theme === 'light' ? 'bg-white text-black' : 'bg-black text-white'
+      actualTheme === 'light' ? 'bg-white text-black' : 'bg-black text-white'
     }`}>
       <h1 className={`text-3xl font-bold mb-2 tracking-widest ${
-        theme === 'light' ? 'text-pink-600' : 'text-yellow-400'
+        actualTheme === 'light' ? 'text-pink-600' : 'text-yellow-400'
       }`}>{t('pacman.title')}</h1>
       <div className="flex gap-6 mb-2">
-        <p className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.score')}: {score}</p>
-        <p className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.lives')}: {lives}</p>
-        <p className={`font-bold ${theme === 'light' ? 'text-pink-600' : 'text-red-400'}`}>{t('pacman.cherries')}: {cherries}/3 🍒</p>
+        <p className={actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.score')}: {score}</p>
+        <p className={actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'}>{t('pacman.lives')}: {lives}</p>
+        <p className={`font-bold ${actualTheme === 'light' ? 'text-pink-600' : 'text-red-400'}`}>{t('pacman.cherries')}: {cherries}/3 🍒</p>
         {powerUpActive && (
           <p className="font-bold text-blue-400 animate-pulse">⚡ POWER-UP ACTIVO ⚡</p>
         )}
@@ -543,24 +543,24 @@ export default function PacmanGame() {
         ref={canvasRef}
         width={COLS * CELL}
         height={ROWS * CELL}
-        className={theme === 'light'
+        className={actualTheme === 'light'
           ? 'border-4 border-pink-400 rounded-lg shadow-[0_0_30px_rgba(255,182,193,0.5)]'
           : 'border-4 border-blue-500 rounded-lg shadow-[0_0_30px_#00f6ff]'
         }
       />
 
-      <p className={`mt-4 text-sm animate-pulse ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
+      <p className={`mt-4 text-sm animate-pulse ${actualTheme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
         {t('pacman.instructions')}
       </p>
       
-      <p className={`mt-2 text-xs ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'}`}>
+      <p className={`mt-2 text-xs ${actualTheme === 'light' ? 'text-gray-500' : 'text-gray-500'}`}>
         🍒 Come las cerezas para poder comer a los fantasmas
       </p>
 
       {cherries >= 3 && (
         <button
           onClick={() => router.push('/galeria')}
-          className={theme === 'light'
+          className={actualTheme === 'light'
             ? 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
             : 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
           }
@@ -585,7 +585,7 @@ export default function PacmanGame() {
 
             <button
               onClick={() => router.push('/')}
-              className={`px-6 py-3 rounded-lg hover:scale-105 transition transform ${theme === 'light' ? 'bg-pink-100 text-black border-2 border-pink-300' : 'bg-yellow-400 text-black'}`}
+              className={`px-6 py-3 rounded-lg hover:scale-105 transition transform ${actualTheme === 'light' ? 'bg-pink-100 text-black border-2 border-pink-300' : 'bg-yellow-400 text-black'}`}
             >
               {t('gallery.back')}
             </button>

@@ -25,7 +25,7 @@ const Projects = () => {
       description:
         "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
-      image: "https://placehold.co/400x250/png",
+      image: "https://private-user-images.githubusercontent.com/197989260/449297596-1d5cf074-3652-424d-ab33-56415c0ccc90.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjIzMTc4MjEsIm5iZiI6MTc2MjMxNzUyMSwicGF0aCI6Ii8xOTc5ODkyNjAvNDQ5Mjk3NTk2LTFkNWNmMDc0LTM2NTItNDI0ZC1hYjMzLTU2NDE1YzBjY2M5MC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMTA1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTEwNVQwNDM4NDFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iMDMwYzEyNGMxOWQ0ODBkYjQ4MGJmZGU0YWQyZTkyNjU0MmQ0N2Y1ZDlkYWFjZmVmMmI4YTU3MTQ3MzJhZDYyJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.fKczl2T3_VuMlyRHljpn77skJem6RJ7YzIogtr92iXQ",
       githubUrl: "https://github.com/migueltovarb/ISWDISENO10196-4.git",
       liveUrl: "https://taskmanager-demo.vercel.app",
       featured: true,

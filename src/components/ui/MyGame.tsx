@@ -7,7 +7,7 @@ import { useI18n, useTheme } from "@/app/providers";
 
 const MyGame: React.FC = () => {
   const { t } = useI18n();
-  const { theme } = useTheme();
+  const { actualTheme } = useTheme();
   const [selectedGame, setSelectedGame] = useState<"none" | "pacman" | "boo">(
     "none"
   );
@@ -44,7 +44,7 @@ const MyGame: React.FC = () => {
       className="min-h-screen flex flex-col justify-center items-center px-4 py-16 relative overflow-hidden"
       style={{
         background:
-          theme === "light"
+          actualTheme === "light"
             ? "linear-gradient(to bottom, #ffffff, #fdf2f8, #fce7f3)"
             : "linear-gradient(to bottom, #581c87, #4338ca, #000000)",
       }}
@@ -101,13 +101,13 @@ const MyGame: React.FC = () => {
       <div
         className="relative z-10 w-full max-w-7xl border-4 sm:border-6 md:border-8 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl"
         style={{
-          borderColor: theme === "light" ? "#f9a8d4" : "#1f2937",
+          borderColor: actualTheme === "light" ? "#f9a8d4" : "#1f2937",
           background:
-            theme === "light"
+            actualTheme === "light"
               ? "linear-gradient(to bottom right, #fbcfe8, #e9d5ff, #fbcfe8)"
               : "linear-gradient(to bottom right, #581c87, #3730a3, #581c87)",
           boxShadow:
-            theme === "light"
+            actualTheme === "light"
               ? "inset 0 0 100px rgba(255,192,203,0.3), 0 0 50px rgba(219,112,147,0.3)"
               : "inset 0 0 100px rgba(0,0,0,0.5), 0 0 50px rgba(138,43,226,0.3)",
         }}
@@ -119,11 +119,11 @@ const MyGame: React.FC = () => {
               className="relative rounded-2xl md:rounded-3xl overflow-hidden"
               style={{
                 background:
-                  theme === "light"
+                  actualTheme === "light"
                     ? "linear-gradient(to bottom right, #d8b4fe, #a5b4fc)"
                     : "linear-gradient(to bottom right, #4338ca, #6b21a8)",
                 boxShadow:
-                  theme === "light"
+                  actualTheme === "light"
                     ? "0 20px 60px rgba(147,51,234,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
                     : "0 20px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,255,255,0.1)",
               }}
@@ -239,11 +239,11 @@ const MyGame: React.FC = () => {
               className="relative rounded-2xl md:rounded-3xl overflow-hidden"
               style={{
                 background:
-                  theme === "light"
+                  actualTheme === "light"
                     ? "linear-gradient(to bottom right, #f9a8d4, #fb7185)"
                     : "linear-gradient(to bottom right, #be185d, #9f1239)",
                 boxShadow:
-                  theme === "light"
+                  actualTheme === "light"
                     ? "0 20px 60px rgba(236,72,153,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
                     : "0 20px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,255,255,0.1)",
               }}

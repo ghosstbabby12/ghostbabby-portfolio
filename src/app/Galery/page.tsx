@@ -16,7 +16,7 @@ interface SectionData {
 }
 
 export default function Galeria() {
-  const { theme } = useTheme()
+  const { actualTheme } = useTheme()
   const { t } = useI18n()
   const router = useRouter()
 
@@ -89,7 +89,7 @@ export default function Galeria() {
     <section
       id="galeria"
       className={`min-h-screen py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${
-        theme === 'light'
+        actualTheme === 'light'
           ? 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 text-gray-900'
           : 'bg-gradient-to-br from-gray-950 via-purple-950 to-indigo-900 text-white'
       }`}
@@ -110,7 +110,7 @@ export default function Galeria() {
             <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400 animate-pulse" />
           </div>
           <p className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto px-4 ${
-            theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+            actualTheme === 'light' ? 'text-gray-700' : 'text-gray-300'
           }`}>
             {t('interactiveGallery.subtitle')}
           </p>
@@ -126,7 +126,7 @@ export default function Galeria() {
           <motion.button
             onClick={() => router.push('/')}
             className={`flex items-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-lg transition-all ${
-              theme === 'light'
+              actualTheme === 'light'
                 ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
                 : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700'
             }`}
@@ -167,13 +167,13 @@ export default function Galeria() {
                 {!isUnlocked ? (
                   <motion.div
                     className={`relative p-6 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl bg-gradient-to-br ${section.gradient} bg-opacity-20 backdrop-blur-sm border-2 ${section.color} shadow-2xl ${
-                      theme === 'light' ? 'bg-white/40' : ''
+                      actualTheme === 'light' ? 'bg-white/40' : ''
                     }`}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
                     <div className={`absolute inset-0 rounded-2xl md:rounded-3xl ${
-                      theme === 'light' ? 'bg-white/30' : 'bg-black/60'
+                      actualTheme === 'light' ? 'bg-white/30' : 'bg-black/60'
                     }`}></div>
                     <div className="relative z-10 flex flex-col items-center text-center space-y-4 sm:space-y-6">
                       <motion.div
@@ -181,16 +181,16 @@ export default function Galeria() {
                         transition={{ duration: 2, repeat: Infinity }}
                       >
                         <Lock className={`w-12 h-12 sm:w-16 sm:h-16 ${
-                          theme === 'light' ? 'text-purple-600' : 'text-white'
+                          actualTheme === 'light' ? 'text-purple-600' : 'text-white'
                         }`} />
                       </motion.div>
                       <h3 className={`text-xl sm:text-2xl md:text-3xl font-semibold ${
-                        theme === 'light' ? 'text-gray-900' : 'text-white'
+                        actualTheme === 'light' ? 'text-gray-900' : 'text-white'
                       }`}>
                         {t('interactiveGallery.locked')}
                       </h3>
                       <p className={`text-base sm:text-lg md:text-xl max-w-2xl ${
-                        theme === 'light' ? 'text-gray-800' : 'text-white'
+                        actualTheme === 'light' ? 'text-gray-800' : 'text-white'
                       }`}>
                         {t(`${categoryKey}.question`)}
                       </p>
@@ -206,7 +206,7 @@ export default function Galeria() {
                             }
                           }}
                           className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border-2 text-base sm:text-lg transition-all focus:outline-none focus:ring-4 ${
-                            theme === 'light'
+                            actualTheme === 'light'
                               ? 'bg-white/80 border-purple-300 text-gray-900 placeholder-gray-500 focus:ring-purple-300'
                               : 'bg-white/10 backdrop-blur-md border-white/30 text-white placeholder-white/60 focus:ring-white/50'
                           }`}
@@ -229,7 +229,7 @@ export default function Galeria() {
                       <motion.div
                         key={imgIdx}
                         className={`group relative h-56 sm:h-64 md:h-72 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border-2 ${section.color} cursor-pointer ${
-                          theme === 'light' ? 'bg-white' : ''
+                          actualTheme === 'light' ? 'bg-white' : ''
                         }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

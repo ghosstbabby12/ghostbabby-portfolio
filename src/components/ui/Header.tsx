@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { theme, toggleTheme } = useTheme()
+  const { actualTheme, toggleTheme } = useTheme()
   const { t, lang, toggleLang } = useI18n()
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -129,10 +129,10 @@ const Header = () => {
             <button
               onClick={toggleTheme}
               className="ml-3 p-2 rounded-md text-white/90 hover:text-ghost-purple transition-colors"
-              aria-label={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
-              title={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
+              aria-label={actualTheme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
+              title={actualTheme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
             >
-              {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+              {actualTheme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {/* Language toggle */}
@@ -191,7 +191,7 @@ const Header = () => {
                   onClick={toggleTheme}
                   className="p-2 rounded-md text-white/90 hover:text-ghost-purple transition-colors"
                 >
-                  {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+                  {actualTheme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
                 <button
                   onClick={toggleLang}

@@ -6,7 +6,7 @@ import { useI18n, useTheme } from '../../app/providers'
 
 const Experience = () => {
   const { t } = useI18n()
-  const { theme } = useTheme()
+  const { actualTheme } = useTheme()
   
   const experiences = [
     {
@@ -68,10 +68,10 @@ const Experience = () => {
               <motion.div
                 className="hidden md:flex absolute left-1/2 w-12 h-12 items-center justify-center rounded-full shadow-lg z-20 border-4"
                 style={{
-                  background: theme === 'light'
+                  background: actualTheme === 'light'
                     ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
                     : 'linear-gradient(to bottom right, #667eea, #764ba2)',
-                  borderColor: theme === 'light' ? '#ffffff' : '#0a0118',
+                  borderColor: actualTheme === 'light' ? '#ffffff' : '#0a0118',
                   top: '50%',
                   transform: 'translate(-50%, -50%)'
                 }}
@@ -88,7 +88,7 @@ const Experience = () => {
               <motion.div
                 className="w-full md:w-1/2 p-6 rounded-2xl glass-effect border shadow-xl hover:shadow-2xl transition-all duration-300 group relative z-10"
                 style={{
-                  borderColor: theme === 'light'
+                  borderColor: actualTheme === 'light'
                     ? 'rgba(213, 116, 142, 0.2)'
                     : 'rgba(255, 255, 255, 0.1)'
                 }}
@@ -102,7 +102,7 @@ const Experience = () => {
                     <p
                       className="font-medium mt-1"
                       style={{
-                        color: theme === 'light' ? '#c2185b' : '#667eea'
+                        color: actualTheme === 'light' ? '#c2185b' : '#667eea'
                       }}
                     >
                       {exp.company}
@@ -113,8 +113,8 @@ const Experience = () => {
                 <span
                   className="inline-block text-sm px-3 py-1 rounded-full mb-4"
                   style={{
-                    color: theme === 'light' ? '#5a5a5a' : 'rgba(255, 255, 255, 0.6)',
-                    backgroundColor: theme === 'light' ? 'rgba(213, 116, 142, 0.1)' : 'rgba(255, 255, 255, 0.05)'
+                    color: actualTheme === 'light' ? '#5a5a5a' : 'rgba(255, 255, 255, 0.6)',
+                    backgroundColor: actualTheme === 'light' ? 'rgba(213, 116, 142, 0.1)' : 'rgba(255, 255, 255, 0.05)'
                   }}
                 >
                   {exp.period}
@@ -123,7 +123,7 @@ const Experience = () => {
                 <p
                   className="leading-relaxed"
                   style={{
-                    color: theme === 'light' ? '#3a3a3a' : 'rgba(255, 255, 255, 0.7)'
+                    color: actualTheme === 'light' ? '#3a3a3a' : 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
                   {exp.description}

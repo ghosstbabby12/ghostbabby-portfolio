@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel Live Coding</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="strudel-iframe" src="https://strudel.cc/?code=samples('github:algorave-dave%2Fsamples')%0Asamples('https:%2F%2Fraw.githubusercontent.com%2Ftidalcycles%2FDirt-Samples%2Fmaster%2Fstrudel.json')%0Asamples('https:%2F%2Fraw.githubusercontent.com%2FMittans%2Ftidal-drum-machines%2Fmain%2Fmachines%2Ftidal-drum-machines.json')%0A%0Aconst%20gain_patterns%20%3D%20%5B%0A%221%22%2C%0A%22%7B0.75%202.5%7D*2%22%2C%0A%22%7B0.75%202.5!9%200.75%202.5!5%200.75%202.5%200.75%202.5!7%200.75%202.5!3%20%3C2.5%200.75%3E%202.5%7D%2516%22%2C%0A%5D%0A%0Aconst%20drum_structure%20%3D%20%5B%0A%22~%22%2C%0A%22x*2%22%2C%0A%22%7Bx%20~!9%20x%20~!5%20x%20~%20x%20~!7%20x%20~!3%20%3C%20~%20x%20%3E%20~%7D%2516%22%2C%0A%5D%0A%0Aconst%20basslines%20%3D%20%5B%0A%22%5B%5Beb1%2C%20eb2%5D!16%20%5Bf2%2C%20f1%5D!16%20%5Bg2%2C%20g1%5D!16%20%5Bf2%2C%20f1%5D!8%20%5Bbb2%2C%20bb1%5D!8%5D%2F2%22%2C%0A%22%5B%5Beb1%2C%20eb2%5D!16%20%5Bbb2%2C%20bb1%5D!16%20%5Bg2%2C%20g1%5D!16%20%5Bf2%2C%20f1%5D!4%20%5Bbb1%2C%20bb2%5D!4%20%5Beb1%2C%20eb2%5D!4%20%5Bf1%2C%20f2%5D!4%5D%2F8%22%0A%5D%0A%0Aconst%20arpeggiator1%20%3D%20%5B%0A%22%7Bd4%20bb3%20eb3%20d3%20bb2%20eb2%7D%2516%22%2C%0A%22%7Bc4%20bb3%20f3%20c3%20bb2%20f2%7D%2516%22%2C%0A%22%7Bd4%20bb3%20g3%20d3%20bb2%20g2%7D%2516%22%2C%0A%22%7Bc4%20bb3%20f3%20c3%20bb2%20f2%7D%2516%22%2C%0A%5D%0A%0Aconst%20arpeggiator2%20%3D%20%5B%0A%22%7Bd4%20bb3%20eb3%20d3%20bb2%20eb2%7D%2516%22%2C%0A%22%7Bc4%20bb3%20f3%20c3%20bb2%20f2%7D%2516%22%2C%0A%22%7Bd4%20bb3%20g3%20d3%20bb2%20g2%7D%2516%22%2C%0A%22%7Bd5%20bb4%20g4%20d4%20bb3%20g3%20d4%20bb3%20eb3%20d3%20bb2%20eb2%7D%2516%22%2C%0A%5D%0A%0Aconst%20pattern%20%3D%200%0Aconst%20bass%20%3D%200%0A%0Abassline%3A%0Anote(pick(basslines%2C%20bass))%0A.sound(%22supersaw%22)%0A.postgain(2)%0A.room(0.6)%0A.lpf(700)%0A.room(0.4)%0A.postgain(pick(gain_patterns%2C%20pattern))%0A%0Amain_arp%3A%0Anote(pick(arpeggiator1%2C%20%22%3C0%201%202%203%3E%2F2%22))%0A.sound(%22supersaw%22)%0A.lpf(300)%0A.adsr(%220%3A0%3A.5%3A.1%22)%0A.room(0.6)%0A.lpenv(3.3)%0A.postgain(pick(gain_patterns%2C%20pattern))%0A%0Adrums%3A%0Astack(%0As(%22tech%3A5%22)%0A.postgain(6)%0A.pcurve(2)%0A.pdec(1)%0A.struct(pick(drum_structure%2C%20pattern))%2C%0A%0As(%22sh%22).struct(%22%5Bx!3%20~!2%20x!10%20~%5D%22)%0A.postgain(0.5).lpf(7000)%0A.bank(%22RolandTR808%22)%0A.speed(0.8).jux(rev).room(sine.range(0.1%2C0.4)).gain(0.6)%2C%0A%0As(%22%7B~%20~%20rim%20~%20cp%20~%20rim%20cp%20~!2%20rim%20~%20cp%20~%20%3C%20rim%20~%20%3E!2%7D%258%20*2%22)%0A.bank(%22%5BKorgDDM110%2C%20OberheimDmx%5D%22).speed(1.2)%0A.postgain(.25)%2C%0A)%0A%0Adrums2%3A%0Astack(%0As(%22%5B~%20hh%5D4%22).bank(%22RolandTR808%22).room(0.3).speed(0.75).gain(1.2)%2C%0As(%22hh%22).struct(%22x16%22).bank(%22RolandTR808%22)%0A.gain(0.6)%0A.jux(rev)%0A.room(sine.range(0.1%2C0.4))%0A.postgain(0.5)%2C%0A%0As(%22%5Bpsr%3A%5B2%7C5%7C6%7C7%7C8%7C9%7C12%7C24%7C25%5D*16%5D%3F0.1%22)%0A.gain(0.1)%0A.postgain(pick(gain_patterns%2C%20pattern))%0A.hpf(1000)%0A.speed(0.5)%0A.rarely(jux(rev))%2C%0A)" allow="microphone; midi"></iframe>
+
+  <script>
+    // Ensure the iframe loads properly
+    window.addEventListener('message', function(event) {
+      console.log('Message received:', event.data);
+    });
+  </script>
+</body>
+</html>

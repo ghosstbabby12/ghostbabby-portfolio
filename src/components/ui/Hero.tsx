@@ -175,10 +175,10 @@ const Hero = () => {
             top: mousePosition.y - 100,
           }}
           animate={{
-            x: (mousePosition.x - (typeof window !== 'undefined' ? window.innerWidth : 1920) / 2) * 0.1,
-            y: (mousePosition.y - (typeof window !== 'undefined' ? window.innerHeight : 1080) / 2) * 0.1,
+            x: (mousePosition.x - (typeof window !== 'undefined' ? window.innerWidth : 1920) / 2) * 0.02,
+            y: (mousePosition.y - (typeof window !== 'undefined' ? window.innerHeight : 1080) / 2) * 0.02,
           }}
-          transition={{ type: "spring", stiffness: 50, damping: 10 }}
+          transition={{ type: "spring", stiffness: 150, damping: 20 }}
         >
           <div className="w-48 h-48 bg-gradient-to-r from-ghost-purple/20 to-ghost-pink/20 rounded-full blur-xl opacity-50"></div>
         </motion.div>

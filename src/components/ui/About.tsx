@@ -4,20 +4,22 @@ import { motion, useInView, Variants } from 'framer-motion'
 import { useRef } from 'react'
 import { Code2, Music, Gamepad2, Coffee, Dumbbell, Palette, Sparkles, Heart } from 'lucide-react'
 import { useI18n, useTheme } from '../../app/providers'
+import { useRouter } from 'next/navigation'
 
 const About = () => {
   const { t } = useI18n()
-  const { theme } = useTheme()
+  const { actualTheme } = useTheme()
+  const router = useRouter()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   const interests = [
-    { icon: Music, label: t('about.interests.music'), gradient: "from-purple-500 to-pink-500" },
-    { icon: Palette, label: t('about.interests.art'), gradient: "from-pink-500 to-red-500" },
-    { icon: Coffee, label: t('about.interests.cooking'), gradient: "from-amber-500 to-orange-500" },
-    { icon: Gamepad2, label: t('about.interests.gaming'), gradient: "from-blue-500 to-purple-500" },
-    { icon: Dumbbell, label: t('about.interests.sports'), gradient: "from-green-500 to-emerald-500" },
-    { icon: Code2, label: t('about.interests.coding'), gradient: "from-cyan-500 to-blue-500" },
+    { icon: Music, label: t('about.interests.music'), gradient: "from-purple-500 to-pink-500", link: "/strudel" },
+    { icon: Palette, label: t('about.interests.art'), gradient: "from-pink-500 to-red-500", link: null },
+    { icon: Coffee, label: t('about.interests.cooking'), gradient: "from-amber-500 to-orange-500", link: null },
+    { icon: Gamepad2, label: t('about.interests.gaming'), gradient: "from-blue-500 to-purple-500", link: "#mygame" },
+    { icon: Dumbbell, label: t('about.interests.sports'), gradient: "from-green-500 to-emerald-500", link: null },
+    { icon: Code2, label: t('about.interests.coding'), gradient: "from-cyan-500 to-blue-500", link: "#projects" },
   ]
 
   const containerVariants: Variants = {
@@ -80,7 +82,7 @@ const About = () => {
                 <div
                   className="w-32 h-32 md:w-40 md:h-40 rounded-full flex items-center justify-center"
                   style={{
-                    background: theme === 'light'
+                    background: actualTheme === 'light'
                       ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
                       : 'linear-gradient(to bottom right, #667eea, #764ba2)'
                   }}
@@ -90,7 +92,7 @@ const About = () => {
                 <motion.div
                   className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center"
                   style={{
-                    background: theme === 'light' ? '#eaa4ba' : '#764ba2'
+                    background: actualTheme === 'light' ? '#eaa4ba' : '#764ba2'
                   }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -127,6 +129,18 @@ const About = () => {
                   variants={itemVariants}
                   whileHover={{ y: -10, scale: 1.05 }}
                   className="glass-effect rounded-2xl p-6 flex flex-col items-center gap-3 cursor-pointer group"
+                  onClick={() => {
+                    if (interest.link) {
+                      if (interest.link.startsWith('#')) {
+                        const element = document.querySelector(interest.link)
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' })
+                        }
+                      } else {
+                        router.push(interest.link)
+                      }
+                    }
+                  }}
                 >
                   <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${interest.gradient} flex items-center justify-center group-hover:shadow-lg group-hover:shadow-${interest.gradient.split(' ')[1]}/50 transition-all duration-300`}>
                     <interest.icon className="w-7 h-7 text-white" />
