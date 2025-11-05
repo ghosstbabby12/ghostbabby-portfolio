@@ -20,12 +20,14 @@ interface Player {
 }
 
 interface Boo {
+  id: number
   x: number
   y: number
   vx: number
   vy: number
   hiding: boolean
   size: number
+  speed: number
 }
 
 interface Block {
@@ -81,9 +83,9 @@ export default function MarioGhostHouseClassic() {
   const [player, setPlayer] = useState<Player>({
     x: 100, y: 400, vx: 0, vy: 0, direction: 1, animFrame: 0, onGround: false
   })
-  const [boo, setBoo] = useState<Boo>({
-    x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80
-  })
+  const [boos, setBoos] = useState<Boo[]>([{
+    id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 2.5
+  }])
   const [blocks, setBlocks] = useState<Block[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [platforms, setPlatforms] = useState<Platform[]>([])
@@ -295,39 +297,39 @@ export default function MarioGhostHouseClassic() {
       ctx.restore()
     }
 
-    const drawBigBoo = (x: number, y: number, hiding: boolean, animTime: number) => {
+    const drawBigBoo = (x: number, y: number, hiding: boolean, animTime: number, booSize: number = 80) => {
       const screenX = x - cameraX
-      const size = 80
+      const size = booSize
       const floatY = y + Math.sin(animTime * 2) * 12
-      
+
       ctx.save()
-      
-      // Múltiples capas de glow para efecto más dramático
+
+      // Glow púrpura/azul más intenso (estilo King Boo)
       for (let i = 5; i > 0; i--) {
-        const glowSize = size + i * 15
-        const alpha = hiding ? 0.15 / i : 0.35 / i
-        
+        const glowSize = size + i * 18
+        const alpha = hiding ? 0.12 / i : 0.4 / i
+
         const glow = ctx.createRadialGradient(screenX, floatY, 0, screenX, floatY, glowSize)
-        glow.addColorStop(0, `rgba(100, 200, 255, ${alpha})`)
-        glow.addColorStop(0.5, `rgba(0, 191, 255, ${alpha * 0.6})`)
-        glow.addColorStop(1, 'rgba(0, 191, 255, 0)')
+        glow.addColorStop(0, `rgba(138, 43, 226, ${alpha})`)
+        glow.addColorStop(0.5, `rgba(75, 0, 130, ${alpha * 0.7})`)
+        glow.addColorStop(1, 'rgba(138, 43, 226, 0)')
         ctx.fillStyle = glow
         ctx.beginPath()
         ctx.arc(screenX, floatY, glowSize, 0, Math.PI * 2)
         ctx.fill()
       }
-      
+
       // Sombra del cuerpo
-      ctx.fillStyle = 'rgba(0, 0, 50, 0.4)'
+      ctx.fillStyle = 'rgba(75, 0, 130, 0.5)'
       ctx.fillRect(screenX - size/2 + 10, floatY - size/2 + 6, size - 16, size)
       ctx.fillRect(screenX - size/2 + 6, floatY - size/2 + 10, size - 8, size - 8)
       ctx.fillRect(screenX - size/2 + 2, floatY - size/2 + 14, size, size - 16)
-      
-      // Cuerpo principal con gradiente
-      const bodyColor = hiding ? '#E8E8FF' : '#FFFFFF'
+
+      // Cuerpo principal blanco brillante
+      const bodyColor = hiding ? '#F0F0FF' : '#FFFFFF'
       ctx.fillStyle = bodyColor
-      
-      // Cuerpo redondeado pixel art mejorado
+
+      // Cuerpo redondeado pixel art
       ctx.fillRect(screenX - size/2 + 12, floatY - size/2, size - 24, size)
       ctx.fillRect(screenX - size/2 + 8, floatY - size/2 + 4, size - 16, size - 8)
       ctx.fillRect(screenX - size/2 + 4, floatY - size/2 + 8, size - 8, size - 16)
@@ -412,19 +414,19 @@ export default function MarioGhostHouseClassic() {
           ctx.fillRect(eyeX - 10, floatY - 10, 2, 18)
           ctx.fillRect(eyeX - 6, floatY - 16, 12, 2)
           
-          // Blanco del ojo
-          ctx.fillStyle = '#000080'
+          // Blanco del ojo (con tinte púrpura oscuro de King Boo)
+          ctx.fillStyle = '#1a0033'
           ctx.fillRect(eyeX - 7, floatY - 14, 14, 24)
           ctx.fillRect(eyeX - 9, floatY - 10, 2, 16)
           ctx.fillRect(eyeX - 5, floatY - 16, 10, 2)
           ctx.fillRect(eyeX + 7, floatY - 10, 2, 16)
           ctx.fillRect(eyeX - 5, floatY + 10, 10, 2)
-          
-          // Iris celeste brillante
+
+          // Iris púrpura/carmesí brillante (estilo King Boo)
           const irisGradient = ctx.createLinearGradient(eyeX - 6, floatY - 8, eyeX + 6, floatY + 8)
-          irisGradient.addColorStop(0, '#00FFFF')
-          irisGradient.addColorStop(0.5, '#00CED1')
-          irisGradient.addColorStop(1, '#008B8B')
+          irisGradient.addColorStop(0, '#FF00FF')
+          irisGradient.addColorStop(0.5, '#CC00CC')
+          irisGradient.addColorStop(1, '#8B008B')
           ctx.fillStyle = irisGradient
           ctx.fillRect(eyeX - 6, floatY - 8, 12, 16)
           
@@ -506,7 +508,95 @@ export default function MarioGhostHouseClassic() {
       ctx.strokeStyle = hiding ? 'rgba(200, 200, 255, 0.5)' : 'rgba(230, 240, 255, 0.6)'
       ctx.lineWidth = 2
       ctx.strokeRect(screenX - size/2, floatY - size/2 + 12, size, size - 24)
-      
+
+      // Corona de King Boo (pixel art)
+      if (!hiding) {
+        const crownY = floatY - size/2 - 28
+        const crownBounce = Math.sin(animTime * 2) * 2
+
+        // Sombra de la corona
+        ctx.fillStyle = 'rgba(139, 90, 0, 0.3)'
+        ctx.fillRect(screenX - 32, crownY + crownBounce + 3, 64, 26)
+
+        // Base de la corona (oro)
+        const goldGradient = ctx.createLinearGradient(screenX - 30, crownY, screenX + 30, crownY + 24)
+        goldGradient.addColorStop(0, '#FFD700')
+        goldGradient.addColorStop(0.5, '#FFA500')
+        goldGradient.addColorStop(1, '#FF8C00')
+        ctx.fillStyle = goldGradient
+
+        // Band principal de la corona
+        ctx.fillRect(screenX - 30, crownY + crownBounce + 18, 60, 8)
+
+        // Picos de la corona (5 picos)
+        for (let i = 0; i < 5; i++) {
+          const spikeX = screenX - 26 + i * 13
+          const spikeHeight = i === 2 ? 20 : 16 // Pico central más alto
+
+          // Pico dorado
+          ctx.fillStyle = goldGradient
+          ctx.fillRect(spikeX, crownY + crownBounce + 18 - spikeHeight, 10, spikeHeight)
+
+          // Highlight en el pico
+          ctx.fillStyle = '#FFED4E'
+          ctx.fillRect(spikeX + 1, crownY + crownBounce + 19 - spikeHeight, 3, spikeHeight - 4)
+
+          // Sombra en el pico
+          ctx.fillStyle = 'rgba(139, 90, 0, 0.4)'
+          ctx.fillRect(spikeX + 7, crownY + crownBounce + 20 - spikeHeight, 2, spikeHeight - 2)
+        }
+
+        // Highlights en la banda
+        ctx.fillStyle = '#FFED4E'
+        ctx.fillRect(screenX - 28, crownY + crownBounce + 19, 56, 3)
+
+        // Sombras en la banda
+        ctx.fillStyle = 'rgba(139, 90, 0, 0.5)'
+        ctx.fillRect(screenX - 28, crownY + crownBounce + 23, 56, 2)
+
+        // Gemas en la corona (rubíes y zafiros)
+        const gems = [
+          { x: -20, color: '#DC143C', highlight: '#FF69B4' }, // Rubí izquierda
+          { x: 0, color: '#4169E1', highlight: '#87CEEB' },   // Zafiro centro
+          { x: 20, color: '#DC143C', highlight: '#FF69B4' }   // Rubí derecha
+        ]
+
+        gems.forEach(gem => {
+          const gemX = screenX + gem.x
+          const gemY = crownY + crownBounce + 20
+
+          // Glow de gema
+          ctx.fillStyle = gem.highlight
+          ctx.shadowBlur = 8
+          ctx.shadowColor = gem.color
+          ctx.fillRect(gemX - 5, gemY - 5, 10, 10)
+          ctx.shadowBlur = 0
+
+          // Gema principal
+          ctx.fillStyle = gem.color
+          ctx.fillRect(gemX - 4, gemY - 4, 8, 8)
+          ctx.fillRect(gemX - 3, gemY - 5, 6, 1)
+          ctx.fillRect(gemX - 5, gemY - 3, 1, 6)
+          ctx.fillRect(gemX + 4, gemY - 3, 1, 6)
+          ctx.fillRect(gemX - 3, gemY + 4, 6, 1)
+
+          // Brillo en la gema
+          ctx.fillStyle = gem.highlight
+          ctx.fillRect(gemX - 2, gemY - 2, 3, 3)
+
+          // Reflejo
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+          ctx.fillRect(gemX - 1, gemY - 1, 2, 2)
+        })
+
+        // Detalles decorativos en la corona
+        ctx.fillStyle = '#B8860B'
+        for (let i = 0; i < 6; i++) {
+          const decorX = screenX - 25 + i * 10
+          ctx.fillRect(decorX, crownY + crownBounce + 21, 2, 2)
+        }
+      }
+
       ctx.restore()
     }
 
@@ -729,8 +819,10 @@ export default function MarioGhostHouseClassic() {
         ctx.restore()
       }
 
-      // Boo
-      drawBigBoo(boo.x, boo.y, boo.hiding, animTime)
+      // Boos
+      boos.forEach(boo => {
+        drawBigBoo(boo.x, boo.y, boo.hiding, animTime)
+      })
 
       // Peach
       if (invincible && Math.floor(animTime * 10) % 2 === 0) {
@@ -820,7 +912,7 @@ export default function MarioGhostHouseClassic() {
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
     }
-  }, [gameStarted, gameOver, victory, player, boo, blocks, testimonials, platforms, cameraX, score, time, lives, invincible, collectedTestimonials])
+  }, [gameStarted, gameOver, victory, player, boos, blocks, testimonials, platforms, cameraX, score, time, lives, invincible, collectedTestimonials])
 
   useEffect(() => {
     if (!gameStarted || gameOver || victory) return
@@ -935,7 +1027,13 @@ export default function MarioGhostHouseClassic() {
                 
                 // Añadir a testimonios recolectados inmediatamente
                 setCollectedTestimonials(prev => [...prev, testimonialData_item])
-                setScore(s => s + 100)
+
+                // Sistema de combo: más puntos por golpes consecutivos
+                const comboBonus = collectedTestimonials.length * 50
+                setScore(s => s + 100 + comboBonus)
+
+                // Bonificación de tiempo al golpear bloques
+                setTime(t => Math.min(200, t + 10))
                 
                 // Mostrar popup
                 setShowTestimonialPopup({
@@ -983,25 +1081,28 @@ export default function MarioGhostHouseClassic() {
         return Math.min(maxCameraX, prev + (targetX - prev) * 0.1)
       })
 
-      // IA del Boo grande
-      setBoo(prev => {
-        const dx = player.x + 16 - prev.x
-        const dy = player.y + 23 - prev.y
+      // IA de los Boos (con dificultad progresiva)
+      setBoos(prevBoos => prevBoos.map(boo => {
+        const dx = player.x + 16 - boo.x
+        const dy = player.y + 23 - boo.y
         const dist = Math.sqrt(dx * dx + dy * dy)
-        
-        const playerLookingAtBoo = 
-          (player.direction > 0 && dx > 0) || 
+
+        const playerLookingAtBoo =
+          (player.direction > 0 && dx > 0) ||
           (player.direction < 0 && dx < 0)
-        
+
         const hiding = playerLookingAtBoo && dist < 400
 
-        let { x, y, vx, vy } = prev
+        let { x, y, vx, vy, speed } = boo
+
+        // Velocidad aumenta con el tiempo
+        const difficultyMultiplier = 1 + (200 - time) * 0.003
 
         if (!hiding && dist < 600) {
-          const speed = 2.5
-          const targetVx = (dx / dist) * speed
-          const targetVy = (dy / dist) * speed
-          
+          const adjustedSpeed = speed * difficultyMultiplier
+          const targetVx = (dx / dist) * adjustedSpeed
+          const targetVy = (dy / dist) * adjustedSpeed
+
           vx += (targetVx - vx) * 0.1
           vy += (targetVy - vy) * 0.1
         } else {
@@ -1012,31 +1113,61 @@ export default function MarioGhostHouseClassic() {
         x += vx
         y += vy
 
-        return { ...prev, x, y, vx, vy, hiding }
-      })
+        return { ...boo, x, y, vx, vy, hiding }
+      }))
 
-      // Colisión con Boo
+      // Añadir nuevos Boos según testimonios recolectados
+      if (collectedTestimonials.length === 3 && boos.length === 1) {
+        setBoos(prev => [...prev, {
+          id: 1,
+          x: WORLD_WIDTH - 400,
+          y: 300,
+          vx: 0,
+          vy: 0,
+          hiding: false,
+          size: 70,
+          speed: 2.8
+        }])
+      } else if (collectedTestimonials.length === 6 && boos.length === 2) {
+        setBoos(prev => [...prev, {
+          id: 2,
+          x: 1500,
+          y: 250,
+          vx: 0,
+          vy: 0,
+          hiding: false,
+          size: 65,
+          speed: 3.0
+        }])
+      }
+
+      // Colisión con Boos
       if (!invincible) {
-        const dx = player.x + 16 - boo.x
-        const dy = player.y + 23 - boo.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        
-        if (!boo.hiding && dist < 85) {
-          setLives(l => {
-            const newLives = l - 1
-            if (newLives <= 0) setGameOver(true)
-            return newLives
-          })
-          setInvincible(true)
-          setTimeout(() => setInvincible(false), 2000)
-          setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0 }))
+        for (const boo of boos) {
+          const dx = player.x + 16 - boo.x
+          const dy = player.y + 23 - boo.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          if (!boo.hiding && dist < 85) {
+            setLives(l => {
+              const newLives = l - 1
+              if (newLives <= 0) setGameOver(true)
+              return newLives
+            })
+            // Penalización de tiempo al recibir daño
+            setTime(t => Math.max(0, t - 15))
+            setInvincible(true)
+            setTimeout(() => setInvincible(false), 2000)
+            setPlayer(p => ({ ...p, x: 100, y: 400, vx: 0, vy: 0 }))
+            break
+          }
         }
       }
 
     }, 16)
 
     return () => clearInterval(gameLoop)
-  }, [gameStarted, gameOver, victory, keys, player, boo, blocks, platforms, invincible, testimonialData])
+  }, [gameStarted, gameOver, victory, keys, player, boos, blocks, platforms, invincible, testimonialData, collectedTestimonials, time])
 
   const startGame = () => {
     setGameStarted(true)
@@ -1050,7 +1181,7 @@ export default function MarioGhostHouseClassic() {
     setBlocks(prev => prev.map(b => ({ ...b, hit: false, bouncing: false, bounceOffset: 0 })))
     setTestimonials([])
     setCollectedTestimonials([])
-    setBoo({ x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80 })
+    setBoos([{ id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 2.5 }])
   }
 
   return (

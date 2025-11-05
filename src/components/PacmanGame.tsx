@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation'
 const CELL = 20
 const ROWS = 22
 const COLS = 28
-const SPEED = 0.1
-const POWER_UP_DURATION = 300 // ~5 segundos (60 ticks por segundo)
+const SPEED = 0.12
+const POWER_UP_DURATION = 300
 
 // Clase Vector2D para operaciones vectoriales
 class Vector2D {
@@ -76,7 +76,7 @@ export default function PacmanGame() {
   const { theme } = useTheme()
 
   const map = [
-    "----------------------------",
+    "############################",
     "#............##............#",
     "#.####.#####.##.#####.####.#",
     "#.####.#####.##.#####.####.#",
@@ -105,9 +105,9 @@ export default function PacmanGame() {
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx) return
 
-    // Pac-Man usando vectores
+    // Pac-Man - posición inicial en pasillo libre
     let pacman = {
-      position: new Vector2D(13, 17),
+      position: new Vector2D(14, 14),
       velocity: Vector2D.right(),
       nextVelocity: Vector2D.right(),
       mouth: 0,
@@ -125,34 +125,34 @@ export default function PacmanGame() {
     
     const ghosts: Ghost[] = [
       {
-        position: new Vector2D(13, 11),
+        position: new Vector2D(13, 10),
         velocity: Vector2D.left(),
         color: theme === 'light' ? '#000000' : '#FF0000',
-        startPosition: new Vector2D(13, 11),
+        startPosition: new Vector2D(13, 10),
         eaten: false,
         respawnTimer: 0
       },
       {
-        position: new Vector2D(14, 11),
+        position: new Vector2D(14, 10),
         velocity: Vector2D.right(),
         color: theme === 'light' ? '#FFB6C1' : '#FFB8FF',
-        startPosition: new Vector2D(14, 11),
+        startPosition: new Vector2D(14, 10),
         eaten: false,
         respawnTimer: 0
       },
       {
-        position: new Vector2D(12, 11),
+        position: new Vector2D(12, 10),
         velocity: Vector2D.down(),
         color: theme === 'light' ? '#FFC0CB' : '#00FFFF',
-        startPosition: new Vector2D(12, 11),
+        startPosition: new Vector2D(12, 10),
         eaten: false,
         respawnTimer: 0
       },
       {
-        position: new Vector2D(15, 11),
+        position: new Vector2D(15, 10),
         velocity: Vector2D.up(),
         color: theme === 'light' ? '#FFD4E5' : '#FFB851',
-        startPosition: new Vector2D(15, 11),
+        startPosition: new Vector2D(15, 10),
         eaten: false,
         respawnTimer: 0
       }
@@ -165,18 +165,16 @@ export default function PacmanGame() {
       }
     }
 
-    // 🍒 Posiciones de las cerezas
     const cherryPositions = new Set<string>([
       '1,1',
       '1,26',
       '9,14'
     ])
 
-    // Estado del power-up
     let powerUpTimer = 0
     let isFlashing = false
 
-    // Verificar si una posición es válida
+    // Verificar si una posición es válida (con márgenes)
     const canMove = (position: Vector2D): boolean => {
       const row = Math.floor(position.y)
       const col = Math.floor(position.x)
@@ -185,7 +183,6 @@ export default function PacmanGame() {
       return tile !== '#' && tile !== '-' && tile !== undefined
     }
 
-    // Obtener todas las direcciones posibles
     const getPossibleDirections = (): Vector2D[] => {
       return [
         Vector2D.right(),
@@ -195,7 +192,6 @@ export default function PacmanGame() {
       ]
     }
 
-    // Movimiento inteligente de fantasmas usando vectores
     const moveGhost = (ghost: Ghost, flee: boolean = false) => {
       const directions = getPossibleDirections()
       
@@ -207,26 +203,20 @@ export default function PacmanGame() {
       const validDirections: DirectionScore[] = []
       
       for (const direction of directions) {
-        const testPosition = ghost.position.add(direction.multiply(SPEED))
+        const testPosition = ghost.position.add(direction.multiply(SPEED * 2))
         
         if (canMove(testPosition)) {
-          // Evitar retroceso inmediato
           const isBackward = direction.x === -ghost.velocity.x && direction.y === -ghost.velocity.y
-          
-          // Calcular distancia a Pac-Man usando vectores
           const distanceToPacman = testPosition.distanceTo(pacman.position)
           
           let score: number
           
           if (flee) {
-            // Modo huida: alejarse de Pac-Man
             score = distanceToPacman * 0.8 + Math.random() * 10
           } else {
-            // Modo normal: perseguir a Pac-Man
             score = -distanceToPacman * 0.2 + Math.random() * 25
           }
           
-          // Penalizar retroceso pero no eliminarlo completamente
           if (isBackward) score -= 10
           
           validDirections.push({ direction, score })
@@ -234,16 +224,13 @@ export default function PacmanGame() {
       }
       
       if (validDirections.length > 0) {
-        // Ordenar por score y elegir la mejor dirección
         validDirections.sort((a, b) => b.score - a.score)
-        const bestDirection = validDirections[0].direction
-        ghost.velocity = bestDirection.clone()
-        ghost.position = ghost.position.add(bestDirection.multiply(SPEED))
+        ghost.velocity = validDirections[0].direction.clone()
       }
     }
 
     const resetPositionsAfterHit = () => {
-      pacman.position = new Vector2D(13, 17)
+      pacman.position = new Vector2D(1, 1)
       pacman.velocity = Vector2D.right()
       pacman.nextVelocity = Vector2D.right()
       
@@ -270,13 +257,15 @@ export default function PacmanGame() {
         return
       }
 
-      // Intentar cambiar dirección de Pac-Man
+      // === PACMAN MOVEMENT ===
+      
+      // Intentar cambiar dirección
       const testNextPosition = pacman.position.add(pacman.nextVelocity.multiply(SPEED))
       if (canMove(testNextPosition)) {
         pacman.velocity = pacman.nextVelocity.clone()
       }
 
-      // Mover Pac-Man en la dirección actual
+      // Mover Pac-Man
       const newPosition = pacman.position.add(pacman.velocity.multiply(SPEED))
       if (canMove(newPosition)) {
         pacman.position = newPosition
@@ -292,22 +281,18 @@ export default function PacmanGame() {
         setScore(prev => prev + 10)
       }
 
-      // 🍒 Comer cerezas - ACTIVA POWER-UP
+      // Comer cerezas
       if (cherryPositions.has(key)) {
         cherryPositions.delete(key)
         setCherries(prev => prev + 1)
         setScore(prev => prev + 50)
-        
-        // Activar power-up
         powerUpTimer = POWER_UP_DURATION
         setPowerUpActive(true)
       }
 
-      // Actualizar timer del power-up
+      // Actualizar power-up timer
       if (powerUpTimer > 0) {
         powerUpTimer--
-        
-        // Flash en los últimos 2 segundos
         isFlashing = powerUpTimer < 120 && Math.floor(powerUpTimer / 10) % 2 === 0
         
         if (powerUpTimer === 0) {
@@ -316,14 +301,15 @@ export default function PacmanGame() {
         }
       }
 
-      // Boca animada
+      // Animación de boca
       pacman.mouth += pacman.mouthOpening ? 0.05 : -0.05
       if (pacman.mouth > 0.3) pacman.mouthOpening = false
       if (pacman.mouth < 0) pacman.mouthOpening = true
 
-      // Movimiento de fantasmas
+      // === GHOST MOVEMENT ===
+      const isPowerUpActive = powerUpTimer > 0
+      
       ghosts.forEach(ghost => {
-        // Si el fantasma fue comido, respawnear después de un tiempo
         if (ghost.eaten) {
           ghost.respawnTimer--
           if (ghost.respawnTimer <= 0) {
@@ -332,35 +318,32 @@ export default function PacmanGame() {
           return
         }
 
-        const isPowerUpActive = powerUpTimer > 0
-
-        // 30% cambiar dirección, 70% seguir
-        if (Math.random() < 0.3) {
+        // Cambiar dirección ocasionalmente
+        if (Math.random() < 0.02) {
           moveGhost(ghost, isPowerUpActive)
+        }
+
+        // Mover fantasma
+        const attemptPosition = ghost.position.add(ghost.velocity.multiply(SPEED * 0.9))
+        if (canMove(attemptPosition)) {
+          ghost.position = attemptPosition
         } else {
-          const attemptPosition = ghost.position.add(ghost.velocity.multiply(SPEED))
-          if (canMove(attemptPosition)) {
-            ghost.position = attemptPosition
-          } else {
-            // Si choca con pared, buscar nueva dirección
-            moveGhost(ghost, isPowerUpActive)
-          }
+          // Buscar nueva dirección si choca
+          moveGhost(ghost, isPowerUpActive)
         }
       })
 
-      // Colisión con fantasmas usando distancia vectorial
+      // Colisión con fantasmas
       for (const ghost of ghosts) {
         if (ghost.eaten) continue
         
         const distance = ghost.position.distanceTo(pacman.position)
-        if (distance < 0.6) {
+        if (distance < 0.7) {
           if (powerUpTimer > 0) {
-            // ¡Pac-Man come al fantasma!
             ghost.eaten = true
-            ghost.respawnTimer = 180 // 3 segundos
+            ghost.respawnTimer = 180
             setScore(prev => prev + 200)
           } else {
-            // Pac-Man pierde una vida
             setLives(prev => {
               const next = prev - 1
               if (next <= 0) {
@@ -384,16 +367,15 @@ export default function PacmanGame() {
     }
 
     const draw = () => {
-      // Fondo siempre oscuro para el laberinto
+      // Fondo
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Dibujar mapa - siempre en modo oscuro
+      // Dibujar mapa
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
           const tile = map[r]?.[c] ?? '#'
           if (tile === '#') {
-            // Muros azules/cyan
             ctx.strokeStyle = '#00f6ff'
             ctx.lineWidth = 2
             ctx.strokeRect(c * CELL, r * CELL, CELL, CELL)
@@ -409,7 +391,7 @@ export default function PacmanGame() {
         }
       }
 
-      // 🍒 Dibujar cerezas
+      // Dibujar cerezas
       cherryPositions.forEach(pos => {
         const [r, c] = pos.split(',').map(Number)
         const x = c * CELL + CELL / 2
@@ -421,16 +403,13 @@ export default function PacmanGame() {
         ctx.fillText('🍒', x, y)
       })
 
-      // Dibujar fantasmas usando vectores
+      // Dibujar fantasmas
       for (const ghost of ghosts) {
-        if (ghost.eaten) continue // No dibujar fantasmas comidos
+        if (ghost.eaten) continue
 
-        const screenPosition = new Vector2D(
-          ghost.position.x * CELL + CELL / 2,
-          ghost.position.y * CELL + CELL / 2
-        )
+        const screenX = ghost.position.x * CELL
+        const screenY = ghost.position.y * CELL
         
-        // Color del fantasma: azul si power-up activo, normal si no
         let ghostColor = ghost.color
         if (powerUpTimer > 0) {
           ghostColor = isFlashing ? 'white' : '#0066FF'
@@ -438,48 +417,39 @@ export default function PacmanGame() {
         
         ctx.fillStyle = ghostColor
         ctx.beginPath()
-        ctx.arc(screenPosition.x, screenPosition.y - 3, CELL / 2 - 2, Math.PI, 0)
-        ctx.lineTo(screenPosition.x + CELL / 2 - 2, screenPosition.y + CELL / 2 - 2)
-        ctx.lineTo(screenPosition.x + CELL / 4, screenPosition.y + CELL / 4)
-        ctx.lineTo(screenPosition.x, screenPosition.y + CELL / 2 - 2)
-        ctx.lineTo(screenPosition.x - CELL / 4, screenPosition.y + CELL / 4)
-        ctx.lineTo(screenPosition.x - CELL / 2 + 2, screenPosition.y + CELL / 2 - 2)
+        ctx.arc(screenX, screenY - 3, CELL / 2 - 2, Math.PI, 0)
+        ctx.lineTo(screenX + CELL / 2 - 2, screenY + CELL / 2 - 2)
+        ctx.lineTo(screenX + CELL / 4, screenY + CELL / 4)
+        ctx.lineTo(screenX, screenY + CELL / 2 - 2)
+        ctx.lineTo(screenX - CELL / 4, screenY + CELL / 4)
+        ctx.lineTo(screenX - CELL / 2 + 2, screenY + CELL / 2 - 2)
         ctx.closePath()
         ctx.fill()
         
         // Ojos
         ctx.fillStyle = 'white'
         ctx.beginPath()
-        ctx.arc(screenPosition.x - 4, screenPosition.y - 3, 3.5, 0, Math.PI * 2)
-        ctx.arc(screenPosition.x + 4, screenPosition.y - 3, 3.5, 0, Math.PI * 2)
+        ctx.arc(screenX - 4, screenY - 3, 3.5, 0, Math.PI * 2)
+        ctx.arc(screenX + 4, screenY - 3, 3.5, 0, Math.PI * 2)
         ctx.fill()
         
-        // Pupilas mirando en dirección de movimiento
+        // Pupilas
         if (powerUpTimer > 0 && !isFlashing) {
-          // Pupilas mirando hacia arriba (asustados)
           ctx.fillStyle = '#FF0000'
           ctx.beginPath()
-          ctx.arc(screenPosition.x - 4, screenPosition.y - 5, 2, 0, Math.PI * 2)
-          ctx.arc(screenPosition.x + 4, screenPosition.y - 5, 2, 0, Math.PI * 2)
+          ctx.arc(screenX - 4, screenY - 5, 2, 0, Math.PI * 2)
+          ctx.arc(screenX + 4, screenY - 5, 2, 0, Math.PI * 2)
           ctx.fill()
         } else {
           ctx.fillStyle = theme === 'light' ? '#000000' : '#000080'
           ctx.beginPath()
-          ctx.arc(
-            screenPosition.x - 4 + ghost.velocity.x * 1.5,
-            screenPosition.y - 3 + ghost.velocity.y * 1.5,
-            2, 0, Math.PI * 2
-          )
-          ctx.arc(
-            screenPosition.x + 4 + ghost.velocity.x * 1.5,
-            screenPosition.y - 3 + ghost.velocity.y * 1.5,
-            2, 0, Math.PI * 2
-          )
+          ctx.arc(screenX - 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
+          ctx.arc(screenX + 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
           ctx.fill()
         }
       }
 
-      // Dibujar Pac-Man usando vectores para rotación
+      // Dibujar Pac-Man
       ctx.fillStyle = '#FFFF00'
       let rotation = 0
       if (pacman.velocity.x > 0) rotation = 0
@@ -489,8 +459,8 @@ export default function PacmanGame() {
 
       const startAngle = rotation + pacman.mouth * Math.PI
       const endAngle = rotation + 2 * Math.PI - pacman.mouth * Math.PI
-      const centerX = pacman.position.x * CELL + CELL / 2
-      const centerY = pacman.position.y * CELL + CELL / 2
+      const centerX = pacman.position.x * CELL
+      const centerY = pacman.position.y * CELL
       
       ctx.beginPath()
       ctx.moveTo(centerX, centerY)
@@ -498,18 +468,19 @@ export default function PacmanGame() {
       ctx.closePath()
       ctx.fill()
       
-      // Ojo de Pac-Man
+      // Ojo
       if (!pacman.velocity.equals(Vector2D.zero())) {
         ctx.fillStyle = 'black'
         ctx.beginPath()
-        let eyeOffset = new Vector2D(0, -5)
+        let eyeOffsetX = 0
+        let eyeOffsetY = -5
         
-        if (pacman.velocity.x > 0) eyeOffset.x += 3
-        else if (pacman.velocity.x < 0) eyeOffset.x -= 3
-        if (pacman.velocity.y > 0) eyeOffset.y += 8
-        else if (pacman.velocity.y < 0) eyeOffset.y -= 3
+        if (pacman.velocity.x > 0) eyeOffsetX += 3
+        else if (pacman.velocity.x < 0) eyeOffsetX -= 3
+        if (pacman.velocity.y > 0) eyeOffsetY += 8
+        else if (pacman.velocity.y < 0) eyeOffsetY -= 3
         
-        ctx.arc(centerX + eyeOffset.x, centerY + eyeOffset.y, 2, 0, Math.PI * 2)
+        ctx.arc(centerX + eyeOffsetX, centerY + eyeOffsetY, 2, 0, Math.PI * 2)
         ctx.fill()
       }
     }
@@ -586,7 +557,7 @@ export default function PacmanGame() {
         🍒 Come las cerezas para poder comer a los fantasmas
       </p>
 
-      {cherries === 3 && !gameOver && (
+      {cherries >= 3 && (
         <button
           onClick={() => router.push('/galeria')}
           className={theme === 'light'
