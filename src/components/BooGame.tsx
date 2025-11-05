@@ -100,7 +100,7 @@ export default function MarioGhostHouseClassic() {
   const GOAL_X = WORLD_WIDTH - 300
 
   const testimonialData: TestimonialData[] = [
-    { id: 0, name: 'Ana García', role: 'CEO de Tech Solutions', text: '¡Excelente trabajo! Superó todas nuestras expectativas.', avatar: '👩‍💼', stars: 5 },
+    { id: 0, name: 'Jesus Villota', role: 'CEO de Tech Solutions', text: '¡Excelente trabajo! Superó todas nuestras expectativas.', avatar: '👩‍💼', stars: 5 },
     { id: 1, name: 'Carlos Ruiz', role: 'CTO de StartupXYZ', text: 'Código limpio y bien documentado. Muy profesional.', avatar: '👨‍💻', stars: 5 },
     { id: 2, name: 'María López', role: 'Product Manager', text: 'Entrega a tiempo y comunicación impecable.', avatar: '👩‍🎨', stars: 5 },
     { id: 3, name: 'Diego Torres', role: 'Lead Developer', text: 'Gran habilidad técnica y trabajo en equipo.', avatar: '👨‍🔧', stars: 5 },
@@ -130,7 +130,7 @@ export default function MarioGhostHouseClassic() {
       { x: 0, y: 520, width: 3600, height: 80 },
       
       // Plataformas para acceder a bloques (perfectamente alineadas)
-      { x: 280, y: 400, width: 140, height: 20 },
+      { x: 280, y: 450, width: 140, height: 20 },
       { x: 680, y: 400, width: 140, height: 20 },
       { x: 1080, y: 400, width: 140, height: 20 },
       { x: 1480, y: 400, width: 140, height: 20 },
@@ -1204,19 +1204,19 @@ export default function MarioGhostHouseClassic() {
 
         {showTestimonialPopup && (
           <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-bounce px-4 w-full max-w-[95%] sm:max-w-md">
-            <div className="bg-black rounded-lg p-3 sm:p-4 md:p-6 border-2 sm:border-4 border-yellow-400 shadow-2xl" style={{ fontFamily: 'monospace' }}>
+            <div className="rounded-lg p-3 sm:p-4 md:p-6 border-2 sm:border-4 shadow-2xl" style={{ fontFamily: 'monospace', backgroundColor: '#000000', borderColor: '#ffd700' }}>
               <div className="text-center mb-2 sm:mb-3">
                 <div className="text-4xl sm:text-5xl md:text-6xl mb-1 sm:mb-2">{showTestimonialPopup.avatar}</div>
-                <div className="text-yellow-400 text-xl sm:text-2xl md:text-3xl font-bold">¡TESTIMONIAL!</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-bold" style={{ color: '#ffd700' }}>¡TESTIMONIAL!</div>
               </div>
-              <div className="bg-gray-900 p-3 sm:p-4 rounded border-2 border-gray-700">
+              <div className="p-3 sm:p-4 rounded border-2" style={{ backgroundColor: '#1a1a1a', borderColor: '#4a4a4a' }}>
                 <h3 className="text-base sm:text-lg md:text-xl font-bold text-white text-center mb-1">
                   {showTestimonialPopup.name}
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-400 text-center mb-2">
+                <p className="text-xs sm:text-sm text-center mb-2" style={{ color: '#9ca3af' }}>
                   {showTestimonialPopup.role}
                 </p>
-                <p className="text-yellow-400 text-center mb-2 sm:mb-3 text-lg sm:text-xl md:text-2xl">
+                <p className="text-center mb-2 sm:mb-3 text-lg sm:text-xl md:text-2xl" style={{ color: '#ffd700' }}>
                   {'⭐'.repeat(showTestimonialPopup.stars)}
                 </p>
                 <p className="text-white text-center italic text-xs sm:text-sm leading-relaxed">
@@ -1224,32 +1224,32 @@ export default function MarioGhostHouseClassic() {
                 </p>
               </div>
               <div className="text-center mt-3 sm:mt-4">
-                <p className="text-green-400 font-bold text-lg sm:text-xl md:text-2xl">+100 PUNTOS!</p>
+                <p className="font-bold text-lg sm:text-xl md:text-2xl" style={{ color: '#4ade80' }}>+100 PUNTOS!</p>
               </div>
             </div>
           </div>
         )}
 
         {!gameStarted && !gameOver && !victory && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 p-4">
+          <div className="absolute inset-0 flex items-center justify-center bg-black p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
             <div className="text-center space-y-4 sm:space-y-5 md:space-y-6 px-4 sm:px-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg">
               <h2 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2 sm:mb-4" style={{ fontFamily: 'monospace' }}>
                 INSTRUCCIONES
               </h2>
-              <div className="bg-gray-900 p-4 sm:p-5 md:p-6 rounded border-2 border-gray-700">
+              <div className="p-4 sm:p-5 md:p-6 rounded border-2" style={{ backgroundColor: '#1a1a1a', borderColor: '#4a4a4a' }}>
                 <p className="text-white text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
                   ⬅️ ➡️ MOVER
                 </p>
                 <p className="text-white text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
                   ESPACIO / ⬆️ SALTAR
                 </p>
-                <p className="text-yellow-300 text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                <p className="text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace', color: '#ffd700' }}>
                   GOLPEA BLOQUES ? DESDE ABAJO
                 </p>
-                <p className="text-green-300 text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace' }}>
+                <p className="text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace', color: '#4ade80' }}>
                   RECOLECTA TESTIMONIOS 📜
                 </p>
-                <p className="text-cyan-300 text-base sm:text-lg" style={{ fontFamily: 'monospace' }}>
+                <p className="text-base sm:text-lg" style={{ fontFamily: 'monospace', color: '#22d3ee' }}>
                   EVITA AL BOO 👻
                 </p>
               </div>
@@ -1265,16 +1265,16 @@ export default function MarioGhostHouseClassic() {
         )}
 
         {victory && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 z-50 p-4">
-            <div className="bg-gray-900 p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 border-yellow-400 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg">
+          <div className="absolute inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
+            <div className="p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg" style={{ backgroundColor: '#1a1a1a', borderColor: '#ffd700' }}>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-400" style={{ fontFamily: 'monospace' }}>
                 STAGE CLEAR!
               </h2>
-              <div className="bg-black p-3 sm:p-4 rounded">
+              <div className="p-3 sm:p-4 rounded" style={{ backgroundColor: '#000000' }}>
                 <p className="text-white text-xl sm:text-2xl md:text-3xl mb-2" style={{ fontFamily: 'monospace' }}>
                   SCORE: {score}
                 </p>
-                <p className="text-green-400 text-base sm:text-lg md:text-xl" style={{ fontFamily: 'monospace' }}>
+                <p className="text-base sm:text-lg md:text-xl" style={{ fontFamily: 'monospace', color: '#4ade80' }}>
                   TESTIMONIOS: {collectedTestimonials.length}/{testimonialData.length}
                 </p>
               </div>
@@ -1297,12 +1297,12 @@ export default function MarioGhostHouseClassic() {
         )}
 
         {gameOver && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-95 p-4">
-            <div className="bg-gray-900 p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 border-red-500 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-red-500" style={{ fontFamily: 'monospace' }}>
+          <div className="absolute inset-0 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
+            <div className="p-4 sm:p-6 md:p-8 lg:p-10 rounded border-2 sm:border-4 text-center space-y-4 sm:space-y-5 md:space-y-6 w-full max-w-[95%] sm:max-w-md" style={{ backgroundColor: '#1a1a1a', borderColor: '#ef4444' }}>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold" style={{ fontFamily: 'monospace', color: '#ef4444' }}>
                 GAME OVER
               </h2>
-              <div className="bg-black p-3 sm:p-4 rounded">
+              <div className="p-3 sm:p-4 rounded" style={{ backgroundColor: '#000000' }}>
                 <p className="text-white text-xl sm:text-2xl md:text-3xl" style={{ fontFamily: 'monospace' }}>
                   SCORE: {score}
                 </p>

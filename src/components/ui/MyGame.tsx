@@ -11,9 +11,9 @@ const MyGame: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<"none" | "pacman" | "boo">(
     "none"
   );
-  const [score, setScore] = useState(999999);
-  const [level, setLevel] = useState(8);
-  const [credits, setCredits] = useState(5);
+  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [credits, setCredits] = useState(10);
   const [isHoveringBoo, setIsHoveringBoo] = useState(false);
   const [isHoveringPacman, setIsHoveringPacman] = useState(false);
 
@@ -176,7 +176,7 @@ const MyGame: React.FC = () => {
                   {isHoveringBoo && (
                     <div className="relative z-10 flex items-center justify-center w-full h-full">
                       <img
-                        src="https://media1.tenor.com/m/TbGh9uzZ8mUAAAAC/king-boo-super-mario.gif"
+                        src="https://media1.tenor.com/m/Mdy4Mo_LLeQAAAAC/king-boo-boo.gif"
                         alt="Boo animated"
                         className="max-w-[80%] max-h-[80%] object-contain"
                         style={{
@@ -296,7 +296,7 @@ const MyGame: React.FC = () => {
                   {isHoveringPacman && (
                     <div className="relative z-10 flex items-center justify-center w-full h-full">
                       <img
-                        src="https://i.pinimg.com/originals/72/07/a4/7207a4522bc87de5a1753224a7ddb431.gif"
+                        src="https://laughingsquid.com/wp-content/uploads/2013/06/fpsman1.gif"
                         alt="Pac-Man animated"
                         className="max-w-[80%] max-h-[80%] object-contain"
                         style={{
