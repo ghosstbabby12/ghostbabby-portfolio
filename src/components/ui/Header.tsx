@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
+import { Menu, X, Sun, Moon, Monitor, Globe } from 'lucide-react'
 import { useTheme, useI18n } from '../../app/providers'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -129,10 +129,22 @@ const Header = () => {
             <button
               onClick={toggleTheme}
               className="ml-3 p-2 rounded-md text-white/90 hover:text-ghost-purple transition-colors"
-              aria-label={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
-              title={theme === 'light' ? t('actions.theme.light') : t('actions.theme.dark')}
+              aria-label={
+                theme === 'light'
+                  ? t('actions.theme.light')
+                  : theme === 'dark'
+                  ? t('actions.theme.dark')
+                  : t('actions.theme.system')
+              }
+              title={
+                theme === 'light'
+                  ? t('actions.theme.light')
+                  : theme === 'dark'
+                  ? t('actions.theme.dark')
+                  : t('actions.theme.system')
+              }
             >
-              {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === 'light' ? <Sun size={18} /> : theme === 'dark' ? <Moon size={18} /> : <Monitor size={18} />}
             </button>
 
             {/* Language toggle */}

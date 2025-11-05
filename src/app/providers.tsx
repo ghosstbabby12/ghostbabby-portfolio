@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 // THEME
-export type Theme = "dark" | "light"
+export type Theme = "dark" | "light" | "system"
 
 interface ThemeContextValue {
   theme: Theme
@@ -14,30 +14,70 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark")
+  const [theme, setTheme] = useState<Theme>("system")
 
+  // Detectar preferencias del sistema
+  const getSystemTheme = (): "dark" | "light" => {
+    if (typeof window === "undefined") return "dark"
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  }
+
+  // Inicializar tema desde localStorage o usar system por defecto
   useEffect(() => {
     try {
       const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) as Theme | null
-      if (stored === "light" || stored === "dark") {
+      if (stored === "light" || stored === "dark" || stored === "system") {
         setTheme(stored)
       } else {
-        setTheme("dark")
+        setTheme("system")
       }
     } catch {}
   }, [])
 
+  // Aplicar tema al DOM y escuchar cambios en las preferencias del sistema
   useEffect(() => {
     const root = document.documentElement
-    if (theme === "light") root.classList.add("light")
-    else root.classList.remove("light")
+
+    // Función para aplicar el tema efectivo
+    const applyTheme = (effectiveTheme: "dark" | "light") => {
+      if (effectiveTheme === "light") {
+        root.classList.add("light")
+      } else {
+        root.classList.remove("light")
+      }
+    }
+
+    // Determinar el tema efectivo
+    const effectiveTheme = theme === "system" ? getSystemTheme() : theme
+    applyTheme(effectiveTheme)
+
+    // Guardar en localStorage
     try {
       localStorage.setItem("theme", theme)
     } catch {}
+
+    // Si el tema es "system", escuchar cambios en las preferencias del sistema
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+      const handleChange = (e: MediaQueryListEvent) => {
+        applyTheme(e.matches ? "dark" : "light")
+      }
+
+      mediaQuery.addEventListener("change", handleChange)
+      return () => mediaQuery.removeEventListener("change", handleChange)
+    }
   }, [theme])
 
   const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme: () => setTheme((t) => (t === "light" ? "dark" : "light")) }),
+    () => ({
+      theme,
+      setTheme,
+      toggleTheme: () => setTheme((t) => {
+        if (t === "dark") return "light"
+        if (t === "light") return "system"
+        return "dark"
+      })
+    }),
     [theme]
   )
 
@@ -80,6 +120,7 @@ const DICTIONARY = {
       theme: {
         light: "Modo Claro",
         dark: "Modo Oscuro",
+        system: "Modo Sistema",
       },
       language: "Idioma",
     },
@@ -297,6 +338,7 @@ const DICTIONARY = {
     theme: {
       light: "Light Mode",
       dark: "Dark Mode",
+      system: "System Mode",
     },
     language: "Language",
   },
