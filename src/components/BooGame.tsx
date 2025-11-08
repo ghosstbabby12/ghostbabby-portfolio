@@ -30,6 +30,26 @@ interface Boo {
   speed: number
 }
 
+interface Turtle {
+  id: number
+  x: number
+  y: number
+  vx: number
+  vy: number
+  direction: number
+  dead: boolean
+  animFrame: number
+}
+
+interface Mushroom {
+  id: number
+  x: number
+  y: number
+  vy: number
+  vx: number
+  collected: boolean
+}
+
 interface Block {
   id: number
   x: number
@@ -89,6 +109,8 @@ export default function MarioGhostHouseClassic() {
   const [blocks, setBlocks] = useState<Block[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [platforms, setPlatforms] = useState<Platform[]>([])
+  const [turtles, setTurtles] = useState<Turtle[]>([])
+  const [mushrooms, setMushrooms] = useState<Mushroom[]>([])
   const [keys, setKeys] = useState({ left: false, right: false, jump: false })
   const [cameraX, setCameraX] = useState(0)
   const [invincible, setInvincible] = useState(false)
@@ -172,6 +194,24 @@ export default function MarioGhostHouseClassic() {
       testimonial: null
     }))
     setBlocks(initialBlocks)
+
+    // Tortugas enemigas distribuidas por el nivel
+    const initialTurtles: Turtle[] = [
+      { id: 0, x: 600, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+      { id: 1, x: 1200, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
+      { id: 2, x: 1800, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+      { id: 3, x: 2400, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
+      { id: 4, x: 3000, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+    ]
+    setTurtles(initialTurtles)
+
+    // Hongos de vida distribuidos estratégicamente
+    const initialMushrooms: Mushroom[] = [
+      { id: 0, x: 1000, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 1, x: 2000, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 2, x: 2800, y: 480, vy: 0, vx: 1, collected: false },
+    ]
+    setMushrooms(initialMushrooms)
   }, [])
 
   useEffect(() => {
@@ -709,32 +749,151 @@ export default function MarioGhostHouseClassic() {
     const drawFlag = (animTime: number) => {
       const screenX = GOAL_X - cameraX
       const y = 200
-      
+
       // Asta (pixel art)
       ctx.fillStyle = '#FFD700'
       ctx.fillRect(screenX, y, 8, 320)
-      
+
       // Anillos
       for (let i = 0; i < 6; i++) {
         ctx.fillStyle = i % 2 === 0 ? '#FFA500' : '#FFD700'
         ctx.fillRect(screenX - 2, y + i * 50, 12, 8)
       }
-      
+
       // Bandera ondeante (pixel style)
       const wave = Math.floor(Math.sin(animTime * 3) * 3)
       ctx.fillStyle = victory ? '#FFD700' : '#FF69B4'
       ctx.fillRect(screenX + 8, y + 20, 60 + wave, 50)
-      
+
       // Borde bandera
       ctx.strokeStyle = victory ? '#FFA500' : '#C71585'
       ctx.lineWidth = 2
       ctx.strokeRect(screenX + 8, y + 20, 60 + wave, 50)
-      
+
       // Estrella
       ctx.fillStyle = '#FFFFFF'
       ctx.font = 'bold 32px Arial'
       ctx.textAlign = 'center'
       ctx.fillText('★', screenX + 38, y + 52)
+    }
+
+    const drawTurtle = (turtle: Turtle, animTime: number) => {
+      const screenX = turtle.x - cameraX
+      const walkCycle = Math.floor(turtle.animFrame / 8) % 2
+
+      ctx.save()
+
+      if (turtle.dead) {
+        // Tortuga muerta (caparazón volteado)
+        ctx.fillStyle = '#228B22'
+        ctx.fillRect(screenX + 4, turtle.y + 8, 24, 16)
+
+        // Patrón del caparazón
+        ctx.fillStyle = '#FFFF00'
+        ctx.fillRect(screenX + 8, turtle.y + 10, 4, 4)
+        ctx.fillRect(screenX + 16, turtle.y + 10, 4, 4)
+        ctx.fillRect(screenX + 12, turtle.y + 16, 4, 4)
+
+        // Borde
+        ctx.strokeStyle = '#006400'
+        ctx.lineWidth = 2
+        ctx.strokeRect(screenX + 4, turtle.y + 8, 24, 16)
+      } else {
+        // Caparazón
+        ctx.fillStyle = '#228B22'
+        ctx.fillRect(screenX + 4, turtle.y, 24, 20)
+
+        // Patrón hexagonal del caparazón
+        ctx.fillStyle = '#FFFF00'
+        ctx.fillRect(screenX + 8, turtle.y + 4, 4, 4)
+        ctx.fillRect(screenX + 16, turtle.y + 4, 4, 4)
+        ctx.fillRect(screenX + 12, turtle.y + 8, 4, 4)
+        ctx.fillRect(screenX + 8, turtle.y + 12, 4, 4)
+        ctx.fillRect(screenX + 16, turtle.y + 12, 4, 4)
+
+        // Borde del caparazón
+        ctx.strokeStyle = '#006400'
+        ctx.lineWidth = 2
+        ctx.strokeRect(screenX + 4, turtle.y, 24, 20)
+
+        // Cabeza
+        ctx.fillStyle = '#90EE90'
+        const headX = turtle.direction > 0 ? screenX + 26 : screenX + 2
+        ctx.fillRect(headX, turtle.y + 8, 6, 8)
+
+        // Ojo
+        ctx.fillStyle = '#000000'
+        ctx.fillRect(headX + (turtle.direction > 0 ? 3 : 1), turtle.y + 10, 2, 2)
+
+        // Patas (animadas)
+        ctx.fillStyle = '#90EE90'
+        if (walkCycle === 0) {
+          // Patas delanteras
+          ctx.fillRect(screenX + 2, turtle.y + 18, 4, 6)
+          ctx.fillRect(screenX + 26, turtle.y + 18, 4, 6)
+          // Patas traseras
+          ctx.fillRect(screenX + 8, turtle.y + 20, 4, 4)
+          ctx.fillRect(screenX + 20, turtle.y + 20, 4, 4)
+        } else {
+          // Patas delanteras
+          ctx.fillRect(screenX + 2, turtle.y + 20, 4, 4)
+          ctx.fillRect(screenX + 26, turtle.y + 20, 4, 4)
+          // Patas traseras
+          ctx.fillRect(screenX + 8, turtle.y + 18, 4, 6)
+          ctx.fillRect(screenX + 20, turtle.y + 18, 4, 6)
+        }
+      }
+
+      ctx.restore()
+    }
+
+    const drawMushroom = (mushroom: Mushroom, animTime: number) => {
+      const screenX = mushroom.x - cameraX
+      const bounce = Math.sin(animTime * 5) * 2
+
+      ctx.save()
+
+      // Sombra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+      ctx.fillRect(screenX + 4, mushroom.y + 22, 16, 4)
+
+      // Tallo
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 8, mushroom.y + 12 + bounce, 8, 12)
+
+      // Borde del tallo
+      ctx.strokeStyle = '#E0E0E0'
+      ctx.lineWidth = 1
+      ctx.strokeRect(screenX + 8, mushroom.y + 12 + bounce, 8, 12)
+
+      // Sombrero (rojo con puntos blancos)
+      ctx.fillStyle = '#FF0000'
+      ctx.fillRect(screenX + 4, mushroom.y + 8 + bounce, 16, 8)
+      ctx.fillRect(screenX + 2, mushroom.y + 10 + bounce, 20, 4)
+
+      // Parte superior redondeada
+      ctx.fillRect(screenX + 6, mushroom.y + 6 + bounce, 12, 2)
+      ctx.fillRect(screenX + 8, mushroom.y + 4 + bounce, 8, 2)
+
+      // Puntos blancos
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 6, mushroom.y + 8 + bounce, 3, 3)
+      ctx.fillRect(screenX + 15, mushroom.y + 8 + bounce, 3, 3)
+      ctx.fillRect(screenX + 10, mushroom.y + 11 + bounce, 4, 4)
+
+      // Brillo en el sombrero
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
+      ctx.fillRect(screenX + 8, mushroom.y + 6 + bounce, 4, 4)
+
+      // Glow de vida
+      ctx.shadowBlur = 10
+      ctx.shadowColor = '#FF0000'
+      ctx.strokeStyle = '#FF0000'
+      ctx.lineWidth = 1
+      ctx.strokeRect(screenX + 4, mushroom.y + 8 + bounce, 16, 8)
+      ctx.shadowBlur = 0
+
+      ctx.restore()
     }
 
     const animate = () => {
@@ -818,6 +977,20 @@ export default function MarioGhostHouseClassic() {
         ctx.shadowBlur = 0
         ctx.restore()
       }
+
+      // Tortugas
+      turtles.forEach(turtle => {
+        if (!turtle.dead || turtle.vy !== 0) {
+          drawTurtle(turtle, animTime)
+        }
+      })
+
+      // Hongos
+      mushrooms.forEach(mushroom => {
+        if (!mushroom.collected) {
+          drawMushroom(mushroom, animTime)
+        }
+      })
 
       // Boos
       boos.forEach(boo => {
@@ -912,7 +1085,7 @@ export default function MarioGhostHouseClassic() {
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
     }
-  }, [gameStarted, gameOver, victory, player, boos, blocks, testimonials, platforms, cameraX, score, time, lives, invincible, collectedTestimonials])
+  }, [gameStarted, gameOver, victory, player, boos, blocks, testimonials, platforms, turtles, mushrooms, cameraX, score, time, lives, invincible, collectedTestimonials])
 
   useEffect(() => {
     if (!gameStarted || gameOver || victory) return
@@ -1141,6 +1314,104 @@ export default function MarioGhostHouseClassic() {
         }])
       }
 
+      // Actualizar tortugas
+      setTurtles(prevTurtles => prevTurtles.map(turtle => {
+        if (turtle.dead) {
+          // Tortugas muertas desaparecen después de un tiempo
+          return turtle
+        }
+
+        let { x, y, vx, vy, direction, animFrame } = turtle
+
+        // Movimiento horizontal
+        x += vx
+        animFrame++
+
+        // Cambiar dirección en los bordes o obstáculos
+        if (x < 50 || x > WORLD_WIDTH - 50) {
+          vx = -vx
+          direction = -direction
+        }
+
+        // Gravedad simple (las tortugas caminan sobre el piso)
+        const onFloor = y >= 496
+        if (!onFloor) {
+          vy += GRAVITY
+          y += vy
+        } else {
+          y = 496
+          vy = 0
+        }
+
+        return { ...turtle, x, y, vx, vy, direction, animFrame }
+      }))
+
+      // Actualizar hongos
+      setMushrooms(prevMushrooms => prevMushrooms.map(mushroom => {
+        if (mushroom.collected) return mushroom
+
+        let { x, y, vx, vy } = mushroom
+
+        // Movimiento suave izquierda-derecha
+        x += vx
+
+        // Rebotar en los bordes
+        if (x < mushroom.id * 50 || x > mushroom.id * 50 + 100) {
+          vx = -vx
+        }
+
+        return { ...mushroom, x, y, vx, vy }
+      }))
+
+      // Colisión jugador con tortugas
+      turtles.forEach((turtle, index) => {
+        if (turtle.dead) return
+
+        const dx = player.x + 16 - (turtle.x + 16)
+        const dy = player.y + 23 - (turtle.y + 12)
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < 30) {
+          // Si el jugador salta sobre la tortuga
+          if (player.vy > 0 && player.y < turtle.y) {
+            setTurtles(prev => prev.map((t, i) =>
+              i === index ? { ...t, dead: true } : t
+            ))
+            setScore(s => s + 200)
+            setPlayer(p => ({ ...p, vy: JUMP_FORCE * 0.6 })) // Pequeño rebote
+          } else if (!invincible) {
+            // La tortuga daña al jugador
+            setLives(l => {
+              const newLives = l - 1
+              if (newLives <= 0) setGameOver(true)
+              return newLives
+            })
+            setTime(t => Math.max(0, t - 10))
+            setInvincible(true)
+            setTimeout(() => setInvincible(false), 2000)
+            setPlayer(p => ({ ...p, x: Math.max(100, p.x - 50), vx: 0, vy: JUMP_FORCE * 0.5 }))
+          }
+        }
+      })
+
+      // Colisión jugador con hongos (vida extra)
+      mushrooms.forEach((mushroom, index) => {
+        if (mushroom.collected) return
+
+        const dx = player.x + 16 - (mushroom.x + 12)
+        const dy = player.y + 23 - (mushroom.y + 12)
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < 25) {
+          setMushrooms(prev => prev.map((m, i) =>
+            i === index ? { ...m, collected: true } : m
+          ))
+          setLives(l => Math.min(5, l + 1)) // Máximo 5 vidas
+          setScore(s => s + 500)
+          setTime(t => Math.min(200, t + 20)) // Bonus de tiempo
+        }
+      })
+
       // Colisión con Boos
       if (!invincible) {
         for (const boo of boos) {
@@ -1167,7 +1438,7 @@ export default function MarioGhostHouseClassic() {
     }, 16)
 
     return () => clearInterval(gameLoop)
-  }, [gameStarted, gameOver, victory, keys, player, boos, blocks, platforms, invincible, testimonialData, collectedTestimonials, time])
+  }, [gameStarted, gameOver, victory, keys, player, boos, blocks, platforms, turtles, mushrooms, invincible, testimonialData, collectedTestimonials, time])
 
   const startGame = () => {
     setGameStarted(true)
@@ -1182,6 +1453,22 @@ export default function MarioGhostHouseClassic() {
     setTestimonials([])
     setCollectedTestimonials([])
     setBoos([{ id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 2.5 }])
+
+    // Resetear tortugas
+    setTurtles([
+      { id: 0, x: 600, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+      { id: 1, x: 1200, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
+      { id: 2, x: 1800, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+      { id: 3, x: 2400, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
+      { id: 4, x: 3000, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+    ])
+
+    // Resetear hongos
+    setMushrooms([
+      { id: 0, x: 1000, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 1, x: 2000, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 2, x: 2800, y: 480, vy: 0, vx: 1, collected: false },
+    ])
   }
 
   return (
@@ -1248,6 +1535,12 @@ export default function MarioGhostHouseClassic() {
                 </p>
                 <p className="text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace', color: '#4ade80' }}>
                   RECOLECTA TESTIMONIOS 📜
+                </p>
+                <p className="text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace', color: '#90EE90' }}>
+                  SALTA SOBRE TORTUGAS 🐢
+                </p>
+                <p className="text-base sm:text-lg mb-2 sm:mb-3" style={{ fontFamily: 'monospace', color: '#FF0000' }}>
+                  COME HONGOS = +1 VIDA 🍄
                 </p>
                 <p className="text-base sm:text-lg" style={{ fontFamily: 'monospace', color: '#22d3ee' }}>
                   EVITA AL BOO 👻
