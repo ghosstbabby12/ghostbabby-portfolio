@@ -10,8 +10,8 @@ const Projects = () => {
     {
       id: 1,
       title: "Manejo de Integración Continua",
-      description:
-        "Este proyecto consiste en una aplicación React sencilla que consume la API pública de usuarios aleatorios y muestra información básica de los usuarios",
+      description: t ('projects.description'),
+        
 
       technologies: ["React 18", "Axios", "Jest + React Testing Library", "Jenkins (CI/CD)",],
       image: "/projects/ReactApp.jpg",
@@ -25,7 +25,7 @@ const Projects = () => {
       description:
         "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
-      image: "https://private-user-images.githubusercontent.com/197989260/449297596-1d5cf074-3652-424d-ab33-56415c0ccc90.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjIzMTc4MjEsIm5iZiI6MTc2MjMxNzUyMSwicGF0aCI6Ii8xOTc5ODkyNjAvNDQ5Mjk3NTk2LTFkNWNmMDc0LTM2NTItNDI0ZC1hYjMzLTU2NDE1YzBjY2M5MC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMTA1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTEwNVQwNDM4NDFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iMDMwYzEyNGMxOWQ0ODBkYjQ4MGJmZGU0YWQyZTkyNjU0MmQ0N2Y1ZDlkYWFjZmVmMmI4YTU3MTQ3MzJhZDYyJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.fKczl2T3_VuMlyRHljpn77skJem6RJ7YzIogtr92iXQ",
+      image: "/projects/TaskManager.png",
       githubUrl: "https://github.com/migueltovarb/ISWDISENO10196-4.git",
       liveUrl: "https://taskmanager-demo.vercel.app",
       featured: true,
@@ -47,7 +47,7 @@ const Projects = () => {
       description:
         "🧪 Pruebas Unitarias con Pytest",
       technologies: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind"],
-      image: "https://placehold.co/400x250/png",
+      image: "/projects/JuegoBricks.png",
       githubUrl: "https://github.com/ghosstbabby12/JuegoBricks.git",
       liveUrl: "https://juego-bricks-tau.vercel.app",
       featured: false,
@@ -65,13 +65,43 @@ const Projects = () => {
     },
     {
       id: 6,
-      title: "Learning Management System",
+      title: "GestorLab",
       description:
-        "Plataforma educativa con cursos online, seguimiento de progreso, quizzes interactivos y certificaciones.",
+        "El sistema implementa autenticación y control de roles, donde los docentes pueden crear, editar y cancelar sus propias reservas, mientras que los administradores tienen la capacidad de aprobar o rechazar solicitudes, visualizar estadísticas de uso y exportar reportes en formato CSV.",
       technologies: ["Next.js", "Supabase", "Stripe", "Video.js", "PDF.js"],
-      image: "https://placehold.co/400x250/png",
-      githubUrl: "https://github.com/tuusuario/lms-platform",
+      image: "projects/GestorLab.png",
+      githubUrl: "https://github.com/ghosstbabby12/GestorLab.git",
       liveUrl: "https://lms-demo.vercel.app",
+      featured: false,
+    },
+    {
+      id: 7,
+      title: "Security Network",
+      description: "analisis de url maliciosas usando machine learning",
+      technologies: [],
+      image: " /projects/SecurityNetwork.png",
+      githubUrl: "https://github.com/ghosstbabby12/PatronesDeSofware.git",
+      liveUrl: "",
+      featured: false,
+    },
+    {
+      id: 8,
+      title: "unity 3d",
+      description: " juego de plataformas en unity 3d",
+      technologies: [],
+      image: " /projects/Unity3D.png",
+      githubUrl: "",
+      liveUrl: "",
+      featured: false,
+    },
+    {
+      id: 9,
+      title: "Sistema de Gestión de Formularios",
+      description: "Aplicación web desarrollada en Django que permite registrar y gestionar formularios de solicitudes y asistencias, almacenando los datos en una base de datos SQLite. Incluye validación de formularios, confirmación visual tras el envío y una interfaz clara y moderna para el usuario.",
+      technologies: [],
+      image: " /projects/DjangoForm.png",
+      githubUrl: "https://github.com/ghosstbabby12/Formularios_Cami.git",
+      liveUrl: "",
       featured: false,
     },
   ];

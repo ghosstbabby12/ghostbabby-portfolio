@@ -96,12 +96,13 @@ const Header = () => {
               transition={{ duration: 0.5 }}
             >
               <Image
-                src="/images/me.jpg"
+                src="https://media.tenor.com/cl2Xs1LDULsAAAAi/balls.gif"
                 alt="Camila Bastidas Avatar"
                 width={40}
                 height={40}
                 className="object-cover"
                 priority
+                unoptimized
               />
             </motion.div>
             <span className="text-xl font-bold text-gradient animate-glow">

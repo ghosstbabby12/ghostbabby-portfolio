@@ -51,9 +51,9 @@ const Hero = () => {
             transition={{ duration: 0.8 }}
             className="space-y-6 text-center"
           >
-            {/* GIF clickeable para ir a la sección de juegos */}
+            {/* Foto de perfil clickeable para ir a la sección de juegos */}
             <motion.a
-              href="#mygame"
+              href="#about"
               className="inline-block cursor-pointer"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -62,17 +62,17 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.preventDefault()
-                const element = document.querySelector('#mygame')
+                const element = document.querySelector('#about')
                 if (element) {
                   element.scrollIntoView({ behavior: 'smooth' })
                 }
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* eslint-disable-net-line @next/next/no-img-element */}
               <img
-                src="https://media.tenor.com/cl2Xs1LDULsAAAAi/balls.gif"
-                alt="Ir a juegos"
-                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full shadow-2xl border-4 border-purple-500/50 hover:border-pink-500/70 transition-all"
+                src="/images/me15.jpeg"
+                alt="Camila Bastidas"
+                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full shadow-2xl border-4 border-purple-500/50 hover:border-pink-500/70 transition-all object-cover"
               />
             </motion.a>
 

@@ -127,13 +127,13 @@ const DICTIONARY = {
     },
 
     hero: {
-      welcome: "¡Bienvenido!",
+      welcome: "Bienvenido! ",
       intro: {
         part1: "Este portafolio es una experiencia interactiva donde puedes ",
         unlock: "desbloquear niveles",
         part2: ", descubrir ",
         hidden: "secciones ocultas",
-        part3: " ver el detalle de mi experiencia laboral y mi proceso de crecimiento. Diviertete!"
+        part3: " ver el detalle de mi experiencia laboral y mi proceso de crecimiento personal.!"
       },
       builtWith: "Construido con:",
       strudel: {
@@ -214,11 +214,11 @@ const DICTIONARY = {
       title: "Sobre Mí",
       greeting: "¡Hola! Soy",
       name: "Camila Bastidas",
-      bio: "Estudiante de Ingeniería de Software de 21 años apasionada por crear experiencias digitales únicas que combinan tecnología, arte y creatividad.",
-      inspiration: "Mi inspiración viene de",
-      tetrisGames: "los juegos retro",
-      inspirationEnd: "que me enseñaron que lo simple puede ser extraordinario.",
-      
+      bio: "Estudiante de Ingeniería de Software de 21 años, apasionada por crear experiencias digitales únicas que combinan tecnología, arte y creatividad.",
+      inspiration: "Mi inspiración para este portafolio viene de",
+      tetrisGames: "los video juegos retro",
+      inspirationEnd: "porque demuestran que la simplicidad puede ser la base para construir reliquias digitales genuinas y atemporales.",
+
       interestsTitle: "✨ Mis Pasiones",
       interests: {
         music: "Música",
@@ -228,7 +228,7 @@ const DICTIONARY = {
         sports: "Deporte",
         coding: "Programación"
       },
-      
+
       statsTitle: "📊 En Números",
       stats: {
         age: "Años",
@@ -236,7 +236,7 @@ const DICTIONARY = {
         projects: "Proyectos Completados",
         tech: "Tecnologías Dominadas"
       },
-      
+
       cards: {
         mission: {
           title: "Mi Misión",
@@ -352,7 +352,7 @@ const DICTIONARY = {
     language: "Language",
   },
   hero: {
-    welcome: "Welcome my portfolio!",
+    welcome: "Welcome!",
     intro: {
       part1: "This portfolio is a unique interactive experience where you can ",
       unlock: "unlock levels",
@@ -435,7 +435,7 @@ const DICTIONARY = {
     inspiration: "My inspiration comes from",
     tetrisGames: "retro games",
     inspirationEnd: "that taught me that simplicity can be extraordinary.",
-    
+
     interestsTitle: "✨ My Passions",
     interests: {
       music: "Music",
@@ -445,7 +445,7 @@ const DICTIONARY = {
       sports: "Sports",
       coding: "Coding"
     },
-    
+
     statsTitle: "📊 By The Numbers",
     stats: {
       age: "Years Old",
@@ -453,7 +453,7 @@ const DICTIONARY = {
       projects: "Completed Projects",
       tech: "Technologies Mastered"
     },
-    
+
     cards: {
       mission: {
         title: "My Mission",
@@ -467,13 +467,7 @@ const DICTIONARY = {
         title: "My Passion",
         description: "Constantly learning, experimenting with new technologies, and creating projects that connect retro nostalgia with the digital future."
       }
-    },
-    missionTitle: "My Mission",
-    missionDesc: "Turning innovative ideas into digital solutions that positively impact user experience and deliver real business value.",
-    approachTitle: "My Approach",
-    approachDesc: "I combine creativity and technology to build modern, scalable, user-centered web applications following best practices.",
-    passionTitle: "My Passion",
-    passionDesc: "Continuously learning new technologies and methodologies to stay at the forefront of web development and deliver innovative solutions."
+    }
   },
   pacman: {
     title: "👻 GHOST-MAN",
