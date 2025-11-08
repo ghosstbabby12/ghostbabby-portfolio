@@ -115,7 +115,6 @@ export default function MarioGhostHouseClassic() {
   const [cameraX, setCameraX] = useState(0)
   const [invincible, setInvincible] = useState(false)
   const [collectedTestimonials, setCollectedTestimonials] = useState<TestimonialData[]>([])
-  const [showTestimonialPopup, setShowTestimonialPopup] = useState<Testimonial | null>(null)
   const [hitEffect, setHitEffect] = useState<{x: number, y: number, show: boolean}>({x: 0, y: 0, show: false})
   const animationFrame = useRef<number>()
 
@@ -1207,18 +1206,7 @@ export default function MarioGhostHouseClassic() {
 
                 // Bonificación de tiempo al golpear bloques
                 setTime(t => Math.min(200, t + 10))
-                
-                // Mostrar popup
-                setShowTestimonialPopup({
-                  ...testimonialData_item,
-                  x: b.x + 20,
-                  y: b.y - 50,
-                  vy: -8,
-                  collected: false,
-                  floating: true
-                })
-                setTimeout(() => setShowTestimonialPopup(null), 2500)
-                
+
                 // Mostrar efecto HIT
                 setHitEffect({x: b.x + 20, y: b.y - 30, show: true})
                 setTimeout(() => setHitEffect(prev => ({...prev, show: false})), 500)
@@ -1488,34 +1476,6 @@ export default function MarioGhostHouseClassic() {
           className="border-4 border-gray-800 bg-black w-full"
           style={{ imageRendering: 'pixelated' }}
         />
-
-        {showTestimonialPopup && (
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 animate-bounce px-4 w-full max-w-[95%] sm:max-w-md">
-            <div className="rounded-lg p-3 sm:p-4 md:p-6 border-2 sm:border-4 shadow-2xl" style={{ fontFamily: 'monospace', backgroundColor: '#000000', borderColor: '#ffd700' }}>
-              <div className="text-center mb-2 sm:mb-3">
-                <div className="text-4xl sm:text-5xl md:text-6xl mb-1 sm:mb-2">{showTestimonialPopup.avatar}</div>
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold" style={{ color: '#ffd700' }}>¡TESTIMONIAL!</div>
-              </div>
-              <div className="p-3 sm:p-4 rounded border-2" style={{ backgroundColor: '#1a1a1a', borderColor: '#4a4a4a' }}>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold text-white text-center mb-1">
-                  {showTestimonialPopup.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-center mb-2" style={{ color: '#9ca3af' }}>
-                  {showTestimonialPopup.role}
-                </p>
-                <p className="text-center mb-2 sm:mb-3 text-lg sm:text-xl md:text-2xl" style={{ color: '#ffd700' }}>
-                  {'⭐'.repeat(showTestimonialPopup.stars)}
-                </p>
-                <p className="text-white text-center italic text-xs sm:text-sm leading-relaxed">
-                  "{showTestimonialPopup.text}"
-                </p>
-              </div>
-              <div className="text-center mt-3 sm:mt-4">
-                <p className="font-bold text-lg sm:text-xl md:text-2xl" style={{ color: '#4ade80' }}>+100 PUNTOS!</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {!gameStarted && !gameOver && !victory && (
           <div className="absolute inset-0 flex items-center justify-center bg-black p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
