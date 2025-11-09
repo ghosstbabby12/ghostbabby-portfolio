@@ -150,10 +150,11 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
     <div
       className={`min-h-screen py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${
         actualTheme === 'light'
-          ? 'bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50'
-          : 'bg-ghost-gradient'
+          ? 'bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100'
+          : 'bg-gradient-to-br from-gray-900 via-blue-950 to-black'
       }`}
     >
+
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -171,7 +172,7 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
           </div>
 
           <p className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto ${
-            actualTheme === 'light' ? 'text-gray-700' : 'text-white/80'
+            actualTheme === 'light' ? 'text-gray-700' : 'text-white/90'
           }`}>
             {t('hero.strudel.description')}
           </p>
@@ -184,8 +185,10 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className={`glass-effect rounded-xl p-4 ${
-            actualTheme === 'light' ? 'bg-white/40' : ''
+          <div className={`glass-effect rounded-xl p-4 backdrop-blur-lg border ${
+            actualTheme === 'light'
+              ? 'bg-white/60 border-purple-200'
+              : 'bg-white/5 border-white/10'
           }`}>
             <div className="flex items-center gap-2 mb-2">
               <Play className="w-5 h-5 text-purple-500" />
@@ -196,7 +199,7 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
               </h3>
             </div>
             <p className={`text-sm ${
-              actualTheme === 'light' ? 'text-gray-700' : 'text-white/70'
+              actualTheme === 'light' ? 'text-gray-600' : 'text-white/70'
             }`}>
               Escribe código y escucha música en tiempo real
             </p>
@@ -205,8 +208,10 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
           <div className="relative" ref={dropdownRef}>
             <motion.button
               onClick={() => setShowSamples(!showSamples)}
-              className={`glass-effect rounded-xl p-4 w-full text-left transition-all ${
-                actualTheme === 'light' ? 'bg-white/40 hover:bg-white/60' : 'hover:bg-white/10'
+              className={`glass-effect rounded-xl p-4 w-full text-left transition-all backdrop-blur-lg border ${
+                actualTheme === 'light'
+                  ? 'bg-white/60 border-purple-200 hover:bg-white/80'
+                  : 'bg-white/5 border-white/10 hover:bg-white/10'
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -225,12 +230,12 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
                   transition={{ duration: 0.3 }}
                 >
                   <ChevronDown className={`w-5 h-5 ${
-                    actualTheme === 'light' ? 'text-gray-700' : 'text-white/70'
+                    actualTheme === 'light' ? 'text-gray-600' : 'text-white/70'
                   }`} />
                 </motion.div>
               </div>
               <p className={`text-sm ${
-                actualTheme === 'light' ? 'text-gray-700' : 'text-white/70'
+                actualTheme === 'light' ? 'text-gray-600' : 'text-white/70'
               }`}>
                 {currentSample.name}
               </p>
@@ -244,7 +249,7 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className={`absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden shadow-xl z-50 border ${
+                  className={`absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden shadow-xl z-50 border backdrop-blur-xl ${
                     actualTheme === 'light'
                       ? 'bg-white border-purple-300'
                       : 'bg-gray-900 border-purple-500/50'
@@ -282,8 +287,10 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
             </AnimatePresence>
           </div>
 
-          <div className={`glass-effect rounded-xl p-4 ${
-            actualTheme === 'light' ? 'bg-white/40' : ''
+          <div className={`glass-effect rounded-xl p-4 backdrop-blur-lg border ${
+            actualTheme === 'light'
+              ? 'bg-white/60 border-purple-200'
+              : 'bg-white/5 border-white/10'
           }`}>
             <div className="flex items-center gap-2 mb-2">
               <Info className="w-5 h-5 text-blue-500" />
@@ -294,7 +301,7 @@ s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
               </h3>
             </div>
             <p className={`text-sm ${
-              actualTheme === 'light' ? 'text-gray-700' : 'text-white/70'
+              actualTheme === 'light' ? 'text-gray-600' : 'text-white/70'
             }`}>
               No necesitas instalar nada
             </p>
