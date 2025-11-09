@@ -114,6 +114,8 @@ export default function PacmanGame() {
       mouthOpening: true,
     }
 
+    type GhostType = 'blinky' | 'pinky' | 'inky' | 'clyde'
+    
     type Ghost = { 
       position: Vector2D
       velocity: Vector2D
@@ -121,40 +123,50 @@ export default function PacmanGame() {
       startPosition: Vector2D
       eaten: boolean
       respawnTimer: number
+      type: GhostType
+      cornerTarget: Vector2D
     }
     
     const ghosts: Ghost[] = [
       {
         position: new Vector2D(13, 10),
         velocity: Vector2D.left(),
-        color: actualTheme === 'light' ? '#000000' : '#FF0000',
+        color: '#FF0000', // Rojo - Blinky (Shadow)
         startPosition: new Vector2D(13, 10),
         eaten: false,
-        respawnTimer: 0
+        respawnTimer: 0,
+        type: 'blinky',
+        cornerTarget: new Vector2D(COLS - 2, 1)
       },
       {
         position: new Vector2D(14, 10),
         velocity: Vector2D.right(),
-        color: actualTheme === 'light' ? '#FFB6C1' : '#FFB8FF',
+        color: '#FFB8FF', // Rosa - Pinky (Speedy)
         startPosition: new Vector2D(14, 10),
         eaten: false,
-        respawnTimer: 0
+        respawnTimer: 0,
+        type: 'pinky',
+        cornerTarget: new Vector2D(1, 1)
       },
       {
         position: new Vector2D(12, 10),
         velocity: Vector2D.down(),
-        color: actualTheme === 'light' ? '#FFC0CB' : '#00FFFF',
+        color: '#00FFFF', // Cian - Inky (Bashful)
         startPosition: new Vector2D(12, 10),
         eaten: false,
-        respawnTimer: 0
+        respawnTimer: 0,
+        type: 'inky',
+        cornerTarget: new Vector2D(COLS - 2, ROWS - 2)
       },
       {
         position: new Vector2D(15, 10),
         velocity: Vector2D.up(),
-        color: actualTheme === 'light' ? '#FFD4E5' : '#FFB851',
+        color: '#FFB851', // Naranja - Clyde (Pokey)
         startPosition: new Vector2D(15, 10),
         eaten: false,
-        respawnTimer: 0
+        respawnTimer: 0,
+        type: 'clyde',
+        cornerTarget: new Vector2D(1, ROWS - 2)
       }
     ]
 
@@ -173,8 +185,9 @@ export default function PacmanGame() {
 
     let powerUpTimer = 0
     let isFlashing = false
+    const initialPelletCount = pellets.size
 
-    // Verificar si una posición es válida (con márgenes)
+    // Verificar si una posición es válida
     const canMove = (position: Vector2D): boolean => {
       const row = Math.floor(position.y)
       const col = Math.floor(position.x)
@@ -192,8 +205,102 @@ export default function PacmanGame() {
       ]
     }
 
-    const moveGhost = (ghost: Ghost, flee: boolean = false) => {
+    // Obtener el objetivo de cada fantasma según su personalidad
+    const getGhostTarget = (ghost: Ghost, isPowerUpActive: boolean): Vector2D => {
+      if (isPowerUpActive) {
+        // En modo asustado, huir de Pac-Man
+        const awayVector = ghost.position.add(
+          new Vector2D(
+            ghost.position.x - pacman.position.x,
+            ghost.position.y - pacman.position.y
+          )
+        )
+        return awayVector
+      }
+
+      switch (ghost.type) {
+        case 'blinky': {
+          // BLINKY (Rojo - Shadow): Persigue directamente a Pac-Man
+          // Cruise Elroy: se vuelve más rápido cuando quedan pocos puntos
+          const remainingPellets = pellets.size
+          const pelletPercentage = remainingPellets / initialPelletCount
+          
+          // Si quedan menos del 50% de puntos, es más agresivo
+          const isCruiseElroy = pelletPercentage < 0.5
+          
+          return pacman.position.clone()
+        }
+
+        case 'pinky': {
+          // PINKY (Rosa - Speedy): Emboscadora, apunta 4 casillas adelante de Pac-Man
+          const ahead = 4
+          let targetPos = pacman.position.clone()
+          
+          if (pacman.velocity.x > 0) {
+            targetPos.x += ahead
+          } else if (pacman.velocity.x < 0) {
+            targetPos.x -= ahead
+          } else if (pacman.velocity.y > 0) {
+            targetPos.y += ahead
+          } else if (pacman.velocity.y < 0) {
+            targetPos.y -= ahead
+            // Bug original: también se mueve a la izquierda
+            targetPos.x -= ahead
+          }
+          
+          return targetPos
+        }
+
+        case 'inky': {
+          // INKY (Cian - Bashful): Usa posición de Pac-Man Y Blinky para crear emboscada
+          const blinky = ghosts.find(g => g.type === 'blinky')
+          if (!blinky) return pacman.position.clone()
+          
+          // Punto 2 casillas adelante de Pac-Man
+          const ahead = 2
+          let intermediatePos = pacman.position.clone()
+          
+          if (pacman.velocity.x > 0) {
+            intermediatePos.x += ahead
+          } else if (pacman.velocity.x < 0) {
+            intermediatePos.x -= ahead
+          } else if (pacman.velocity.y > 0) {
+            intermediatePos.y += ahead
+          } else if (pacman.velocity.y < 0) {
+            intermediatePos.y -= ahead
+          }
+          
+          // Vector desde Blinky a ese punto, duplicado
+          const vectorX = intermediatePos.x - blinky.position.x
+          const vectorY = intermediatePos.y - blinky.position.y
+          
+          return new Vector2D(
+            blinky.position.x + vectorX * 2,
+            blinky.position.y + vectorY * 2
+          )
+        }
+
+        case 'clyde': {
+          // CLYDE (Naranja - Pokey): Persigue si está lejos, huye si está cerca
+          const distanceToPacman = ghost.position.distanceTo(pacman.position)
+          
+          if (distanceToPacman > 8) {
+            // Lejos: persigue a Pac-Man
+            return pacman.position.clone()
+          } else {
+            // Cerca: huye a su esquina
+            return ghost.cornerTarget.clone()
+          }
+        }
+
+        default:
+          return pacman.position.clone()
+      }
+    }
+
+    const moveGhost = (ghost: Ghost, isPowerUpActive: boolean) => {
       const directions = getPossibleDirections()
+      const target = getGhostTarget(ghost, isPowerUpActive)
       
       type DirectionScore = {
         direction: Vector2D
@@ -207,17 +314,31 @@ export default function PacmanGame() {
         
         if (canMove(testPosition)) {
           const isBackward = direction.x === -ghost.velocity.x && direction.y === -ghost.velocity.y
-          const distanceToPacman = testPosition.distanceTo(pacman.position)
+          const distanceToTarget = testPosition.distanceTo(target)
           
-          let score: number
+          let score = -distanceToTarget
           
-          if (flee) {
-            score = distanceToPacman * 0.8 + Math.random() * 10
+          // En modo normal, usar la IA específica del fantasma
+          if (!isPowerUpActive) {
+            // Blinky es más directo (menos aleatorio)
+            if (ghost.type === 'blinky') {
+              score += Math.random() * 5
+              
+              // Cruise Elroy: más agresivo con pocos puntos
+              const pelletPercentage = pellets.size / initialPelletCount
+              if (pelletPercentage < 0.5) {
+                score *= 1.5 // Prioriza más el objetivo
+              }
+            } else {
+              score += Math.random() * 15
+            }
           } else {
-            score = -distanceToPacman * 0.2 + Math.random() * 25
+            // En modo asustado, más errático
+            score += Math.random() * 20
           }
           
-          if (isBackward) score -= 10
+          // Penalizar retroceso
+          if (isBackward) score -= 20
           
           validDirections.push({ direction, score })
         }
@@ -230,7 +351,7 @@ export default function PacmanGame() {
     }
 
     const resetPositionsAfterHit = () => {
-      pacman.position = new Vector2D(1, 1)
+      pacman.position = new Vector2D(14, 14)
       pacman.velocity = Vector2D.right()
       pacman.nextVelocity = Vector2D.right()
       
@@ -318,13 +439,32 @@ export default function PacmanGame() {
           return
         }
 
-        // Cambiar dirección ocasionalmente
-        if (Math.random() < 0.02) {
+        // Velocidad base según tipo
+        let ghostSpeed = SPEED * 0.9
+        
+        // Blinky Cruise Elroy: más rápido con pocos puntos
+        if (ghost.type === 'blinky') {
+          const pelletPercentage = pellets.size / initialPelletCount
+          if (pelletPercentage < 0.5) {
+            ghostSpeed = SPEED * 1.0 // Igual velocidad que Pac-Man
+          }
+          if (pelletPercentage < 0.25) {
+            ghostSpeed = SPEED * 1.05 // Más rápido que Pac-Man
+          }
+        }
+
+        // Cambiar dirección con frecuencia variable según tipo
+        let changeChance = 0.02
+        if (ghost.type === 'blinky') changeChance = 0.025 // Más agresivo
+        if (ghost.type === 'inky') changeChance = 0.015 // Más errático
+        if (ghost.type === 'clyde') changeChance = 0.03 // Más cambiante
+        
+        if (Math.random() < changeChance) {
           moveGhost(ghost, isPowerUpActive)
         }
 
         // Mover fantasma
-        const attemptPosition = ghost.position.add(ghost.velocity.multiply(SPEED * 0.9))
+        const attemptPosition = ghost.position.add(ghost.velocity.multiply(ghostSpeed))
         if (canMove(attemptPosition)) {
           ghost.position = attemptPosition
         } else {
@@ -441,7 +581,7 @@ export default function PacmanGame() {
           ctx.arc(screenX + 4, screenY - 5, 2, 0, Math.PI * 2)
           ctx.fill()
         } else {
-          ctx.fillStyle = actualTheme === 'light' ? '#000000' : '#000080'
+          ctx.fillStyle = '#000080'
           ctx.beginPath()
           ctx.arc(screenX - 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
           ctx.arc(screenX + 4 + ghost.velocity.x * 1.5, screenY - 3 + ghost.velocity.y * 1.5, 2, 0, Math.PI * 2)
@@ -553,9 +693,15 @@ export default function PacmanGame() {
         {t('pacman.instructions')}
       </p>
       
-      <p className={`mt-2 text-xs ${actualTheme === 'light' ? 'text-gray-500' : 'text-gray-500'}`}>
-        🍒 Come las cerezas para poder comer a los fantasmas
-      </p>
+      <div className={`mt-2 text-xs ${actualTheme === 'light' ? 'text-gray-500' : 'text-gray-500'}`}>
+        <p>🍒 Come las cerezas para poder comer a los fantasmas</p>
+        <p className="mt-1">
+          <span className="text-red-500">●</span> Blinky (Rojo) - Persigue directamente | 
+          <span className="text-pink-400"> ●</span> Pinky (Rosa) - Emboscador | 
+          <span className="text-cyan-400"> ●</span> Inky (Cian) - Impredecible | 
+          <span className="text-orange-400"> ●</span> Clyde (Naranja) - Errático
+        </p>
+      </div>
 
       {cherries >= 3 && (
         <button

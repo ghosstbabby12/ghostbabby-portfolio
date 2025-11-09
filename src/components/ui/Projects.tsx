@@ -101,7 +101,6 @@ const Projects = () => {
       technologies: [],
       image: " /projects/DjangoForm.png",
       githubUrl: "https://github.com/ghosstbabby12/Formularios_Cami.git",
-      liveUrl: "",
       featured: false,
     },
   ];

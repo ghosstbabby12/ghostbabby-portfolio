@@ -50,6 +50,17 @@ interface Mushroom {
   collected: boolean
 }
 
+interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  life: number
+  maxLife: number
+  color: string
+  size: number
+}
+
 interface Block {
   id: number
   x: number
@@ -111,6 +122,7 @@ export default function MarioGhostHouseClassic() {
   const [platforms, setPlatforms] = useState<Platform[]>([])
   const [turtles, setTurtles] = useState<Turtle[]>([])
   const [mushrooms, setMushrooms] = useState<Mushroom[]>([])
+  const [particles, setParticles] = useState<Particle[]>([])
   const [keys, setKeys] = useState({ left: false, right: false, jump: false })
   const [cameraX, setCameraX] = useState(0)
   const [invincible, setInvincible] = useState(false)
@@ -260,78 +272,92 @@ export default function MarioGhostHouseClassic() {
 
     let animTime = 0
 
-    const drawPeach = (x: number, y: number, dir: number, frame: number) => {
+    const drawPeach = (x: number, y: number, dir: number, frame: number, vy: number = 0) => {
       const screenX = x - cameraX
-      
+
       ctx.save()
-      
-      // Sombra
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
-      ctx.fillRect(screenX + 8, y + 40, 16, 4)
+
+      // Squash & Stretch effect
+      const squashStretch = vy > 5 ? 1.15 : vy < -5 ? 0.85 : 1
+      const squashWidth = vy > 5 ? 0.9 : vy < -5 ? 1.1 : 1
+
+      ctx.translate(screenX + 16, y + 23)
+      ctx.scale(squashWidth, squashStretch)
+      ctx.translate(-(screenX + 16), -(y + 23))
+
+      // Sombra dinámica
+      const shadowScale = Math.max(0.5, 1 - Math.abs(vy) * 0.02)
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * shadowScale})`
+      ctx.fillRect(screenX + 8, y + 40, 16 * shadowScale, 4)
 
       const walkCycle = Math.floor(frame / 6) % 2
 
+      // Pequeño rebote al caminar
+      const bounceOffset = frame > 0 && player.onGround ? Math.sin(frame * 0.3) * 1 : 0
+      const yPos = y - bounceOffset
+
       // Vestido (estilo pixel art)
       ctx.fillStyle = '#FF69B4'
-      ctx.fillRect(screenX + 6, y + 18, 20, 4)
-      ctx.fillRect(screenX + 4, y + 22, 24, 18)
+      ctx.fillRect(screenX + 6, yPos + 18, 20, 4)
+      ctx.fillRect(screenX + 4, yPos + 22, 24, 18)
       
       // Detalles vestido
       ctx.fillStyle = '#FF1493'
-      ctx.fillRect(screenX + 4, y + 22, 24, 2)
-      ctx.fillRect(screenX + 4, y + 30, 24, 2)
-      
-      // Brazos
+      ctx.fillRect(screenX + 4, yPos + 22, 24, 2)
+      ctx.fillRect(screenX + 4, yPos + 30, 24, 2)
+
+      // Brazos (con movimiento)
+      const armSwing = walkCycle === 0 ? -1 : 1
       ctx.fillStyle = '#FDBCB4'
-      ctx.fillRect(screenX + 2, y + 20, 4, 10)
-      ctx.fillRect(screenX + 26, y + 20, 4, 10)
-      
+      ctx.fillRect(screenX + 2, yPos + 20 + armSwing, 4, 10)
+      ctx.fillRect(screenX + 26, yPos + 20 - armSwing, 4, 10)
+
       // Guantes
       ctx.fillStyle = '#FFFFFF'
-      ctx.fillRect(screenX + 2, y + 28, 4, 4)
-      ctx.fillRect(screenX + 26, y + 28, 4, 4)
-      
+      ctx.fillRect(screenX + 2, yPos + 28 + armSwing, 4, 4)
+      ctx.fillRect(screenX + 26, yPos + 28 - armSwing, 4, 4)
+
       // Cabeza
       ctx.fillStyle = '#FDBCB4'
-      ctx.fillRect(screenX + 8, y + 4, 16, 16)
-      
+      ctx.fillRect(screenX + 8, yPos + 4, 16, 16)
+
       // Cabello
       ctx.fillStyle = '#FFD700'
-      ctx.fillRect(screenX + 6, y + 2, 20, 10)
-      
+      ctx.fillRect(screenX + 6, yPos + 2, 20, 10)
+
       // Corona
       ctx.fillStyle = '#FFD700'
-      ctx.fillRect(screenX + 10, y, 12, 4)
-      ctx.fillRect(screenX + 12, y - 2, 2, 2)
-      ctx.fillRect(screenX + 18, y - 2, 2, 2)
-      
+      ctx.fillRect(screenX + 10, yPos, 12, 4)
+      ctx.fillRect(screenX + 12, yPos - 2, 2, 2)
+      ctx.fillRect(screenX + 18, yPos - 2, 2, 2)
+
       // Joya corona
       ctx.fillStyle = '#FF1493'
-      ctx.fillRect(screenX + 15, y, 2, 2)
-      
+      ctx.fillRect(screenX + 15, yPos, 2, 2)
+
       // Ojos
       ctx.fillStyle = '#000000'
-      ctx.fillRect(screenX + 10 + dir, y + 10, 2, 2)
-      ctx.fillRect(screenX + 18 + dir, y + 10, 2, 2)
-      
+      ctx.fillRect(screenX + 10 + dir, yPos + 10, 2, 2)
+      ctx.fillRect(screenX + 18 + dir, yPos + 10, 2, 2)
+
       // Boca
       ctx.fillStyle = '#FF69B4'
-      ctx.fillRect(screenX + 14, y + 14, 4, 2)
-      
-      // Piernas (animadas)
+      ctx.fillRect(screenX + 14, yPos + 14, 4, 2)
+
+      // Piernas (animadas con más movimiento)
       ctx.fillStyle = '#FDBCB4'
       if (walkCycle === 0) {
-        ctx.fillRect(screenX + 10, y + 38, 4, 6)
-        ctx.fillRect(screenX + 18, y + 38, 4, 6)
+        ctx.fillRect(screenX + 10, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 18, yPos + 38, 4, 6)
       } else {
-        ctx.fillRect(screenX + 12, y + 38, 4, 6)
-        ctx.fillRect(screenX + 16, y + 38, 4, 6)
+        ctx.fillRect(screenX + 12, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 16, yPos + 38, 4, 6)
       }
-      
+
       // Zapatos
       ctx.fillStyle = '#FF1493'
-      ctx.fillRect(screenX + 8, y + 42, 6, 4)
-      ctx.fillRect(screenX + 18, y + 42, 6, 4)
+      ctx.fillRect(screenX + 8, yPos + 42, 6, 4)
+      ctx.fillRect(screenX + 18, yPos + 42, 6, 4)
       
       ctx.restore()
     }
@@ -339,301 +365,129 @@ export default function MarioGhostHouseClassic() {
     const drawBigBoo = (x: number, y: number, hiding: boolean, animTime: number, booSize: number = 80) => {
       const screenX = x - cameraX
       const size = booSize
-      const floatY = y + Math.sin(animTime * 2) * 12
+      const floatY = y + Math.sin(animTime * 2) * 8 // Flotación más suave
 
       ctx.save()
 
-      // Glow púrpura/azul más intenso (estilo King Boo)
-      for (let i = 5; i > 0; i--) {
-        const glowSize = size + i * 18
-        const alpha = hiding ? 0.12 / i : 0.4 / i
+      // Sombra simple debajo del Boo
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
+      ctx.fillRect(screenX - 20, floatY + 45, 40, 6)
 
-        const glow = ctx.createRadialGradient(screenX, floatY, 0, screenX, floatY, glowSize)
-        glow.addColorStop(0, `rgba(138, 43, 226, ${alpha})`)
-        glow.addColorStop(0.5, `rgba(75, 0, 130, ${alpha * 0.7})`)
-        glow.addColorStop(1, 'rgba(138, 43, 226, 0)')
-        ctx.fillStyle = glow
-        ctx.beginPath()
-        ctx.arc(screenX, floatY, glowSize, 0, Math.PI * 2)
-        ctx.fill()
-      }
+      // CUERPO BLANCO SIMPLE (estilo SMB3 clásico)
+      ctx.fillStyle = '#FFFFFF'
 
-      // Sombra del cuerpo
-      ctx.fillStyle = 'rgba(75, 0, 130, 0.5)'
-      ctx.fillRect(screenX - size/2 + 10, floatY - size/2 + 6, size - 16, size)
-      ctx.fillRect(screenX - size/2 + 6, floatY - size/2 + 10, size - 8, size - 8)
-      ctx.fillRect(screenX - size/2 + 2, floatY - size/2 + 14, size, size - 16)
+      // Forma redondeada del cuerpo (pixel art)
+      // Centro
+      ctx.fillRect(screenX - 32, floatY - 24, 64, 48)
 
-      // Cuerpo principal blanco brillante
-      const bodyColor = hiding ? '#F0F0FF' : '#FFFFFF'
-      ctx.fillStyle = bodyColor
+      // Lados redondeados
+      ctx.fillRect(screenX - 36, floatY - 20, 4, 40)
+      ctx.fillRect(screenX + 32, floatY - 20, 4, 40)
+      ctx.fillRect(screenX - 40, floatY - 12, 4, 24)
+      ctx.fillRect(screenX + 36, floatY - 12, 4, 24)
 
-      // Cuerpo redondeado pixel art
-      ctx.fillRect(screenX - size/2 + 12, floatY - size/2, size - 24, size)
-      ctx.fillRect(screenX - size/2 + 8, floatY - size/2 + 4, size - 16, size - 8)
-      ctx.fillRect(screenX - size/2 + 4, floatY - size/2 + 8, size - 8, size - 16)
-      ctx.fillRect(screenX - size/2, floatY - size/2 + 12, size, size - 24)
-      
-      // Detalles de iluminación en el cuerpo
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
-      ctx.fillRect(screenX - size/2 + 8, floatY - size/2 + 8, size/3, size/3)
-      
-      ctx.fillStyle = 'rgba(200, 220, 255, 0.3)'
-      ctx.fillRect(screenX - size/2 + 4, floatY - size/2 + 12, size - 8, 4)
-      
-      // Cola ondeante mejorada
-      const tailSegments = 6
-      for (let i = 0; i < tailSegments; i++) {
-        const waveX = Math.sin(animTime * 4 + i * 0.6) * 6
-        const tailY = floatY + size/2 + i * 10
-        const tailSize = (size/1.8) - (i * 6)
-        
-        // Sombra de cola
-        ctx.fillStyle = 'rgba(0, 0, 50, 0.2)'
-        ctx.fillRect(screenX - tailSize/2 + waveX + 3, tailY + 2, tailSize, 10)
-        
-        // Segmento de cola
-        ctx.fillStyle = i % 2 === 0 ? '#FFFFFF' : '#F5F5FF'
-        ctx.fillRect(screenX - tailSize/2 + waveX, tailY, tailSize, 10)
-        
-        // Borde del segmento
-        ctx.strokeStyle = '#E0E0FF'
-        ctx.lineWidth = 1
-        ctx.strokeRect(screenX - tailSize/2 + waveX, tailY, tailSize, 10)
-        
-        // Highlight en cola
-        if (i % 2 === 0) {
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
-          ctx.fillRect(screenX - tailSize/2 + waveX + 2, tailY + 2, tailSize/2, 3)
-        }
-      }
+      // Parte superior redondeada
+      ctx.fillRect(screenX - 28, floatY - 28, 56, 4)
+      ctx.fillRect(screenX - 24, floatY - 32, 48, 4)
+      ctx.fillRect(screenX - 16, floatY - 36, 32, 4)
+      ctx.fillRect(screenX - 8, floatY - 38, 16, 2)
+
+      // COLA ONDULADA (3 picos como SMB3)
+      const wave1 = Math.sin(animTime * 2.5) * 2
+      const wave2 = Math.sin(animTime * 2.5 + 1.2) * 2
+      const wave3 = Math.sin(animTime * 2.5 + 2.4) * 2
+
+      // Pico izquierdo
+      ctx.fillRect(screenX - 24 + wave1, floatY + 24, 16, 8)
+      ctx.fillRect(screenX - 20 + wave1, floatY + 32, 8, 6)
+      ctx.fillRect(screenX - 16 + wave1, floatY + 38, 4, 3)
+
+      // Pico central
+      ctx.fillRect(screenX - 8 + wave2, floatY + 24, 16, 10)
+      ctx.fillRect(screenX - 4 + wave2, floatY + 34, 8, 6)
+      ctx.fillRect(screenX + wave2, floatY + 40, 4, 3)
+
+      // Pico derecho
+      ctx.fillRect(screenX + 8 + wave3, floatY + 24, 16, 8)
+      ctx.fillRect(screenX + 12 + wave3, floatY + 32, 8, 6)
+      ctx.fillRect(screenX + 16 + wave3, floatY + 38, 4, 3)
+
+      // Contorno negro suave para definir la forma
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)'
+      ctx.lineWidth = 1
+      ctx.strokeRect(screenX - 32, floatY - 24, 64, 48)
+
+      // Ya no necesitamos glow ni sombras complejas - todo está en el cuerpo principal arriba
 
       if (hiding) {
-        // Manos cubriendo mejoradas
-        for (let hand = -1; hand <= 1; hand += 2) {
-          const handX = screenX + hand * (size/2 + 8)
-          
-          // Sombra de mano
-          ctx.fillStyle = 'rgba(0, 0, 50, 0.3)'
-          ctx.fillRect(handX + (hand > 0 ? 3 : -18), floatY - 12, 16, 28)
-          
-          // Mano
-          ctx.fillStyle = '#FFFFFF'
-          ctx.fillRect(handX + (hand > 0 ? 0 : -15), floatY - 14, 15, 28)
-          
-          // Borde de mano
-          ctx.strokeStyle = '#E0E0FF'
-          ctx.lineWidth = 2
-          ctx.strokeRect(handX + (hand > 0 ? 0 : -15), floatY - 14, 15, 28)
-          
-          // Dedos detallados
-          for (let i = 0; i < 4; i++) {
-            const fingerY = floatY - 18 + i * 8
-            ctx.fillStyle = '#FFFFFF'
-            ctx.fillRect(handX + (hand > 0 ? -3 : 15), fingerY, 8, 6)
-            
-            ctx.fillStyle = '#F0F0FF'
-            ctx.fillRect(handX + (hand > 0 ? -5 : 17), fingerY + 1, 4, 4)
-            
-            // Uñas
-            ctx.fillStyle = 'rgba(200, 200, 255, 0.5)'
-            ctx.fillRect(handX + (hand > 0 ? -6 : 18), fingerY, 3, 2)
-          }
-        }
-      } else {
-        // Ojos grandes mejorados
-        const eyeGap = 28
-        
-        for (let side = -1; side <= 1; side += 2) {
-          const eyeX = screenX + side * eyeGap
-          
-          // Sombra del ojo
-          ctx.fillStyle = 'rgba(0, 0, 80, 0.4)'
-          ctx.fillRect(eyeX - 8, floatY - 14, 16, 26)
-          ctx.fillRect(eyeX - 10, floatY - 10, 2, 18)
-          ctx.fillRect(eyeX - 6, floatY - 16, 12, 2)
-          
-          // Blanco del ojo (con tinte púrpura oscuro de King Boo)
-          ctx.fillStyle = '#1a0033'
-          ctx.fillRect(eyeX - 7, floatY - 14, 14, 24)
-          ctx.fillRect(eyeX - 9, floatY - 10, 2, 16)
-          ctx.fillRect(eyeX - 5, floatY - 16, 10, 2)
-          ctx.fillRect(eyeX + 7, floatY - 10, 2, 16)
-          ctx.fillRect(eyeX - 5, floatY + 10, 10, 2)
+        // BOO TÍMIDO (estilo SMB3 simple)
 
-          // Iris púrpura/carmesí brillante (estilo King Boo)
-          const irisGradient = ctx.createLinearGradient(eyeX - 6, floatY - 8, eyeX + 6, floatY + 8)
-          irisGradient.addColorStop(0, '#FF00FF')
-          irisGradient.addColorStop(0.5, '#CC00CC')
-          irisGradient.addColorStop(1, '#8B008B')
-          ctx.fillStyle = irisGradient
-          ctx.fillRect(eyeX - 6, floatY - 8, 12, 16)
-          
-          // Pupila oscura
-          ctx.fillStyle = '#000040'
-          ctx.fillRect(eyeX - 4, floatY - 4, 8, 12)
-          
-          // Brillos en el iris (múltiples capas)
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-          ctx.fillRect(eyeX - 4, floatY - 6, 3, 4)
-          
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
-          ctx.fillRect(eyeX + 2, floatY - 2, 2, 3)
-          
-          ctx.fillStyle = 'rgba(200, 255, 255, 0.7)'
-          ctx.fillRect(eyeX - 1, floatY + 4, 4, 2)
-        }
-        
-        // Cejas malvadas
-        ctx.fillStyle = '#000040'
-        const browWave = Math.sin(animTime * 3) * 2
-        ctx.fillRect(screenX - 34, floatY - 22 + browWave, 12, 4)
-        ctx.fillRect(screenX - 36, floatY - 20 + browWave, 2, 4)
-        ctx.fillRect(screenX + 22, floatY - 22 + browWave, 12, 4)
-        ctx.fillRect(screenX + 34, floatY - 20 + browWave, 2, 4)
-        
-        // Boca grande mejorada
-        ctx.fillStyle = '#8B0000'
-        ctx.fillRect(screenX - 28, floatY + 14, 56, 20)
-        ctx.fillRect(screenX - 30, floatY + 16, 2, 16)
-        ctx.fillRect(screenX + 28, floatY + 16, 2, 16)
-        ctx.fillRect(screenX - 26, floatY + 12, 4, 4)
-        ctx.fillRect(screenX + 22, floatY + 12, 4, 4)
-        
-        // Interior oscuro de la boca
-        ctx.fillStyle = '#4B0000'
-        ctx.fillRect(screenX - 24, floatY + 18, 48, 14)
-        
-        // Lengua detallada
-        const tongueGradient = ctx.createLinearGradient(screenX - 10, floatY + 22, screenX + 10, floatY + 30)
-        tongueGradient.addColorStop(0, '#FF69B4')
-        tongueGradient.addColorStop(0.5, '#FF1493')
-        tongueGradient.addColorStop(1, '#C71585')
-        ctx.fillStyle = tongueGradient
-        ctx.fillRect(screenX - 10, floatY + 22, 20, 10)
-        
-        // Textura de lengua
-        ctx.fillStyle = 'rgba(255, 105, 180, 0.5)'
-        ctx.fillRect(screenX - 8, floatY + 23, 16, 2)
-        ctx.fillRect(screenX - 6, floatY + 27, 12, 2)
-        
-        // Dientes mejorados con más detalle
+        // Rubor rosado
+        ctx.fillStyle = 'rgba(255, 150, 200, 0.5)'
+        ctx.fillRect(screenX - 8, floatY - 8, 4, 4)
+        ctx.fillRect(screenX + 4, floatY - 8, 4, 4)
+
+        // Brazos/manos simples cubriendo la cara
         ctx.fillStyle = '#FFFFFF'
-        for (let i = 0; i < 8; i++) {
-          const toothX = screenX - 26 + i * 7
-          
-          // Diente principal
-          ctx.fillRect(toothX, floatY + 14, 6, 10)
-          
-          // Highlight en diente
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-          ctx.fillRect(toothX + 1, floatY + 15, 2, 6)
-          
-          // Sombra en diente
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
-          ctx.fillRect(toothX + 4, floatY + 16, 2, 7)
-          
-          ctx.fillStyle = '#FFFFFF'
-        }
-        
-        // Babas/saliva
-        ctx.fillStyle = 'rgba(150, 255, 255, 0.3)'
-        const droolX = screenX - 20 + Math.sin(animTime * 2) * 15
-        ctx.fillRect(droolX, floatY + 34, 3, 8 + Math.sin(animTime * 3) * 4)
-        ctx.fillRect(droolX + 20, floatY + 34, 3, 6 + Math.cos(animTime * 3) * 3)
-      }
-      
-      // Borde exterior para definición
-      ctx.strokeStyle = hiding ? 'rgba(200, 200, 255, 0.5)' : 'rgba(230, 240, 255, 0.6)'
-      ctx.lineWidth = 2
-      ctx.strokeRect(screenX - size/2, floatY - size/2 + 12, size, size - 24)
 
-      // Corona de King Boo (pixel art)
-      if (!hiding) {
-        const crownY = floatY - size/2 - 28
-        const crownBounce = Math.sin(animTime * 2) * 2
+        // Brazo izquierdo
+        ctx.fillRect(screenX - 28, floatY - 12, 12, 24)
+        ctx.fillRect(screenX - 32, floatY - 8, 4, 16)
 
-        // Sombra de la corona
-        ctx.fillStyle = 'rgba(139, 90, 0, 0.3)'
-        ctx.fillRect(screenX - 32, crownY + crownBounce + 3, 64, 26)
+        // Brazo derecho
+        ctx.fillRect(screenX + 16, floatY - 12, 12, 24)
+        ctx.fillRect(screenX + 28, floatY - 8, 4, 16)
 
-        // Base de la corona (oro)
-        const goldGradient = ctx.createLinearGradient(screenX - 30, crownY, screenX + 30, crownY + 24)
-        goldGradient.addColorStop(0, '#FFD700')
-        goldGradient.addColorStop(0.5, '#FFA500')
-        goldGradient.addColorStop(1, '#FF8C00')
-        ctx.fillStyle = goldGradient
+        // Ojos tímidos pequeños asomándose
+        ctx.fillStyle = '#000000'
+        ctx.fillRect(screenX - 12, floatY - 2, 4, 4)
+        ctx.fillRect(screenX + 8, floatY - 2, 4, 4)
 
-        // Band principal de la corona
-        ctx.fillRect(screenX - 30, crownY + crownBounce + 18, 60, 8)
+        // Brillo en ojos tímidos
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(screenX - 11, floatY - 1, 2, 2)
+        ctx.fillRect(screenX + 9, floatY - 1, 2, 2)
 
-        // Picos de la corona (5 picos)
-        for (let i = 0; i < 5; i++) {
-          const spikeX = screenX - 26 + i * 13
-          const spikeHeight = i === 2 ? 20 : 16 // Pico central más alto
+      } else {
+        // BOO ENOJADO (estilo SMB3 clásico - simple y efectivo)
 
-          // Pico dorado
-          ctx.fillStyle = goldGradient
-          ctx.fillRect(spikeX, crownY + crownBounce + 18 - spikeHeight, 10, spikeHeight)
+        // Ojos ovales grandes negros (estilo clásico)
+        ctx.fillStyle = '#000000'
 
-          // Highlight en el pico
-          ctx.fillStyle = '#FFED4E'
-          ctx.fillRect(spikeX + 1, crownY + crownBounce + 19 - spikeHeight, 3, spikeHeight - 4)
+        // Ojo izquierdo
+        ctx.fillRect(screenX - 24, floatY - 16, 12, 20)
+        ctx.fillRect(screenX - 26, floatY - 12, 2, 12)
+        ctx.fillRect(screenX - 22, floatY - 18, 8, 2)
+        ctx.fillRect(screenX - 22, floatY + 4, 8, 2)
 
-          // Sombra en el pico
-          ctx.fillStyle = 'rgba(139, 90, 0, 0.4)'
-          ctx.fillRect(spikeX + 7, crownY + crownBounce + 20 - spikeHeight, 2, spikeHeight - 2)
-        }
+        // Ojo derecho
+        ctx.fillRect(screenX + 12, floatY - 16, 12, 20)
+        ctx.fillRect(screenX + 24, floatY - 12, 2, 12)
+        ctx.fillRect(screenX + 14, floatY - 18, 8, 2)
+        ctx.fillRect(screenX + 14, floatY + 4, 8, 2)
 
-        // Highlights en la banda
-        ctx.fillStyle = '#FFED4E'
-        ctx.fillRect(screenX - 28, crownY + crownBounce + 19, 56, 3)
+        // Brillo blanco en los ojos
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(screenX - 22, floatY - 14, 4, 6)
+        ctx.fillRect(screenX + 14, floatY - 14, 4, 6)
 
-        // Sombras en la banda
-        ctx.fillStyle = 'rgba(139, 90, 0, 0.5)'
-        ctx.fillRect(screenX - 28, crownY + crownBounce + 23, 56, 2)
+        // Boca en "O" (sorpresa/susto)
+        ctx.fillStyle = '#000000'
 
-        // Gemas en la corona (rubíes y zafiros)
-        const gems = [
-          { x: -20, color: '#DC143C', highlight: '#FF69B4' }, // Rubí izquierda
-          { x: 0, color: '#4169E1', highlight: '#87CEEB' },   // Zafiro centro
-          { x: 20, color: '#DC143C', highlight: '#FF69B4' }   // Rubí derecha
-        ]
+        // Contorno de la boca
+        ctx.fillRect(screenX - 8, floatY + 8, 16, 16)
+        ctx.fillRect(screenX - 10, floatY + 10, 2, 12)
+        ctx.fillRect(screenX + 8, floatY + 10, 2, 12)
+        ctx.fillRect(screenX - 6, floatY + 6, 12, 2)
+        ctx.fillRect(screenX - 6, floatY + 24, 12, 2)
 
-        gems.forEach(gem => {
-          const gemX = screenX + gem.x
-          const gemY = crownY + crownBounce + 20
+        // Interior oscuro de la boca
+        ctx.fillStyle = '#660000'
+        ctx.fillRect(screenX - 6, floatY + 10, 12, 12)
 
-          // Glow de gema
-          ctx.fillStyle = gem.highlight
-          ctx.shadowBlur = 8
-          ctx.shadowColor = gem.color
-          ctx.fillRect(gemX - 5, gemY - 5, 10, 10)
-          ctx.shadowBlur = 0
-
-          // Gema principal
-          ctx.fillStyle = gem.color
-          ctx.fillRect(gemX - 4, gemY - 4, 8, 8)
-          ctx.fillRect(gemX - 3, gemY - 5, 6, 1)
-          ctx.fillRect(gemX - 5, gemY - 3, 1, 6)
-          ctx.fillRect(gemX + 4, gemY - 3, 1, 6)
-          ctx.fillRect(gemX - 3, gemY + 4, 6, 1)
-
-          // Brillo en la gema
-          ctx.fillStyle = gem.highlight
-          ctx.fillRect(gemX - 2, gemY - 2, 3, 3)
-
-          // Reflejo
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
-          ctx.fillRect(gemX - 1, gemY - 1, 2, 2)
-        })
-
-        // Detalles decorativos en la corona
-        ctx.fillStyle = '#B8860B'
-        for (let i = 0; i < 6; i++) {
-          const decorX = screenX - 25 + i * 10
-          ctx.fillRect(decorX, crownY + crownBounce + 21, 2, 2)
-        }
+        // Lengua simple
+        ctx.fillStyle = '#FF1493'
+        ctx.fillRect(screenX - 4, floatY + 16, 8, 4)
       }
 
       ctx.restore()
@@ -1000,8 +854,16 @@ export default function MarioGhostHouseClassic() {
       if (invincible && Math.floor(animTime * 10) % 2 === 0) {
         ctx.globalAlpha = 0.5
       }
-      drawPeach(player.x, player.y, player.direction, player.animFrame)
+      drawPeach(player.x, player.y, player.direction, player.animFrame, player.vy)
       ctx.globalAlpha = 1
+
+      // Partículas
+      particles.forEach(particle => {
+        const screenX = particle.x - cameraX
+        const alpha = particle.life / particle.maxLife
+        ctx.fillStyle = particle.color.replace('1)', `${alpha})`)
+        ctx.fillRect(screenX, particle.y, particle.size, particle.size)
+      })
 
       // HUD (estilo SMB)
       ctx.fillStyle = '#000000'
@@ -1084,12 +946,24 @@ export default function MarioGhostHouseClassic() {
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
     }
-  }, [gameStarted, gameOver, victory, player, boos, blocks, testimonials, platforms, turtles, mushrooms, cameraX, score, time, lives, invincible, collectedTestimonials])
+  }, [gameStarted, gameOver, victory, player, boos, blocks, testimonials, platforms, turtles, mushrooms, particles, cameraX, score, time, lives, invincible, collectedTestimonials])
 
   useEffect(() => {
     if (!gameStarted || gameOver || victory) return
 
     const gameLoop = setInterval(() => {
+      // Actualizar partículas
+      setParticles(prev => prev
+        .map(p => ({
+          ...p,
+          x: p.x + p.vx,
+          y: p.y + p.vy,
+          vy: p.vy + 0.3, // Gravedad
+          life: p.life - 1
+        }))
+        .filter(p => p.life > 0)
+      )
+
       // Actualizar bloques que rebotan
       setBlocks(prev => prev.map(block => {
         if (block.bouncing) {
@@ -1147,6 +1021,7 @@ export default function MarioGhostHouseClassic() {
         y += vy
 
         // Colisiones con plataformas
+        const wasOnGround = onGround
         onGround = false
         platforms.forEach(platform => {
           if (
@@ -1159,6 +1034,24 @@ export default function MarioGhostHouseClassic() {
             y = platform.y - 46
             vy = 0
             onGround = true
+
+            // Partículas al aterrizar (solo si venía cayendo)
+            if (!wasOnGround && vy > 5) {
+              const newParticles: Particle[] = []
+              for (let i = 0; i < 4; i++) {
+                newParticles.push({
+                  x: x + 16 + (Math.random() - 0.5) * 20,
+                  y: platform.y,
+                  vx: (Math.random() - 0.5) * 2,
+                  vy: -Math.random() * 2,
+                  life: 20,
+                  maxLife: 20,
+                  color: 'rgba(139, 115, 85, 1)',
+                  size: 2
+                })
+              }
+              setParticles(prev => [...prev, ...newParticles])
+            }
           }
           
           // Golpear desde abajo
@@ -1210,7 +1103,23 @@ export default function MarioGhostHouseClassic() {
                 // Mostrar efecto HIT
                 setHitEffect({x: b.x + 20, y: b.y - 30, show: true})
                 setTimeout(() => setHitEffect(prev => ({...prev, show: false})), 500)
-                
+
+                // Partículas doradas del bloque
+                const newParticles: Particle[] = []
+                for (let i = 0; i < 10; i++) {
+                  newParticles.push({
+                    x: b.x + 20,
+                    y: b.y,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: -Math.random() * 5 - 3,
+                    life: 35,
+                    maxLife: 35,
+                    color: 'rgba(255, 215, 0, 1)',
+                    size: 3
+                  })
+                }
+                setParticles(prev => [...prev, ...newParticles])
+
                 return { ...b, hit: true, bouncing: true }
               }
               return b
@@ -1367,6 +1276,22 @@ export default function MarioGhostHouseClassic() {
             ))
             setScore(s => s + 200)
             setPlayer(p => ({ ...p, vy: JUMP_FORCE * 0.6 })) // Pequeño rebote
+
+            // Generar partículas
+            const newParticles: Particle[] = []
+            for (let i = 0; i < 8; i++) {
+              newParticles.push({
+                x: turtle.x + 16,
+                y: turtle.y + 12,
+                vx: (Math.random() - 0.5) * 6,
+                vy: -Math.random() * 4 - 2,
+                life: 30,
+                maxLife: 30,
+                color: 'rgba(34, 139, 34, 1)',
+                size: 3
+              })
+            }
+            setParticles(prev => [...prev, ...newParticles])
           } else if (!invincible) {
             // La tortuga daña al jugador
             setLives(l => {
@@ -1397,6 +1322,23 @@ export default function MarioGhostHouseClassic() {
           setLives(l => Math.min(5, l + 1)) // Máximo 5 vidas
           setScore(s => s + 500)
           setTime(t => Math.min(200, t + 20)) // Bonus de tiempo
+
+          // Partículas de hongo recolectado
+          const newParticles: Particle[] = []
+          for (let i = 0; i < 12; i++) {
+            const angle = (Math.PI * 2 * i) / 12
+            newParticles.push({
+              x: mushroom.x + 12,
+              y: mushroom.y + 12,
+              vx: Math.cos(angle) * 3,
+              vy: Math.sin(angle) * 3,
+              life: 40,
+              maxLife: 40,
+              color: 'rgba(255, 0, 0, 1)',
+              size: 4
+            })
+          }
+          setParticles(prev => [...prev, ...newParticles])
         }
       })
 
@@ -1457,6 +1399,9 @@ export default function MarioGhostHouseClassic() {
       { id: 1, x: 2000, y: 480, vy: 0, vx: 1, collected: false },
       { id: 2, x: 2800, y: 480, vy: 0, vx: 1, collected: false },
     ])
+
+    // Resetear partículas
+    setParticles([])
   }
 
   return (
