@@ -103,8 +103,11 @@ interface Platform {
   height: number
 }
 
+type CharacterType = 'mario' | 'luigi' | 'peach'
+
 export default function MarioGhostHouseClassic() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterType | null>(null)
   const [gameStarted, setGameStarted] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const [victory, setVictory] = useState(false)
@@ -115,7 +118,7 @@ export default function MarioGhostHouseClassic() {
     x: 100, y: 400, vx: 0, vy: 0, direction: 1, animFrame: 0, onGround: false
   })
   const [boos, setBoos] = useState<Boo[]>([{
-    id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 2.5
+    id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 3.5
   }])
   const [blocks, setBlocks] = useState<Block[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
@@ -157,38 +160,50 @@ export default function MarioGhostHouseClassic() {
   }
 
   useEffect(() => {
-    // Plataformas estratégicamente posicionadas para golpear bloques
+    // Mapa más desafiante con obstáculos y laberintos
     const initialPlatforms: Platform[] = [
-      // Piso principal
-      { x: 0, y: 520, width: 3600, height: 80 },
-      
-      // Plataformas para acceder a bloques (perfectamente alineadas)
-      { x: 280, y: 450, width: 140, height: 20 },
-      { x: 680, y: 400, width: 140, height: 20 },
-      { x: 1080, y: 400, width: 140, height: 20 },
-      { x: 1480, y: 400, width: 140, height: 20 },
-      { x: 1880, y: 400, width: 140, height: 20 },
-      { x: 2280, y: 400, width: 140, height: 20 },
-      { x: 2680, y: 400, width: 140, height: 20 },
-      { x: 3080, y: 400, width: 140, height: 20 },
-      
-      // Plataformas intermedias para navegación
-      { x: 500, y: 460, width: 100, height: 20 },
-      { x: 900, y: 460, width: 100, height: 20 },
-      { x: 1300, y: 460, width: 100, height: 20 },
-      { x: 1700, y: 460, width: 100, height: 20 },
-      { x: 2100, y: 460, width: 100, height: 20 },
-      { x: 2500, y: 460, width: 100, height: 20 },
-      { x: 2900, y: 460, width: 100, height: 20 },
-      
-      // Plataformas altas (opcionales)
-      { x: 400, y: 300, width: 100, height: 20 },
-      { x: 800, y: 280, width: 100, height: 20 },
-      { x: 1200, y: 300, width: 100, height: 20 },
-      { x: 1600, y: 280, width: 100, height: 20 },
-      { x: 2000, y: 300, width: 100, height: 20 },
-      { x: 2400, y: 280, width: 100, height: 20 },
-      { x: 2800, y: 300, width: 100, height: 20 },
+      // Piso principal con huecos peligrosos
+      { x: 0, y: 520, width: 600, height: 80 },
+      { x: 700, y: 520, width: 400, height: 80 },
+      { x: 1200, y: 520, width: 500, height: 80 },
+      { x: 1800, y: 520, width: 400, height: 80 },
+      { x: 2300, y: 520, width: 500, height: 80 },
+      { x: 2900, y: 520, width: 700, height: 80 },
+
+      // Torres verticales (obstáculos para Boo)
+      { x: 500, y: 320, width: 60, height: 200 },
+      { x: 1100, y: 280, width: 60, height: 240 },
+      { x: 1700, y: 300, width: 60, height: 220 },
+      { x: 2200, y: 260, width: 60, height: 260 },
+      { x: 2800, y: 300, width: 60, height: 220 },
+
+      // Plataformas para acceder a bloques (más espaciadas y difíciles)
+      { x: 280, y: 450, width: 100, height: 20 },
+      { x: 780, y: 380, width: 100, height: 20 },
+      { x: 1280, y: 420, width: 100, height: 20 },
+      { x: 1580, y: 360, width: 100, height: 20 },
+      { x: 1980, y: 400, width: 100, height: 20 },
+      { x: 2380, y: 340, width: 100, height: 20 },
+      { x: 2780, y: 390, width: 100, height: 20 },
+      { x: 3180, y: 370, width: 100, height: 20 },
+
+      // Plataformas altas zigzag (escape de Boo)
+      { x: 350, y: 280, width: 80, height: 20 },
+      { x: 600, y: 240, width: 80, height: 20 },
+      { x: 850, y: 200, width: 80, height: 20 },
+      { x: 1400, y: 250, width: 80, height: 20 },
+      { x: 1650, y: 210, width: 80, height: 20 },
+      { x: 1900, y: 270, width: 80, height: 20 },
+      { x: 2500, y: 220, width: 80, height: 20 },
+      { x: 2750, y: 260, width: 80, height: 20 },
+      { x: 3000, y: 230, width: 80, height: 20 },
+
+      // Plataformas flotantes peligrosas
+      { x: 650, y: 360, width: 60, height: 15 },
+      { x: 950, y: 340, width: 60, height: 15 },
+      { x: 1350, y: 320, width: 60, height: 15 },
+      { x: 2100, y: 350, width: 60, height: 15 },
+      { x: 2600, y: 330, width: 60, height: 15 },
     ]
     setPlatforms(initialPlatforms)
 
@@ -359,6 +374,201 @@ export default function MarioGhostHouseClassic() {
       ctx.fillRect(screenX + 8, yPos + 42, 6, 4)
       ctx.fillRect(screenX + 18, yPos + 42, 6, 4)
       
+      ctx.restore()
+    }
+
+    const drawMario = (x: number, y: number, dir: number, frame: number, vy: number = 0) => {
+      const screenX = x - cameraX
+
+      ctx.save()
+
+      // Squash & Stretch effect
+      const squashStretch = vy > 5 ? 1.15 : vy < -5 ? 0.85 : 1
+      const squashWidth = vy > 5 ? 0.9 : vy < -5 ? 1.1 : 1
+
+      ctx.translate(screenX + 16, y + 23)
+      ctx.scale(squashWidth, squashStretch)
+      ctx.translate(-(screenX + 16), -(y + 23))
+
+      // Sombra dinámica
+      const shadowScale = Math.max(0.5, 1 - Math.abs(vy) * 0.02)
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * shadowScale})`
+      ctx.fillRect(screenX + 8, y + 40, 16 * shadowScale, 4)
+
+      const walkCycle = Math.floor(frame / 6) % 2
+
+      // Pequeño rebote al caminar
+      const bounceOffset = frame > 0 && player.onGround ? Math.sin(frame * 0.3) * 1 : 0
+      const yPos = y - bounceOffset
+
+      // Overol (rojo)
+      ctx.fillStyle = '#FF0000'
+      ctx.fillRect(screenX + 6, yPos + 18, 20, 4)
+      ctx.fillRect(screenX + 4, yPos + 22, 24, 18)
+
+      // Botones
+      ctx.fillStyle = '#FFFF00'
+      ctx.fillRect(screenX + 8, yPos + 24, 3, 3)
+      ctx.fillRect(screenX + 21, yPos + 24, 3, 3)
+
+      // Brazos
+      const armSwing = walkCycle === 0 ? -1 : 1
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 2, yPos + 20 + armSwing, 4, 10)
+      ctx.fillRect(screenX + 26, yPos + 20 - armSwing, 4, 10)
+
+      // Guantes blancos
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 2, yPos + 28 + armSwing, 4, 4)
+      ctx.fillRect(screenX + 26, yPos + 28 - armSwing, 4, 4)
+
+      // Cabeza
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 8, yPos + 4, 16, 16)
+
+      // Gorra (roja)
+      ctx.fillStyle = '#FF0000'
+      ctx.fillRect(screenX + 6, yPos + 2, 20, 8)
+      ctx.fillRect(screenX + 8, yPos, 16, 4)
+
+      // Logo M
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 13, yPos + 2, 6, 4)
+      ctx.fillStyle = '#FF0000'
+      ctx.fillRect(screenX + 14, yPos + 3, 1, 2)
+      ctx.fillRect(screenX + 16, yPos + 3, 1, 2)
+      ctx.fillRect(screenX + 18, yPos + 3, 1, 2)
+
+      // Cabello (marrón oscuro)
+      ctx.fillStyle = '#5C4033'
+      ctx.fillRect(screenX + 6, yPos + 8, 4, 4)
+      ctx.fillRect(screenX + 22, yPos + 8, 4, 4)
+
+      // Bigote
+      ctx.fillStyle = '#5C4033'
+      ctx.fillRect(screenX + 8, yPos + 12, 16, 4)
+
+      // Ojos
+      ctx.fillStyle = '#000000'
+      ctx.fillRect(screenX + 10 + dir, yPos + 10, 2, 2)
+      ctx.fillRect(screenX + 18 + dir, yPos + 10, 2, 2)
+
+      // Nariz
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 14, yPos + 12, 4, 4)
+
+      // Piernas (azules)
+      ctx.fillStyle = '#0000FF'
+      if (walkCycle === 0) {
+        ctx.fillRect(screenX + 10, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 18, yPos + 38, 4, 6)
+      } else {
+        ctx.fillRect(screenX + 12, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 16, yPos + 38, 4, 6)
+      }
+
+      // Zapatos (marrones)
+      ctx.fillStyle = '#8B4513'
+      ctx.fillRect(screenX + 8, yPos + 42, 6, 4)
+      ctx.fillRect(screenX + 18, yPos + 42, 6, 4)
+
+      ctx.restore()
+    }
+
+    const drawLuigi = (x: number, y: number, dir: number, frame: number, vy: number = 0) => {
+      const screenX = x - cameraX
+
+      ctx.save()
+
+      // Squash & Stretch effect
+      const squashStretch = vy > 5 ? 1.15 : vy < -5 ? 0.85 : 1
+      const squashWidth = vy > 5 ? 0.9 : vy < -5 ? 1.1 : 1
+
+      ctx.translate(screenX + 16, y + 23)
+      ctx.scale(squashWidth, squashStretch)
+      ctx.translate(-(screenX + 16), -(y + 23))
+
+      // Sombra dinámica
+      const shadowScale = Math.max(0.5, 1 - Math.abs(vy) * 0.02)
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * shadowScale})`
+      ctx.fillRect(screenX + 8, y + 40, 16 * shadowScale, 4)
+
+      const walkCycle = Math.floor(frame / 6) % 2
+
+      // Pequeño rebote al caminar (Luigi salta más alto)
+      const bounceOffset = frame > 0 && player.onGround ? Math.sin(frame * 0.3) * 1.5 : 0
+      const yPos = y - bounceOffset
+
+      // Overol (verde)
+      ctx.fillStyle = '#00AA00'
+      ctx.fillRect(screenX + 6, yPos + 18, 20, 4)
+      ctx.fillRect(screenX + 4, yPos + 22, 24, 18)
+
+      // Botones
+      ctx.fillStyle = '#FFFF00'
+      ctx.fillRect(screenX + 8, yPos + 24, 3, 3)
+      ctx.fillRect(screenX + 21, yPos + 24, 3, 3)
+
+      // Brazos
+      const armSwing = walkCycle === 0 ? -1 : 1
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 2, yPos + 20 + armSwing, 4, 10)
+      ctx.fillRect(screenX + 26, yPos + 20 - armSwing, 4, 10)
+
+      // Guantes blancos
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 2, yPos + 28 + armSwing, 4, 4)
+      ctx.fillRect(screenX + 26, yPos + 28 - armSwing, 4, 4)
+
+      // Cabeza
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 8, yPos + 4, 16, 16)
+
+      // Gorra (verde)
+      ctx.fillStyle = '#00AA00'
+      ctx.fillRect(screenX + 6, yPos + 2, 20, 8)
+      ctx.fillRect(screenX + 8, yPos, 16, 4)
+
+      // Logo L
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(screenX + 13, yPos + 2, 6, 4)
+      ctx.fillStyle = '#00AA00'
+      ctx.fillRect(screenX + 14, yPos + 3, 1, 2)
+      ctx.fillRect(screenX + 17, yPos + 3, 2, 2)
+
+      // Cabello (marrón)
+      ctx.fillStyle = '#5C4033'
+      ctx.fillRect(screenX + 6, yPos + 8, 4, 4)
+      ctx.fillRect(screenX + 22, yPos + 8, 4, 4)
+
+      // Bigote (más largo que Mario)
+      ctx.fillStyle = '#5C4033'
+      ctx.fillRect(screenX + 6, yPos + 12, 20, 4)
+
+      // Ojos
+      ctx.fillStyle = '#000000'
+      ctx.fillRect(screenX + 10 + dir, yPos + 10, 2, 2)
+      ctx.fillRect(screenX + 18 + dir, yPos + 10, 2, 2)
+
+      // Nariz
+      ctx.fillStyle = '#FDBCB4'
+      ctx.fillRect(screenX + 14, yPos + 12, 4, 4)
+
+      // Piernas (azul oscuro)
+      ctx.fillStyle = '#000080'
+      if (walkCycle === 0) {
+        ctx.fillRect(screenX + 10, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 18, yPos + 38, 4, 6)
+      } else {
+        ctx.fillRect(screenX + 12, yPos + 38, 4, 6)
+        ctx.fillRect(screenX + 16, yPos + 38, 4, 6)
+      }
+
+      // Zapatos (marrones)
+      ctx.fillStyle = '#8B4513'
+      ctx.fillRect(screenX + 8, yPos + 42, 6, 4)
+      ctx.fillRect(screenX + 18, yPos + 42, 6, 4)
+
       ctx.restore()
     }
 
@@ -772,27 +982,111 @@ export default function MarioGhostHouseClassic() {
         }
       }
 
+      // Dibujar huecos/abismos MUY VISIBLES (antes de las plataformas)
+      const mainFloorY = 520
+      const sortedPlatforms = [...platforms].filter(p => p.y === mainFloorY).sort((a, b) => a.x - b.x)
+
+      sortedPlatforms.forEach((platform, i) => {
+        if (i < sortedPlatforms.length - 1) {
+          const nextPlatform = sortedPlatforms[i + 1]
+          const gapStart = platform.x + platform.width
+          const gapEnd = nextPlatform.x
+          const gapWidth = gapEnd - gapStart
+
+          if (gapWidth > 50) { // Si hay un hueco significativo
+            const screenX = gapStart - cameraX
+
+            // FONDO DEL ABISMO - MUY OSCURO Y CONTRASTANTE
+            const gradient = ctx.createLinearGradient(screenX, mainFloorY, screenX, CANVAS_HEIGHT)
+            gradient.addColorStop(0, '#000000')
+            gradient.addColorStop(0.3, '#1a0033')
+            gradient.addColorStop(0.6, '#0d0015')
+            gradient.addColorStop(1, '#000000')
+            ctx.fillStyle = gradient
+            ctx.fillRect(screenX, mainFloorY, gapWidth, CANVAS_HEIGHT - mainFloorY)
+
+            // BORDE BRILLANTE DEL ABISMO (efecto de profundidad)
+            ctx.strokeStyle = '#ff0000'
+            ctx.lineWidth = 6
+            ctx.strokeRect(screenX, mainFloorY, gapWidth, CANVAS_HEIGHT - mainFloorY)
+
+            // LÍNEAS DE PROFUNDIDAD BRILLANTES
+            ctx.strokeStyle = '#ff4444'
+            ctx.lineWidth = 3
+            for (let j = 0; j < 8; j++) {
+              const y = mainFloorY + 80 + j * 30
+              ctx.beginPath()
+              ctx.moveTo(screenX + 5, y)
+              ctx.lineTo(screenX + gapWidth - 5, y)
+              ctx.stroke()
+            }
+
+            // BARRAS DE ADVERTENCIA IZQUIERDA (muy visibles)
+            ctx.fillStyle = '#ff0000'
+            ctx.fillRect(screenX - 20, mainFloorY, 20, 100)
+            ctx.fillStyle = '#ffff00'
+            for (let k = 0; k < 4; k++) {
+              ctx.fillRect(screenX - 20, mainFloorY + k * 25, 20, 10)
+            }
+
+            // BARRAS DE ADVERTENCIA DERECHA (muy visibles)
+            ctx.fillStyle = '#ff0000'
+            ctx.fillRect(screenX + gapWidth, mainFloorY, 20, 100)
+            ctx.fillStyle = '#ffff00'
+            for (let k = 0; k < 4; k++) {
+              ctx.fillRect(screenX + gapWidth, mainFloorY + k * 25, 20, 10)
+            }
+
+            // LÍNEAS DIAGONALES DE ADVERTENCIA (patrón de peligro)
+            ctx.strokeStyle = '#ffff00'
+            ctx.lineWidth = 5
+            for (let d = 0; d < gapWidth / 40; d++) {
+              ctx.beginPath()
+              ctx.moveTo(screenX + d * 40, mainFloorY)
+              ctx.lineTo(screenX + d * 40 + 30, mainFloorY + 30)
+              ctx.stroke()
+
+              ctx.beginPath()
+              ctx.moveTo(screenX + d * 40 + 30, mainFloorY)
+              ctx.lineTo(screenX + d * 40, mainFloorY + 30)
+              ctx.stroke()
+            }
+
+            // TEXTO DE ADVERTENCIA
+            ctx.fillStyle = '#ff0000'
+            ctx.font = 'bold 24px Arial'
+            ctx.textAlign = 'center'
+            ctx.fillText('⚠ DANGER ⚠', screenX + gapWidth / 2, mainFloorY + 50)
+
+            // EFECTO DE PULSACIÓN (animación)
+            const pulseIntensity = Math.abs(Math.sin(Date.now() * 0.005)) * 0.5 + 0.5
+            ctx.fillStyle = `rgba(255, 0, 0, ${pulseIntensity * 0.3})`
+            ctx.fillRect(screenX, mainFloorY, gapWidth, 100)
+          }
+        }
+      })
+
       // Plataformas (pixel art)
       platforms.forEach(platform => {
         const screenX = platform.x - cameraX
-        
+
         // Sombra
         ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
         ctx.fillRect(screenX + 4, platform.y + 4, platform.width, platform.height)
-        
+
         // Base marrón
         ctx.fillStyle = '#8B7355'
         ctx.fillRect(screenX, platform.y, platform.width, platform.height)
-        
+
         // Bordes
         ctx.fillStyle = '#A0826D'
         ctx.fillRect(screenX, platform.y, platform.width, 4)
         ctx.fillRect(screenX, platform.y, 4, platform.height)
-        
+
         ctx.fillStyle = '#6B5344'
         ctx.fillRect(screenX, platform.y + platform.height - 4, platform.width, 4)
         ctx.fillRect(screenX + platform.width - 4, platform.y, 4, platform.height)
-        
+
         // Textura pixel
         for (let i = 0; i < platform.width / 20; i++) {
           ctx.fillStyle = i % 2 === 0 ? '#9B7E5F' : '#8B6E4F'
@@ -850,11 +1144,17 @@ export default function MarioGhostHouseClassic() {
         drawBigBoo(boo.x, boo.y, boo.hiding, animTime)
       })
 
-      // Peach
+      // Dibujar personaje seleccionado
       if (invincible && Math.floor(animTime * 10) % 2 === 0) {
         ctx.globalAlpha = 0.5
       }
-      drawPeach(player.x, player.y, player.direction, player.animFrame, player.vy)
+      if (selectedCharacter === 'mario') {
+        drawMario(player.x, player.y, player.direction, player.animFrame, player.vy)
+      } else if (selectedCharacter === 'luigi') {
+        drawLuigi(player.x, player.y, player.direction, player.animFrame, player.vy)
+      } else {
+        drawPeach(player.x, player.y, player.direction, player.animFrame, player.vy)
+      }
       ctx.globalAlpha = 1
 
       // Partículas
@@ -868,11 +1168,12 @@ export default function MarioGhostHouseClassic() {
       // HUD (estilo SMB)
       ctx.fillStyle = '#000000'
       ctx.fillRect(0, 0, CANVAS_WIDTH, 50)
-      
+
       ctx.fillStyle = '#FFFFFF'
       ctx.font = '20px monospace'
       ctx.textAlign = 'left'
-      ctx.fillText('PEACH', 20, 30)
+      const characterName = selectedCharacter === 'mario' ? 'MARIO' : selectedCharacter === 'luigi' ? 'LUIGI' : 'PEACH'
+      ctx.fillText(characterName, 20, 30)
       
       ctx.fillStyle = '#FFD700'
       ctx.fillText('★' + score.toString().padStart(6, '0'), 150, 30)
@@ -1151,7 +1452,7 @@ export default function MarioGhostHouseClassic() {
         return Math.min(maxCameraX, prev + (targetX - prev) * 0.1)
       })
 
-      // IA de los Boos (con dificultad progresiva)
+      // IA de los Boos mejorada (más agresiva y persistente)
       setBoos(prevBoos => prevBoos.map(boo => {
         const dx = player.x + 16 - boo.x
         const dy = player.y + 23 - boo.y
@@ -1161,33 +1462,56 @@ export default function MarioGhostHouseClassic() {
           (player.direction > 0 && dx > 0) ||
           (player.direction < 0 && dx < 0)
 
-        const hiding = playerLookingAtBoo && dist < 400
+        // Boo se esconde solo si el jugador está MUY cerca y mirando
+        const hiding = playerLookingAtBoo && dist < 250
 
         let { x, y, vx, vy, speed } = boo
 
-        // Velocidad aumenta con el tiempo
-        const difficultyMultiplier = 1 + (200 - time) * 0.003
+        // Velocidad aumenta dramáticamente con el tiempo y la cercanía
+        const timeMultiplier = 1 + (200 - time) * 0.005
+        const proximityMultiplier = dist < 300 ? 1.5 : 1.0
+        const difficultyMultiplier = timeMultiplier * proximityMultiplier
 
-        if (!hiding && dist < 600) {
-          const adjustedSpeed = speed * difficultyMultiplier
-          const targetVx = (dx / dist) * adjustedSpeed
-          const targetVy = (dy / dist) * adjustedSpeed
+        if (!hiding) {
+          // Persecución activa (rango extendido)
+          if (dist < 800) {
+            const adjustedSpeed = speed * difficultyMultiplier
+            const targetVx = (dx / dist) * adjustedSpeed
+            const targetVy = (dy / dist) * adjustedSpeed
 
-          vx += (targetVx - vx) * 0.1
-          vy += (targetVy - vy) * 0.1
+            // Aceleración más rápida para respuesta inmediata
+            vx += (targetVx - vx) * 0.2
+            vy += (targetVy - vy) * 0.2
+          } else {
+            // Patrullar y acercarse lentamente si está lejos
+            const patrolSpeed = speed * 0.5
+            vx += (dx / dist) * patrolSpeed * 0.05
+            vy += (dy / dist) * patrolSpeed * 0.05
+          }
         } else {
-          vx *= 0.95
-          vy *= 0.95
+          // Al esconderse, retrocede un poco
+          vx += (dx / dist) * -1
+          vy += (dy / dist) * -1
+          vx *= 0.9
+          vy *= 0.9
         }
 
         x += vx
         y += vy
 
+        // Limitar velocidad máxima
+        const maxSpeed = speed * difficultyMultiplier * 1.2
+        const currentSpeed = Math.sqrt(vx * vx + vy * vy)
+        if (currentSpeed > maxSpeed) {
+          vx = (vx / currentSpeed) * maxSpeed
+          vy = (vy / currentSpeed) * maxSpeed
+        }
+
         return { ...boo, x, y, vx, vy, hiding }
       }))
 
-      // Añadir nuevos Boos según testimonios recolectados
-      if (collectedTestimonials.length === 3 && boos.length === 1) {
+      // Añadir nuevos Boos según testimonios recolectados (más rápido y más agresivo)
+      if (collectedTestimonials.length === 2 && boos.length === 1) {
         setBoos(prev => [...prev, {
           id: 1,
           x: WORLD_WIDTH - 400,
@@ -1196,9 +1520,9 @@ export default function MarioGhostHouseClassic() {
           vy: 0,
           hiding: false,
           size: 70,
-          speed: 2.8
+          speed: 3.8
         }])
-      } else if (collectedTestimonials.length === 6 && boos.length === 2) {
+      } else if (collectedTestimonials.length === 4 && boos.length === 2) {
         setBoos(prev => [...prev, {
           id: 2,
           x: 1500,
@@ -1207,7 +1531,18 @@ export default function MarioGhostHouseClassic() {
           vy: 0,
           hiding: false,
           size: 65,
-          speed: 3.0
+          speed: 4.2
+        }])
+      } else if (collectedTestimonials.length === 6 && boos.length === 3) {
+        setBoos(prev => [...prev, {
+          id: 3,
+          x: 2500,
+          y: 280,
+          vx: 0,
+          vy: 0,
+          hiding: false,
+          size: 75,
+          speed: 4.5
         }])
       }
 
@@ -1382,7 +1717,7 @@ export default function MarioGhostHouseClassic() {
     setBlocks(prev => prev.map(b => ({ ...b, hit: false, bouncing: false, bounceOffset: 0 })))
     setTestimonials([])
     setCollectedTestimonials([])
-    setBoos([{ id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 2.5 }])
+    setBoos([{ id: 0, x: 800, y: 300, vx: 0, vy: 0, hiding: false, size: 80, speed: 3.5 }])
 
     // Resetear tortugas
     setTurtles([
@@ -1422,7 +1757,82 @@ export default function MarioGhostHouseClassic() {
           style={{ imageRendering: 'pixelated' }}
         />
 
-        {!gameStarted && !gameOver && !victory && (
+        {!gameStarted && !gameOver && !victory && !selectedCharacter && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
+            <div className="text-center space-y-6 px-4 sm:px-6 w-full max-w-[95%] sm:max-w-2xl">
+              <h2 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'monospace' }}>
+                SELECCIONA TU PERSONAJE
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                {/* MARIO */}
+                <button
+                  onClick={() => setSelectedCharacter('mario')}
+                  className="group p-6 rounded-lg border-4 transition-all hover:scale-105 active:scale-95 hover:border-yellow-400"
+                  style={{ backgroundColor: '#1a1a1a', borderColor: '#FF0000' }}
+                >
+                  <div className="mb-3 flex justify-center">
+                    <img
+                      src="https://media.tenor.com/C1_KkudKHM8AAAAi/mario-dance.gif"
+                      alt="Mario"
+                      className="w-24 h-24 object-contain"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold text-red-500 mb-2" style={{ fontFamily: 'monospace' }}>MARIO</h3>
+                  <div className="text-sm text-gray-300 space-y-1" style={{ fontFamily: 'monospace' }}>
+                    <p>⭐ Equilibrado</p>
+                    <p>💪 Fuerza: Media</p>
+                    <p>⚡ Velocidad: Media</p>
+                  </div>
+                </button>
+
+                {/* LUIGI */}
+                <button
+                  onClick={() => setSelectedCharacter('luigi')}
+                  className="group p-6 rounded-lg border-4 transition-all hover:scale-105 active:scale-95 hover:border-yellow-400"
+                  style={{ backgroundColor: '#1a1a1a', borderColor: '#00AA00' }}
+                >
+                  <div className="mb-3 flex justify-center">
+                    <img
+                      src="https://media.tenor.com/rBKhw5BhSHcAAAAi/luigi-smw.gif"
+                      alt="Luigi"
+                      className="w-24 h-24 object-contain"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold text-green-500 mb-2" style={{ fontFamily: 'monospace' }}>LUIGI</h3>
+                  <div className="text-sm text-gray-300 space-y-1" style={{ fontFamily: 'monospace' }}>
+                    <p>⭐ Saltarín</p>
+                    <p>💪 Fuerza: Media</p>
+                    <p>⚡ Velocidad: Rápida</p>
+                  </div>
+                </button>
+
+                {/* PEACH */}
+                <button
+                  onClick={() => setSelectedCharacter('peach')}
+                  className="group p-6 rounded-lg border-4 transition-all hover:scale-105 active:scale-95 hover:border-yellow-400"
+                  style={{ backgroundColor: '#1a1a1a', borderColor: '#FF69B4' }}
+                >
+                  <div className="mb-3 flex justify-center">
+                    <img
+                      src="https://i.pinimg.com/originals/d1/3a/0c/d13a0cd665cb1e203a9b529a446347ba.gif"
+                      alt="Peach"
+                      className="w-24 h-24 object-contain"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold text-pink-400 mb-2" style={{ fontFamily: 'monospace' }}>PEACH</h3>
+                  <div className="text-sm text-gray-300 space-y-1" style={{ fontFamily: 'monospace' }}>
+                    <p>⭐ Elegante</p>
+                    <p>💪 Fuerza: Baja</p>
+                    <p>⚡ Velocidad: Media</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!gameStarted && !gameOver && !victory && selectedCharacter && (
           <div className="absolute inset-0 flex items-center justify-center bg-black p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
             <div className="text-center space-y-4 sm:space-y-5 md:space-y-6 px-4 sm:px-6 w-full max-w-[95%] sm:max-w-md md:max-w-lg">
               <h2 className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-2 sm:mb-4" style={{ fontFamily: 'monospace' }}>
@@ -1451,13 +1861,22 @@ export default function MarioGhostHouseClassic() {
                   EVITA AL BOO 👻
                 </p>
               </div>
-              <button
-                onClick={startGame}
-                className="w-full sm:w-auto px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold text-xl sm:text-2xl rounded border-2 sm:border-4 border-green-400 transition-all hover:scale-105 active:scale-95"
-                style={{ fontFamily: 'monospace' }}
-              >
-                🎮 START
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setSelectedCharacter(null)}
+                  className="flex-1 px-6 py-3 bg-gray-600 hover:bg-gray-500 active:bg-gray-700 text-white font-bold text-lg rounded border-2 border-gray-400 transition-all hover:scale-105 active:scale-95"
+                  style={{ fontFamily: 'monospace' }}
+                >
+                  ← VOLVER
+                </button>
+                <button
+                  onClick={startGame}
+                  className="flex-1 px-6 py-3 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold text-lg rounded border-2 border-green-400 transition-all hover:scale-105 active:scale-95"
+                  style={{ fontFamily: 'monospace' }}
+                >
+                  🎮 START
+                </button>
+              </div>
             </div>
           </div>
         )}
