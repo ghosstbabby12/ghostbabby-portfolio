@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { Lock, Sparkles } from 'lucide-react'
+import { useTheme } from '../../app/providers'
 
 export default function Galeria() {
+  const { actualTheme } = useTheme()
   // TODAS las imágenes del proyecto en un array desordenado
   const allImages = [
     // Imágenes de galería
@@ -55,17 +57,6 @@ export default function Galeria() {
     '/images/me15.jpeg',
   ]
 
-  const colors = [
-    'border-purple-500',
-    'border-pink-500',
-    'border-blue-500',
-    'border-indigo-500',
-    'border-yellow-500',
-    'border-red-500',
-    'border-green-500',
-    'border-cyan-500'
-  ]
-
   const unlockQuestions = [
     {
       question: 'Instala dependencias:',
@@ -101,36 +92,74 @@ export default function Galeria() {
   }
 
   return (
-    <section id="galeria" className="min-h-screen bg-gradient-to-br from-gray-950 via-purple-950 to-indigo-900 text-white py-24 px-4">
+    <section
+      id="galeria"
+      className="min-h-screen py-24 px-4 transition-colors duration-300"
+      style={{
+        background: actualTheme === 'light'
+          ? 'linear-gradient(to bottom right, #f5f3ff, #ede9fe, #ddd6fe)'
+          : 'linear-gradient(to bottom right, #030712, #581c87, #312e81)',
+        color: actualTheme === 'light' ? '#1f2937' : '#ffffff'
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+            <Sparkles className={`w-8 h-8 animate-pulse ${actualTheme === 'light' ? 'text-purple-600' : 'text-yellow-400'}`} />
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               Galería Interactiva
             </h1>
-            <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+            <Sparkles className={`w-8 h-8 animate-pulse ${actualTheme === 'light' ? 'text-purple-600' : 'text-yellow-400'}`} />
           </div>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl max-w-3xl mx-auto"
+             style={{ color: actualTheme === 'light' ? '#4b5563' : '#d1d5db' }}>
             Para desbloquear mi galería debes ejecutar unos comandos sencillos para correr el proyecto en local
           </p>
         </div>
 
         {/* Unlock Section */}
         {!galleryUnlocked ? (
-          <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-600 bg-opacity-20 backdrop-blur-sm border-2 border-purple-500 shadow-2xl max-w-2xl mx-auto">
-            <div className="absolute inset-0 bg-black/60 rounded-3xl"></div>
+          <div
+            className="relative p-8 md:p-12 rounded-3xl backdrop-blur-sm border-2 shadow-2xl max-w-2xl mx-auto"
+            style={{
+              background: actualTheme === 'light'
+                ? 'linear-gradient(to bottom right, rgba(196, 181, 253, 0.3), rgba(167, 139, 250, 0.3))'
+                : 'linear-gradient(to bottom right, rgba(124, 58, 237, 0.2), rgba(219, 39, 119, 0.2))',
+              borderColor: actualTheme === 'light' ? '#a78bfa' : '#a855f7'
+            }}
+          >
+            <div
+              className="absolute inset-0 rounded-3xl"
+              style={{ backgroundColor: actualTheme === 'light' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)' }}
+            ></div>
             <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-              <Lock className="w-16 h-16 text-white animate-bounce" />
-              <h3 className="text-2xl md:text-3xl font-semibold">Galería Bloqueada</h3>
+              <Lock
+                className="w-16 h-16 animate-bounce"
+                style={{ color: actualTheme === 'light' ? '#7c3aed' : '#ffffff' }}
+              />
+              <h3
+                className="text-2xl md:text-3xl font-semibold"
+                style={{ color: actualTheme === 'light' ? '#1f2937' : '#ffffff' }}
+              >
+                Galería Bloqueada
+              </h3>
 
               {/* Progress indicator */}
-              <div className="flex items-center gap-2 text-sm text-gray-300">
-                <span className="text-cyan-400 font-bold">Pregunta {currentQuestion + 1} de {unlockQuestions.length}</span>
+              <div className="flex items-center gap-2 text-sm"
+                   style={{ color: actualTheme === 'light' ? '#6b7280' : '#d1d5db' }}>
+                <span
+                  className="font-bold"
+                  style={{ color: actualTheme === 'light' ? '#7c3aed' : '#22d3ee' }}
+                >
+                  Pregunta {currentQuestion + 1} de {unlockQuestions.length}
+                </span>
               </div>
 
-              <p className="text-lg md:text-xl max-w-2xl font-mono text-green-400">
+              <p
+                className="text-lg md:text-xl max-w-2xl font-mono"
+                style={{ color: actualTheme === 'light' ? '#059669' : '#34d399' }}
+              >
                 {unlockQuestions[currentQuestion].question}
               </p>
 
@@ -144,22 +173,44 @@ export default function Galeria() {
                       handleAnswer(input)
                     }
                   }}
-                  className="w-full px-6 py-4 rounded-xl bg-black/50 backdrop-blur-md border-2 border-green-500/50 text-green-400 placeholder-green-400/40 focus:outline-none focus:ring-4 focus:ring-green-500/50 text-lg transition-all font-mono"
+                  className="w-full px-6 py-4 rounded-xl backdrop-blur-md border-2 focus:outline-none focus:ring-4 text-lg transition-all font-mono"
+                  style={{
+                    backgroundColor: actualTheme === 'light' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
+                    borderColor: actualTheme === 'light' ? 'rgba(5, 150, 105, 0.5)' : 'rgba(34, 197, 94, 0.5)',
+                    color: actualTheme === 'light' ? '#059669' : '#34d399',
+                    caretColor: actualTheme === 'light' ? '#059669' : '#34d399'
+                  }}
                   placeholder={unlockQuestions[currentQuestion].placeholder}
                 />
                 <button
                   onClick={() => handleAnswer(input)}
-                  className="w-full py-4 px-8 rounded-xl font-bold text-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl hover:shadow-green-500/30"
+                  className="w-full py-4 px-8 rounded-xl font-bold text-lg text-white hover:scale-105 active:scale-95 transition-all shadow-lg"
+                  style={{
+                    background: actualTheme === 'light'
+                      ? 'linear-gradient(to right, #059669, #10b981)'
+                      : 'linear-gradient(to right, #16a34a, #10b981)',
+                    boxShadow: actualTheme === 'light'
+                      ? '0 10px 15px -3px rgba(5, 150, 105, 0.3)'
+                      : '0 10px 15px -3px rgba(16, 185, 129, 0.3)'
+                  }}
                 >
                   {currentQuestion < unlockQuestions.length - 1 ? '▶ Siguiente' : '🔓 Desbloquear Galería'}
                 </button>
               </div>
 
               {/* Progress bar */}
-              <div className="w-full max-w-md h-2 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="w-full max-w-md h-2 rounded-full overflow-hidden"
+                style={{ backgroundColor: actualTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }}
+              >
                 <div
-                  className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-500"
-                  style={{ width: `${((currentQuestion + 1) / unlockQuestions.length) * 100}%` }}
+                  className="h-full transition-all duration-500"
+                  style={{
+                    background: actualTheme === 'light'
+                      ? 'linear-gradient(to right, #059669, #10b981)'
+                      : 'linear-gradient(to right, #22c55e, #10b981)',
+                    width: `${((currentQuestion + 1) / unlockQuestions.length) * 100}%`
+                  }}
                 ></div>
               </div>
             </div>
@@ -171,9 +222,12 @@ export default function Galeria() {
               {allImages.map((img, imgIdx) => (
                 <div
                   key={imgIdx}
-                  className={`group relative h-32 rounded-lg overflow-hidden shadow-lg border ${colors[imgIdx % colors.length]} hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer`}
+                  className={`group relative h-32 rounded-lg overflow-hidden shadow-lg border-2 hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer`}
                   style={{
-                    animation: `fadeIn 0.5s ease-out ${imgIdx * 0.05}s both`
+                    animation: `fadeIn 0.5s ease-out ${imgIdx * 0.05}s both`,
+                    borderColor: actualTheme === 'light'
+                      ? ['#a78bfa', '#c4b5fd', '#93c5fd', '#a5b4fc', '#fbbf24', '#ef4444', '#34d399', '#22d3ee'][imgIdx % 8]
+                      : ['#a855f7', '#ec4899', '#3b82f6', '#6366f1', '#eab308', '#dc2626', '#22c55e', '#06b6d4'][imgIdx % 8]
                   }}
                 >
                   <img
@@ -181,7 +235,14 @@ export default function Galeria() {
                     alt={`Galería ${imgIdx + 1}`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      backgroundImage: actualTheme === 'light'
+                        ? 'linear-gradient(to top, rgba(167, 139, 250, 0.3), transparent)'
+                        : 'linear-gradient(to top, rgba(124, 58, 237, 0.3), transparent)'
+                    }}
+                  ></div>
                 </div>
               ))}
             </div>

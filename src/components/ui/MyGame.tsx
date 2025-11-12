@@ -45,7 +45,7 @@ const MyGame: React.FC = () => {
       style={{
         background:
           actualTheme === "light"
-            ? "linear-gradient(to bottom, #ffffff, #fdf2f8, #fce7f3)"
+            ? "linear-gradient(to bottom, #f5f3ff, #ede9fe, #ddd6fe)"
             : "linear-gradient(to bottom, #581c87, #4338ca, #000000)",
       }}
     >
@@ -101,14 +101,14 @@ const MyGame: React.FC = () => {
       <div
         className="relative z-10 w-full max-w-7xl border-4 sm:border-6 md:border-8 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl"
         style={{
-          borderColor: actualTheme === "light" ? "#f9a8d4" : "#1f2937",
+          borderColor: actualTheme === "light" ? "#c4b5fd" : "#1f2937",
           background:
             actualTheme === "light"
-              ? "linear-gradient(to bottom right, #fbcfe8, #e9d5ff, #fbcfe8)"
+              ? "linear-gradient(to bottom right, #ddd6fe, #c4b5fd, #ddd6fe)"
               : "linear-gradient(to bottom right, #581c87, #3730a3, #581c87)",
           boxShadow:
             actualTheme === "light"
-              ? "inset 0 0 100px rgba(255,192,203,0.3), 0 0 50px rgba(219,112,147,0.3)"
+              ? "inset 0 0 100px rgba(167,139,250,0.3), 0 0 50px rgba(139,92,246,0.3)"
               : "inset 0 0 100px rgba(0,0,0,0.5), 0 0 50px rgba(138,43,226,0.3)",
         }}
       >
@@ -120,11 +120,11 @@ const MyGame: React.FC = () => {
               style={{
                 background:
                   actualTheme === "light"
-                    ? "linear-gradient(to bottom right, #d8b4fe, #a5b4fc)"
+                    ? "linear-gradient(to bottom right, #c4b5fd, #a78bfa)"
                     : "linear-gradient(to bottom right, #4338ca, #6b21a8)",
                 boxShadow:
                   actualTheme === "light"
-                    ? "0 20px 60px rgba(147,51,234,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
+                    ? "0 20px 60px rgba(139,92,246,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
                     : "0 20px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,255,255,0.1)",
               }}
             >
@@ -250,11 +250,11 @@ const MyGame: React.FC = () => {
               style={{
                 background:
                   actualTheme === "light"
-                    ? "linear-gradient(to bottom right, #f9a8d4, #fb7185)"
+                    ? "linear-gradient(to bottom right, #ddd6fe, #a78bfa)"
                     : "linear-gradient(to bottom right, #be185d, #9f1239)",
                 boxShadow:
                   actualTheme === "light"
-                    ? "0 20px 60px rgba(236,72,153,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
+                    ? "0 20px 60px rgba(167,139,250,0.4), inset 0 0 30px rgba(255,255,255,0.5)"
                     : "0 20px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,255,255,0.1)",
               }}
             >

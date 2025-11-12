@@ -153,6 +153,116 @@ const About = () => {
             </div>
           </motion.div>
 
+          {/* Tech Stack - Organizado y compacto */}
+          <motion.div variants={itemVariants} className="mb-16">
+            <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">
+              <span className="text-gradient">Tech Stack</span>
+            </h3>
+
+            <div className="glass-effect rounded-3xl p-6 md:p-8">
+              {/* Languages */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Languages</h4>
+                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#b07219' }}>
+                    Java
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#3776ab' }}>
+                    🐍 Python
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#00599c' }}>
+                    C++
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#239120' }}>
+                    C#
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-black shadow-lg text-sm" style={{ backgroundColor: '#f7df1e' }}>
+                    JavaScript
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#3178c6' }}>
+                    TypeScript
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Frontend */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Frontend</h4>
+                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#e34f26' }}>
+                    HTML5
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#1572b6' }}>
+                    CSS3
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1, rotate: 360 }} transition={{ duration: 0.5 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm" style={{ backgroundColor: '#61dafb', color: '#282c34' }}>
+                    ⚛️ React
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#7952b3' }}>
+                    Bootstrap
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Backend & Database */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Backend & Database</h4>
+                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#339933' }}>
+                    Node.js
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#4479a1' }}>
+                    MySQL
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#336791' }}>
+                    PostgreSQL
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#47A248' }}>
+                    🍃 MongoDB
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#003B57' }}>
+                    SQLite
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Game Development */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Game Development</h4>
+                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#222222', color: '#ffffff', borderColor: '#ffffff' }}>
+                    🎮 Unity
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#5a5a5a' }}>
+                    Canvas API
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Tools & Platform */}
+              <div>
+                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Tools & Platform</h4>
+                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#f05032' }}>
+                    Git
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#24292e', color: '#ffffff', borderColor: '#ffffff' }}>
+                    GitHub
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#430098' }}>
+                    Heroku
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#4285f4' }}>
+                    Google Cloud
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#ff6c37' }}>
+                    Postman
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Estadísticas */}
           <motion.div variants={itemVariants}>
             <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">
