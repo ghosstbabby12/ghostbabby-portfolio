@@ -36,7 +36,7 @@ const Projects = () => {
       technologies: ["Canvas API", "TypeScript", "Game Physics"],
       image: "/projects/games.png",
       githubUrl: "https://github.com/ghosstbabby12/ghostbabby-portfolio/tree/main/src/components",
-      liveUrl: "",
+      liveUrl: "/arcade",
       featured: false,
     },
   ];
@@ -100,7 +100,7 @@ const Projects = () => {
       technologies: ["Next.js", "Supabase", "Stripe", "Video.js", "PDF.js"],
       image: "projects/GestorLab.png",
       githubUrl: "https://github.com/ghosstbabby12/GestorLab.git",
-      liveUrl: "https://lms-demo.vercel.app",
+      liveUrl: "https://gestorlab.onrender.com/accounts/login/",
       featured: false,
     },
     {
