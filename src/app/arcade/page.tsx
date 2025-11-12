@@ -22,12 +22,22 @@ export default function ArcadePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundColor: '#000000'
+      }}
+    >
       {/* Back to Projects Button */}
       <a
         href="/#projects"
-        className="fixed top-4 left-4 z-50 px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg border-2 border-purple-400 shadow-lg transition-all hover:scale-105 active:scale-95"
-        style={{ fontFamily: 'monospace' }}
+        className="fixed top-4 left-4 z-50 px-6 py-3 font-bold rounded-lg border-2 shadow-lg transition-all hover:scale-105 active:scale-95"
+        style={{
+          fontFamily: 'monospace',
+          backgroundColor: '#7c3aed',
+          color: '#ffffff',
+          borderColor: '#a855f7'
+        }}
       >
         ← VOLVER A PROYECTOS
       </a>
@@ -35,7 +45,13 @@ export default function ArcadePage() {
       {/* Arcade Machine Container */}
       <div className="relative w-full max-w-4xl">
         {/* Top Marquee */}
-        <div className="relative mb-6 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 rounded-t-3xl border-8 border-orange-400 shadow-2xl overflow-hidden">
+        <div
+          className="relative mb-6 rounded-t-3xl border-8 shadow-2xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(to right, #2563eb, #3b82f6, #2563eb)',
+            borderColor: '#f97316'
+          }}
+        >
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
           <div className="relative py-6 px-8">
             <div className="text-center">
@@ -50,8 +66,15 @@ export default function ArcadePage() {
         </div>
 
         {/* Main Screen */}
-        <div className="relative bg-gradient-to-b from-gray-900 via-black to-gray-900 rounded-xl border-8 border-gray-800 shadow-2xl overflow-hidden"
-             style={{ aspectRatio: '4/3', minHeight: '600px' }}>
+        <div
+          className="relative rounded-xl border-8 shadow-2xl overflow-hidden"
+          style={{
+            aspectRatio: '4/3',
+            minHeight: '600px',
+            background: 'linear-gradient(to bottom, #1f2937, #000000, #1f2937)',
+            borderColor: '#374151'
+          }}
+        >
 
           {/* CRT Screen Effect */}
           <div className="absolute inset-0 pointer-events-none z-10">
@@ -62,7 +85,12 @@ export default function ArcadePage() {
           </div>
 
           {selectedGame === 'menu' && (
-            <div className="relative h-full flex flex-col p-4 bg-gradient-to-b from-purple-900 via-purple-800 to-purple-900">
+            <div
+              className="relative h-full flex flex-col p-4"
+              style={{
+                background: 'linear-gradient(to bottom, #581c87, #6b21a8, #7c3aed)'
+              }}
+            >
               {/* Top HUD - Score, Level, Credits */}
               <div className="flex justify-between items-start mb-6 px-4">
                 <div className="text-left">
@@ -273,7 +301,13 @@ export default function ArcadePage() {
         </div>
 
         {/* Control Panel */}
-        <div className="mt-6 bg-gradient-to-b from-purple-900 to-purple-950 rounded-b-3xl border-8 border-purple-700 shadow-2xl p-6">
+        <div
+          className="mt-6 rounded-b-3xl border-8 shadow-2xl p-6"
+          style={{
+            background: 'linear-gradient(to bottom, #581c87, #4c1d95)',
+            borderColor: '#6b21a8'
+          }}
+        >
           <div className="flex justify-center gap-8">
             <div className="flex gap-3">
               <div className="w-6 h-6 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>

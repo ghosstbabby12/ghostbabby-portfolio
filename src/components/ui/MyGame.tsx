@@ -223,12 +223,22 @@ const MyGame: React.FC = () => {
 
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}>
+                    <a
+                      href="https://github.com/ghosstbabby12/ghostbabby-portfolio/blob/main/src/components/BooGame.tsx"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
+                      style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}
+                    >
                       {t("boo.card.codeButton")}
-                    </button>
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}>
+                    </a>
+                    <a
+                      href="/arcade"
+                      className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
+                      style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}
+                    >
                       {t("boo.card.demoButton")}
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -343,12 +353,22 @@ const MyGame: React.FC = () => {
 
                   {/* Botones secundarios */}
                   <div className="flex gap-2 sm:gap-3">
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}>
+                    <a
+                      href="https://github.com/ghosstbabby12/ghostbabby-portfolio/blob/main/src/components/PacmanGame.tsx"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
+                      style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}
+                    >
                       {t("pacman.card.codeButton")}
-                    </button>
-                    <button className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80" style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}>
+                    </a>
+                    <a
+                      href="/arcade"
+                      className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
+                      style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}
+                    >
                       {t("pacman.card.demoButton")}
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>

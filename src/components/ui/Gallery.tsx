@@ -1,77 +1,100 @@
 'use client'
 
 import { useState } from 'react'
-import { Lock, Unlock, Sparkles } from 'lucide-react'
-
-interface SectionData {
-  title: string
-  emoji: string
-  color: string
-  gradient: string
-  question: string
-  answer: string
-  images: string[]
-}
+import { Lock, Sparkles } from 'lucide-react'
 
 export default function Galeria() {
-  const sections: SectionData[] = [
+  // TODAS las imágenes del proyecto en un array desordenado
+  const allImages = [
+    // Imágenes de galería
+    '/galeria/food1.jpg',
+    '/images/me.jpg',
+    '/galeria/games1.jpg',
+    '/projects/Strudel.png',
+    '/galeria/hommies1.jpg',
+    '/images/me2.jpg',
+    '/galeria/food2.jpg',
+    '/projects/ReactApp.jpg',
+    '/galeria/games.jpg',
+    '/images/me3.png',
+    '/galeria/hobby1.jpg',
+    '/galeria/food3.jpg',
+    '/projects/games.png',
+    '/galeria/hommies.jpg',
+    '/images/me4.jpeg',
+    '/galeria/food4.jpg',
+    '/projects/TaskManager.png',
+    '/galeria/games5.jpg',
+    '/images/me5.jpeg',
+    '/galeria/trip2.jpeg',
+    '/galeria/food5.jpg',
+    '/projects/Dark-light.png',
+    '/images/me6.jpeg',
+    '/galeria/hobby.jpg',
+    '/galeria/food6.jpg',
+    '/projects/JuegoBricks.png',
+    '/images/me7.jpeg',
+    '/galeria/hommies4.jpg',
+    '/galeria/food7.jpg',
+    '/projects/LoginPersonal.png',
+    '/images/me8.jpeg',
+    '/galeria/trip4.jpg',
+    '/galeria/food8.jpg',
+    '/projects/GestorLab.png',
+    '/images/me9.jpeg',
+    '/galeria/food9.jpg',
+    '/images/games/pacman.jpg',
+    '/images/me10.jpeg',
+    '/projects/DEMOS.png',
+    '/images/me11.jpeg',
+    '/images/games/boo.jpg',
+    '/images/me12.jpeg',
+    '/projects/recetas.png',
+    '/images/me13.jpeg',
+    '/images/me14.jpeg',
+    '/images/me15.jpeg',
+  ]
+
+  const colors = [
+    'border-purple-500',
+    'border-pink-500',
+    'border-blue-500',
+    'border-indigo-500',
+    'border-yellow-500',
+    'border-red-500',
+    'border-green-500',
+    'border-cyan-500'
+  ]
+
+  const unlockQuestions = [
     {
-      title: 'Video Games',
-      emoji: '🎮',
-      color: 'border-purple-500',
-      gradient: 'from-purple-600 to-pink-600',
-      question: '¿Escribe el comando para ejecutar un proyecto en Next.js',
+      question: 'Instala dependencias:',
+      answer: 'npm install',
+      placeholder: 'npm install'
+    },
+    {
+      question: 'Ejecuta el proyecto:',
       answer: 'npm run dev',
-      images: ['/galeria/games1.jpg', '/galeria/games2.jpg', '/galeria/games3.jpg']
-    },
-    {
-      title: 'Food',
-      emoji: '🍔',
-      color: 'border-pink-500',
-      gradient: 'from-pink-600 to-rose-600',
-      question: '¿Qué hook de React se usa para manejar estado?',
-      answer: 'useState',
-      images: ['/galeria/food1.jpg', '/galeria/food2.jpg', '/galeria/food3.jpg']
-    },
-    {
-      title: 'Hommies',
-      emoji: '👯',
-      color: 'border-blue-500',
-      gradient: 'from-blue-600 to-cyan-600',
-      question: '¿Qué método HTTP se usa para enviar datos al servidor?',
-      answer: 'post',
-      images: ['/galeria/hommies1.jpg', '/galeria/hommies2.jpg', '/galeria/hommies3.jpg']
-    },
-    {
-      title: 'Trips',
-      emoji: '✈️',
-      color: 'border-indigo-500',
-      gradient: 'from-indigo-600 to-purple-600',
-      question: '¿ cual Ultima empresa que visitamos en el viaje empresarial?',
-      answer: 'pragma',
-      images: ['/galeria/trip1.jpg', '/galeria/trip2.jpg', '/galeria/trip3.jpg']
-    },
-    {
-      title: 'Hobbies',
-      emoji: '🎨',
-      color: 'border-yellow-500',
-      gradient: 'from-yellow-600 to-orange-600',
-      question: '¿Qué archivo configura las rutas en Next.js App Router?',
-      answer: 'page.tsx',
-      images: ['/galeria/hobby1.jpg', '/galeria/hobby2.jpg', '/galeria/hobby3.jpg']
+      placeholder: 'npm run dev'
     }
   ]
 
-  const [unlocked, setUnlocked] = useState<{ [key: string]: boolean }>({})
-  const [inputs, setInputs] = useState<{ [key: string]: string }>({})
+  const [galleryUnlocked, setGalleryUnlocked] = useState(false)
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [input, setInput] = useState('')
 
-  const handleAnswer = (key: string, userAnswer: string, correct: string) => {
-    const normalized = userAnswer.toLowerCase().trim().replace(/\s+/g, ' ')
-    const correctNormalized = correct.toLowerCase().trim().replace(/\s+/g, ' ')
-    
+  const handleAnswer = (userAnswer: string) => {
+    const normalized = userAnswer.toLowerCase().trim()
+    const correctNormalized = unlockQuestions[currentQuestion].answer.toLowerCase().trim()
+
     if (normalized === correctNormalized) {
-      setUnlocked((prev) => ({ ...prev, [key]: true }))
-      setInputs((prev) => ({ ...prev, [key]: '' }))
+      if (currentQuestion < unlockQuestions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1)
+        setInput('')
+      } else {
+        setGalleryUnlocked(true)
+        setInput('')
+      }
     } else {
       alert('❌ Respuesta incorrecta. ¡Inténtalo de nuevo!')
     }
@@ -90,83 +113,80 @@ export default function Galeria() {
             <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
           </div>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Explora mi lado más personal 💫 — cada categoría revela momentos de mi vida si respondes correctamente las preguntas de desarrollo web.
+            Para desbloquear mi galería debes ejecutar unos comandos sencillos para correr el proyecto en local
           </p>
         </div>
 
-        {/* Sections */}
-        <div className="space-y-12">
-          {sections.map((section, idx) => {
-            const isUnlocked = unlocked[`section-${idx}`]
-            
-            return (
-              <div key={idx} className="w-full">
-                {/* Section Header */}
-                <div className={`flex items-center gap-3 mb-6 pb-3 border-b-2 ${section.color}`}>
-                  <span className="text-4xl">{section.emoji}</span>
-                  <h2 className="text-3xl md:text-4xl font-bold">{section.title}</h2>
-                  {isUnlocked ? (
-                    <Unlock className="w-6 h-6 text-green-400 ml-auto" />
-                  ) : (
-                    <Lock className="w-6 h-6 text-red-400 ml-auto" />
-                  )}
-                </div>
+        {/* Unlock Section */}
+        {!galleryUnlocked ? (
+          <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-600 bg-opacity-20 backdrop-blur-sm border-2 border-purple-500 shadow-2xl max-w-2xl mx-auto">
+            <div className="absolute inset-0 bg-black/60 rounded-3xl"></div>
+            <div className="relative z-10 flex flex-col items-center text-center space-y-6">
+              <Lock className="w-16 h-16 text-white animate-bounce" />
+              <h3 className="text-2xl md:text-3xl font-semibold">Galería Bloqueada</h3>
 
-                {/* Lock Screen or Gallery */}
-                {!isUnlocked ? (
-                  <div className={`relative p-8 md:p-12 rounded-3xl bg-gradient-to-br ${section.gradient} bg-opacity-20 backdrop-blur-sm border-2 ${section.color} shadow-2xl`}>
-                    <div className="absolute inset-0 bg-black/60 rounded-3xl"></div>
-                    <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-                      <Lock className="w-16 h-16 text-white animate-bounce" />
-                      <h3 className="text-2xl md:text-3xl font-semibold">Sección Bloqueada</h3>
-                      <p className="text-lg md:text-xl max-w-2xl">{section.question}</p>
-                      
-                      <div className="w-full max-w-md space-y-4">
-                        <input
-                          type="text"
-                          value={inputs[`section-${idx}`] || ''}
-                          onChange={(e) => setInputs((prev) => ({ ...prev, [`section-${idx}`]: e.target.value }))}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleAnswer(`section-${idx}`, inputs[`section-${idx}`] || '', section.answer)
-                            }
-                          }}
-                          className="w-full px-6 py-4 rounded-xl bg-white/10 backdrop-blur-md border-2 border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-4 focus:ring-white/50 text-lg transition-all"
-                          placeholder="Escribe tu respuesta..."
-                        />
-                        <button
-                          onClick={() => handleAnswer(`section-${idx}`, inputs[`section-${idx}`] || '', section.answer)}
-                          className="w-full py-4 px-8 rounded-xl font-bold text-lg bg-card-gradient text-white hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl hover:shadow-ghost-purple/30"
-                        >
-                          🔓 Desbloquear
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {section.images.map((img, imgIdx) => (
-                      <div
-                        key={imgIdx}
-                        className={`group relative h-72 rounded-2xl overflow-hidden shadow-xl border-2 ${section.color} hover:scale-105 transition-all duration-300 cursor-pointer`}
-                        style={{
-                          animation: `fadeIn 0.5s ease-out ${imgIdx * 0.2}s both`
-                        }}
-                      >
-                        <img
-                          src={img}
-                          alt={`${section.title} ${imgIdx + 1}`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className={`absolute inset-0 bg-gradient-to-t ${section.gradient} opacity-0 group-hover:opacity-30 transition-opacity duration-300`}></div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+              {/* Progress indicator */}
+              <div className="flex items-center gap-2 text-sm text-gray-300">
+                <span className="text-cyan-400 font-bold">Pregunta {currentQuestion + 1} de {unlockQuestions.length}</span>
               </div>
-            )
-          })}
-        </div>
+
+              <p className="text-lg md:text-xl max-w-2xl font-mono text-green-400">
+                {unlockQuestions[currentQuestion].question}
+              </p>
+
+              <div className="w-full max-w-md space-y-4">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleAnswer(input)
+                    }
+                  }}
+                  className="w-full px-6 py-4 rounded-xl bg-black/50 backdrop-blur-md border-2 border-green-500/50 text-green-400 placeholder-green-400/40 focus:outline-none focus:ring-4 focus:ring-green-500/50 text-lg transition-all font-mono"
+                  placeholder={unlockQuestions[currentQuestion].placeholder}
+                />
+                <button
+                  onClick={() => handleAnswer(input)}
+                  className="w-full py-4 px-8 rounded-xl font-bold text-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-2xl hover:shadow-green-500/30"
+                >
+                  {currentQuestion < unlockQuestions.length - 1 ? '▶ Siguiente' : '🔓 Desbloquear Galería'}
+                </button>
+              </div>
+
+              {/* Progress bar */}
+              <div className="w-full max-w-md h-2 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-500"
+                  style={{ width: `${((currentQuestion + 1) / unlockQuestions.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Gallery Grid - Todas las imágenes mezcladas */
+          <div className="w-full">
+            <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              {allImages.map((img, imgIdx) => (
+                <div
+                  key={imgIdx}
+                  className={`group relative h-32 rounded-lg overflow-hidden shadow-lg border ${colors[imgIdx % colors.length]} hover:scale-110 hover:z-10 transition-all duration-300 cursor-pointer`}
+                  style={{
+                    animation: `fadeIn 0.5s ease-out ${imgIdx * 0.05}s both`
+                  }}
+                >
+                  <img
+                    src={img}
+                    alt={`Galería ${imgIdx + 1}`}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
