@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Lock, Sparkles } from 'lucide-react'
 import { useTheme } from '../../app/providers'
 
 export default function Galeria() {
   const { actualTheme } = useTheme()
+
   // TODAS las imágenes del proyecto en un array desordenado
   const allImages = [
     // Imágenes de galería
@@ -59,20 +60,28 @@ export default function Galeria() {
 
   const unlockQuestions = [
     {
-      question: 'Instala dependencias:',
+      question: 'Instala las dependencias:',
       answer: 'npm install',
-      placeholder: 'npm install'
     },
     {
-      question: 'Ejecuta el proyecto:',
+      question: 'Ejecuta el proyecto en local:',
       answer: 'npm run dev',
-      placeholder: 'npm run dev'
     }
   ]
 
   const [galleryUnlocked, setGalleryUnlocked] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [input, setInput] = useState('')
+
+  // Verificar si el juego fue completado al cargar el componente
+  useEffect(() => {
+    const pacmanGameCompleted = localStorage.getItem('pacmanGameCompleted')
+    const booGameCompleted = localStorage.getItem('booGameCompleted')
+
+    if (pacmanGameCompleted === 'true' || booGameCompleted === 'true') {
+      setGalleryUnlocked(true)
+    }
+  }, [])
 
   const handleAnswer = (userAnswer: string) => {
     const normalized = userAnswer.toLowerCase().trim()
@@ -114,8 +123,19 @@ export default function Galeria() {
           </div>
           <p className="text-lg md:text-xl max-w-3xl mx-auto"
              style={{ color: actualTheme === 'light' ? '#4b5563' : '#d1d5db' }}>
-            Para desbloquear mi galería debes ejecutar unos comandos sencillos para correr el proyecto en local
+            Desbloquea mi galería personal de dos formas
           </p>
+          <div className="mt-4 text-base md:text-lg max-w-2xl mx-auto space-y-2"
+               style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>
+            <p className="flex items-center justify-center gap-2">
+              <span className={`font-bold ${actualTheme === 'light' ? 'text-purple-600' : 'text-cyan-400'}`}>1.</span>
+              Demuestra que sabes ejecutar mi proyecto en local
+            </p>
+            <p className="flex items-center justify-center gap-2">
+              <span className={`font-bold ${actualTheme === 'light' ? 'text-purple-600' : 'text-cyan-400'}`}>2.</span>
+              Juega Pac-Man y recolecta 3 cerezas 🍒
+            </p>
+          </div>
         </div>
 
         {/* Unlock Section */}
@@ -180,7 +200,7 @@ export default function Galeria() {
                     color: actualTheme === 'light' ? '#059669' : '#34d399',
                     caretColor: actualTheme === 'light' ? '#059669' : '#34d399'
                   }}
-                  placeholder={unlockQuestions[currentQuestion].placeholder}
+                  placeholder="Escribe el comando aquí"
                 />
                 <button
                   onClick={() => handleAnswer(input)}
@@ -212,6 +232,37 @@ export default function Galeria() {
                     width: `${((currentQuestion + 1) / unlockQuestions.length) * 100}%`
                   }}
                 ></div>
+              </div>
+
+              {/* Divider */}
+              <div className="w-full max-w-md my-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-px" style={{ backgroundColor: actualTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }}></div>
+                  <span className="text-sm" style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>O</span>
+                  <div className="flex-1 h-px" style={{ backgroundColor: actualTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }}></div>
+                </div>
+              </div>
+
+              {/* Alternative: Play Pac-Man */}
+              <div className="w-full max-w-md">
+                <a
+                  href="/pacman"
+                  className="block w-full py-4 px-8 rounded-xl font-bold text-lg text-white hover:scale-105 active:scale-95 transition-all shadow-lg"
+                  style={{
+                    background: actualTheme === 'light'
+                      ? 'linear-gradient(to right, #7c3aed, #a855f7)'
+                      : 'linear-gradient(to right, #a855f7, #ec4899)',
+                    boxShadow: actualTheme === 'light'
+                      ? '0 10px 15px -3px rgba(124, 58, 237, 0.3)'
+                      : '0 10px 15px -3px rgba(168, 85, 247, 0.3)'
+                  }}
+                >
+                  🍒 Jugar Pac-Man
+                </a>
+                <p className="text-xs mt-2"
+                   style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>
+                  Recolecta 3 cerezas para desbloquear
+                </p>
               </div>
             </div>
           </div>

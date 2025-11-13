@@ -249,6 +249,12 @@ const About = () => {
                   <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#24292e', color: '#ffffff', borderColor: '#ffffff' }}>
                     GitHub
                   </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#000000', color: '#ffffff', borderColor: '#ffffff' }}>
+                    ▲ Vercel
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#46E3B7' }}>
+                    Render
+                  </motion.div>
                   <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#430098' }}>
                     Heroku
                   </motion.div>

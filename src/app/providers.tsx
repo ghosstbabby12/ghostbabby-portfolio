@@ -267,7 +267,7 @@ const DICTIONARY = {
       retry: "Reintentar",
       card: {
         title: "PAC-MAN",
-        description: "Una reinterpretación de la acción clásica arcade, donde cada píxel devorado cuenta para algo más.",
+        description: "Versión clásica del arcade icónico. Recolecta cerezas para desbloquear mi galería personal con fotos y recuerdos.",
         pressToStart: "PRESIONA PARA INICIAR",
         startButton: "START",
         codeButton: "</> Código",
@@ -281,7 +281,7 @@ const DICTIONARY = {
       start: "START",
       card: {
         title: "BOO MARIO BROS",
-        description: "Un spin-off retrofuturista inspirado en los enemigos de Mario, donde el jugador controla a Boo en un mundo oscuro y brillante.",
+        description: "Mini recreación del juego original de Mario Bros. Recolecta testimonios golpeando bloques y descarga mi hoja de vida completando el nivel.",
         pressToStart: "PRESIONA PARA INICIAR",
         startButton: "START",
         codeButton: "</> Código",
@@ -482,7 +482,7 @@ const DICTIONARY = {
     retry: "Retry",
     card: {
       title: "PAC-MAN",
-      description: "A reimagining of the classic arcade action, where every devoured pixel counts for something more.",
+      description: "Classic version of the iconic arcade game. Collect cherries to unlock my personal gallery with photos and memories.",
       pressToStart: "PRESS TO START",
       startButton: "START",
       codeButton: "</> Code",
@@ -496,7 +496,7 @@ const DICTIONARY = {
     start: "START",
     card: {
       title: "BOO MARIO BROS",
-      description: "A retrofuturistic spin-off inspired by Mario's enemies, where the player controls Boo in a dark and bright world.",
+      description: "Mini recreation of the original Mario Bros game. Collect testimonials by hitting blocks and download my resume by completing the level.",
       pressToStart: "PRESS TO START",
       startButton: "START",
       codeButton: "</> Code",

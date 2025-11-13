@@ -160,50 +160,23 @@ export default function MarioGhostHouseClassic() {
   }
 
   useEffect(() => {
-    // Mapa más desafiante con obstáculos y laberintos
+    // Mapa simplificado y más limpio
     const initialPlatforms: Platform[] = [
-      // Piso principal con huecos peligrosos
-      { x: 0, y: 520, width: 600, height: 80 },
-      { x: 700, y: 520, width: 400, height: 80 },
-      { x: 1200, y: 520, width: 500, height: 80 },
-      { x: 1800, y: 520, width: 400, height: 80 },
-      { x: 2300, y: 520, width: 500, height: 80 },
-      { x: 2900, y: 520, width: 700, height: 80 },
+      // Piso principal continuo con menos huecos
+      { x: 0, y: 520, width: 800, height: 80 },
+      { x: 950, y: 520, width: 800, height: 80 },
+      { x: 1900, y: 520, width: 800, height: 80 },
+      { x: 2850, y: 520, width: 850, height: 80 },
 
-      // Torres verticales (obstáculos para Boo)
-      { x: 500, y: 320, width: 60, height: 200 },
-      { x: 1100, y: 280, width: 60, height: 240 },
-      { x: 1700, y: 300, width: 60, height: 220 },
-      { x: 2200, y: 260, width: 60, height: 260 },
-      { x: 2800, y: 300, width: 60, height: 220 },
-
-      // Plataformas para acceder a bloques (más espaciadas y difíciles)
-      { x: 280, y: 450, width: 100, height: 20 },
-      { x: 780, y: 380, width: 100, height: 20 },
-      { x: 1280, y: 420, width: 100, height: 20 },
-      { x: 1580, y: 360, width: 100, height: 20 },
-      { x: 1980, y: 400, width: 100, height: 20 },
-      { x: 2380, y: 340, width: 100, height: 20 },
-      { x: 2780, y: 390, width: 100, height: 20 },
-      { x: 3180, y: 370, width: 100, height: 20 },
-
-      // Plataformas altas zigzag (escape de Boo)
-      { x: 350, y: 280, width: 80, height: 20 },
-      { x: 600, y: 240, width: 80, height: 20 },
-      { x: 850, y: 200, width: 80, height: 20 },
-      { x: 1400, y: 250, width: 80, height: 20 },
-      { x: 1650, y: 210, width: 80, height: 20 },
-      { x: 1900, y: 270, width: 80, height: 20 },
-      { x: 2500, y: 220, width: 80, height: 20 },
-      { x: 2750, y: 260, width: 80, height: 20 },
-      { x: 3000, y: 230, width: 80, height: 20 },
-
-      // Plataformas flotantes peligrosas
-      { x: 650, y: 360, width: 60, height: 15 },
-      { x: 950, y: 340, width: 60, height: 15 },
-      { x: 1350, y: 320, width: 60, height: 15 },
-      { x: 2100, y: 350, width: 60, height: 15 },
-      { x: 2600, y: 330, width: 60, height: 15 },
+      // Plataformas intermedias para alcanzar bloques
+      { x: 280, y: 420, width: 120, height: 20 },
+      { x: 680, y: 420, width: 120, height: 20 },
+      { x: 1080, y: 420, width: 120, height: 20 },
+      { x: 1480, y: 420, width: 120, height: 20 },
+      { x: 1880, y: 420, width: 120, height: 20 },
+      { x: 2280, y: 420, width: 120, height: 20 },
+      { x: 2680, y: 420, width: 120, height: 20 },
+      { x: 3080, y: 420, width: 120, height: 20 },
     ]
     setPlatforms(initialPlatforms)
 
@@ -221,21 +194,17 @@ export default function MarioGhostHouseClassic() {
     }))
     setBlocks(initialBlocks)
 
-    // Tortugas enemigas distribuidas por el nivel
+    // Tortugas enemigas - reducidas para menos dificultad
     const initialTurtles: Turtle[] = [
-      { id: 0, x: 600, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
-      { id: 1, x: 1200, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
-      { id: 2, x: 1800, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
-      { id: 3, x: 2400, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
-      { id: 4, x: 3000, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
+      { id: 0, x: 1200, y: 496, vx: 1.5, vy: 0, direction: 1, dead: false, animFrame: 0 },
+      { id: 1, x: 2400, y: 496, vx: -1.5, vy: 0, direction: -1, dead: false, animFrame: 0 },
     ]
     setTurtles(initialTurtles)
 
-    // Hongos de vida distribuidos estratégicamente
+    // Hongos de vida - reducidos
     const initialMushrooms: Mushroom[] = [
-      { id: 0, x: 1000, y: 480, vy: 0, vx: 1, collected: false },
-      { id: 1, x: 2000, y: 480, vy: 0, vx: 1, collected: false },
-      { id: 2, x: 2800, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 0, x: 1500, y: 480, vy: 0, vx: 1, collected: false },
+      { id: 1, x: 2800, y: 480, vy: 0, vx: 1, collected: false },
     ]
     setMushrooms(initialMushrooms)
   }, [])
@@ -706,19 +675,19 @@ export default function MarioGhostHouseClassic() {
     const drawBlock = (block: Block) => {
       const screenX = block.x - cameraX
       const y = block.y - block.bounceOffset
-      
+
       if (block.hit) {
         // Bloque usado (marrón oscuro)
         ctx.fillStyle = '#8B4513'
         ctx.fillRect(screenX, y, block.width, block.height)
-        
+
         ctx.fillStyle = '#654321'
         ctx.fillRect(screenX, y, block.width, 4)
         ctx.fillRect(screenX, y, 4, block.height)
-        
+
         ctx.fillStyle = '#5D4E37'
         ctx.fillRect(screenX + 4, y + 4, 32, 32)
-        
+
         // Grietas
         ctx.fillStyle = '#3D2E17'
         ctx.fillRect(screenX + 10, y + 8, 2, 24)
@@ -726,22 +695,22 @@ export default function MarioGhostHouseClassic() {
       } else {
         // Bloque activo (dorado brillante)
         const pulse = Math.sin(animTime * 5) * 2
-        
+
         ctx.fillStyle = '#FFD700'
         ctx.shadowBlur = 15 + pulse
         ctx.shadowColor = '#FFD700'
         ctx.fillRect(screenX, y, block.width, block.height)
         ctx.shadowBlur = 0
-        
+
         // Bordes 3D
         ctx.fillStyle = '#FFED4E'
         ctx.fillRect(screenX, y, block.width, 4)
         ctx.fillRect(screenX, y, 4, block.height)
-        
+
         ctx.fillStyle = '#B8860B'
         ctx.fillRect(screenX, y + 36, block.width, 4)
         ctx.fillRect(screenX + 36, y, 4, block.height)
-        
+
         // Símbolo ?
         ctx.fillStyle = '#FFFFFF'
         ctx.shadowBlur = 5
@@ -965,14 +934,14 @@ export default function MarioGhostHouseClassic() {
       // Fondo oscuro estilo Ghost House
       ctx.fillStyle = '#000000'
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-      
+
       // Patrón de fondo (arquitectura fantasmal)
       ctx.fillStyle = 'rgba(40, 40, 80, 0.3)'
       for (let i = 0; i < 20; i++) {
         const x = (i * 80 - (cameraX * 0.3)) % CANVAS_WIDTH
         ctx.fillRect(x, 0, 60, CANVAS_HEIGHT)
       }
-      
+
       // Ventanas fantasmales
       ctx.fillStyle = 'rgba(100, 100, 150, 0.2)'
       for (let i = 0; i < 10; i++) {
@@ -980,6 +949,80 @@ export default function MarioGhostHouseClassic() {
         for (let j = 0; j < 3; j++) {
           ctx.fillRect(x + 20, 50 + j * 150, 40, 60)
         }
+      }
+
+      // CASTILLO al final del nivel (estilo Mario Bros)
+      const castleX = 3300
+      const castleScreenX = castleX - cameraX
+
+      // Dibujar solo si está visible
+      if (castleScreenX > -300 && castleScreenX < CANVAS_WIDTH + 100) {
+        // Color gris del castillo
+        const castleGray = '#A0A0A0'
+        const castleDark = '#606060'
+        const castleLight = '#C0C0C0'
+
+        // Base del castillo
+        ctx.fillStyle = castleGray
+        ctx.fillRect(castleScreenX, 360, 200, 160)
+
+        // Sombras laterales
+        ctx.fillStyle = castleDark
+        ctx.fillRect(castleScreenX + 190, 360, 10, 160)
+
+        // Highlights
+        ctx.fillStyle = castleLight
+        ctx.fillRect(castleScreenX, 360, 10, 160)
+
+        // Torres laterales
+        ctx.fillStyle = castleGray
+        ctx.fillRect(castleScreenX - 20, 280, 60, 240) // Torre izquierda
+        ctx.fillRect(castleScreenX + 160, 280, 60, 240) // Torre derecha
+
+        // Almenas de las torres
+        for (let i = 0; i < 3; i++) {
+          // Torre izquierda
+          ctx.fillRect(castleScreenX - 20 + (i * 20), 270, 15, 20)
+          // Torre derecha
+          ctx.fillRect(castleScreenX + 160 + (i * 20), 270, 15, 20)
+        }
+
+        // Almenas superiores del castillo principal
+        for (let i = 0; i < 8; i++) {
+          ctx.fillRect(castleScreenX + (i * 25), 350, 20, 20)
+        }
+
+        // Puerta del castillo (arco)
+        ctx.fillStyle = '#000000'
+        ctx.fillRect(castleScreenX + 75, 440, 50, 80)
+
+        // Arco superior de la puerta
+        ctx.beginPath()
+        ctx.arc(castleScreenX + 100, 440, 25, Math.PI, 0, true)
+        ctx.fill()
+
+        // Ventanas
+        ctx.fillStyle = '#4A4A4A'
+        ctx.fillRect(castleScreenX + 40, 400, 30, 40)
+        ctx.fillRect(castleScreenX + 130, 400, 30, 40)
+
+        // Ventanas de las torres
+        ctx.fillRect(castleScreenX - 5, 320, 20, 25)
+        ctx.fillRect(castleScreenX + 175, 320, 20, 25)
+
+        // Bandera en la torre izquierda
+        ctx.fillStyle = '#8B4513'
+        ctx.fillRect(castleScreenX + 5, 250, 4, 30)
+
+        // Bandera ondulante
+        const flagWave = Math.sin(animTime * 3) * 2
+        ctx.fillStyle = '#FF0000'
+        ctx.beginPath()
+        ctx.moveTo(castleScreenX + 9, 250)
+        ctx.lineTo(castleScreenX + 30 + flagWave, 255)
+        ctx.lineTo(castleScreenX + 9, 260)
+        ctx.closePath()
+        ctx.fill()
       }
 
       // Dibujar huecos/abismos MUY VISIBLES (antes de las plataformas)
@@ -1066,31 +1109,46 @@ export default function MarioGhostHouseClassic() {
         }
       })
 
-      // Plataformas (pixel art)
+      // Plataformas estilo Super Mario Bros (ladrillos blancos/grises)
       platforms.forEach(platform => {
         const screenX = platform.x - cameraX
+        const brickWidth = 32
+        const brickHeight = 16
 
-        // Sombra
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-        ctx.fillRect(screenX + 4, platform.y + 4, platform.width, platform.height)
+        // Calcular cuántos ladrillos caben
+        const bricksX = Math.ceil(platform.width / brickWidth)
+        const bricksY = Math.ceil(platform.height / brickHeight)
 
-        // Base marrón
-        ctx.fillStyle = '#8B7355'
-        ctx.fillRect(screenX, platform.y, platform.width, platform.height)
+        for (let row = 0; row < bricksY; row++) {
+          for (let col = 0; col < bricksX; col++) {
+            const brickX = screenX + (col * brickWidth)
+            const brickY = platform.y + (row * brickHeight)
 
-        // Bordes
-        ctx.fillStyle = '#A0826D'
-        ctx.fillRect(screenX, platform.y, platform.width, 4)
-        ctx.fillRect(screenX, platform.y, 4, platform.height)
+            // Fondo del ladrillo (gris claro/blanco)
+            ctx.fillStyle = '#D0D0D0'
+            ctx.fillRect(brickX, brickY, brickWidth, brickHeight)
 
-        ctx.fillStyle = '#6B5344'
-        ctx.fillRect(screenX, platform.y + platform.height - 4, platform.width, 4)
-        ctx.fillRect(screenX + platform.width - 4, platform.y, 4, platform.height)
+            // Highlight superior (blanco)
+            ctx.fillStyle = '#FFFFFF'
+            ctx.fillRect(brickX, brickY, brickWidth, 2)
+            ctx.fillRect(brickX, brickY, 2, brickHeight)
 
-        // Textura pixel
-        for (let i = 0; i < platform.width / 20; i++) {
-          ctx.fillStyle = i % 2 === 0 ? '#9B7E5F' : '#8B6E4F'
-          ctx.fillRect(screenX + i * 20, platform.y + 6, 18, platform.height - 12)
+            // Sombra inferior (gris oscuro)
+            ctx.fillStyle = '#808080'
+            ctx.fillRect(brickX, brickY + brickHeight - 2, brickWidth, 2)
+            ctx.fillRect(brickX + brickWidth - 2, brickY, 2, brickHeight)
+
+            // División central del ladrillo
+            ctx.fillStyle = '#A0A0A0'
+            ctx.fillRect(brickX + brickWidth / 2 - 1, brickY + 2, 2, brickHeight - 4)
+
+            // Detalles internos (puntos grises)
+            ctx.fillStyle = '#A0A0A0'
+            ctx.fillRect(brickX + 4, brickY + 4, 2, 2)
+            ctx.fillRect(brickX + brickWidth - 6, brickY + 4, 2, 2)
+            ctx.fillRect(brickX + 4, brickY + brickHeight - 6, 2, 2)
+            ctx.fillRect(brickX + brickWidth - 6, brickY + brickHeight - 6, 2, 2)
+          }
         }
       })
 
@@ -1432,6 +1490,8 @@ export default function MarioGhostHouseClassic() {
         // Victoria
         if (x >= GOAL_X && !victory) {
           setVictory(true)
+          // Guardar en localStorage que se completó el juego
+          localStorage.setItem('booGameCompleted', 'true')
         }
 
         if (y > CANVAS_HEIGHT) {

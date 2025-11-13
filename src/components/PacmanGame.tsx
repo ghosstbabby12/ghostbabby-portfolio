@@ -75,6 +75,20 @@ export default function PacmanGame() {
   const { t } = useI18n()
   const { actualTheme } = useTheme()
 
+  // Guardar en localStorage cuando se recolecten 3 cerezas y redirigir a galería
+  useEffect(() => {
+    if (cherries >= 3) {
+      localStorage.setItem('pacmanGameCompleted', 'true')
+      // Redirigir a la galería después de un breve delay
+      setTimeout(() => {
+        const element = document.querySelector('#galeria')
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 1500) // 1.5 segundos de delay para que el usuario vea el logro
+    }
+  }, [cherries])
+
   const map = [
     "############################",
     "#............##............#",
@@ -705,7 +719,12 @@ export default function PacmanGame() {
 
       {cherries >= 3 && (
         <button
-          onClick={() => router.push('/galeria')}
+          onClick={() => {
+            const element = document.querySelector('#galeria')
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' })
+            }
+          }}
           className={actualTheme === 'light'
             ? 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
             : 'mt-4 px-8 py-4 text-xl bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 text-white rounded-full hover:scale-110 transition-all shadow-lg animate-bounce'
