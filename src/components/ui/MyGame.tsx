@@ -188,20 +188,31 @@ const MyGame: React.FC = () => {
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
-                <div className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10, backgroundColor: '#1a1a1a' }}>
+                <div
+                  className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center"
+                  style={{
+                    zIndex: 10,
+                    backgroundColor: actualTheme === 'light' ? '#f5f3ff' : '#1a1a1a'
+                  }}
+                >
                   <h3
                     className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-wider"
                     style={{
                       fontFamily: "'Courier New', monospace",
-                      color: "#D8B4FE",
-                      textShadow: "0 0 10px #D8B4FE, 0 0 20px #A78BFA, 2px 2px 0px #000000",
+                      color: actualTheme === 'light' ? '#7c3aed' : "#D8B4FE",
+                      textShadow: actualTheme === 'light'
+                        ? "2px 2px 4px rgba(124,58,237,0.3)"
+                        : "0 0 10px #D8B4FE, 0 0 20px #A78BFA, 2px 2px 0px #000000",
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
                     }}
                   >
                     {t("boo.card.title")}
                   </h3>
-                  <p className="text-gray-400 text-center text-xs sm:text-sm mb-3 sm:mb-4 max-w-md">
+                  <p
+                    className="text-center text-xs sm:text-sm mb-3 sm:mb-4 max-w-md"
+                    style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}
+                  >
                     {t("boo.card.description")}
                   </p>
 
@@ -213,8 +224,8 @@ const MyGame: React.FC = () => {
                     style={{
                       fontFamily: "monospace",
                       backgroundColor: "transparent",
-                      color: "#D8B4FE",
-                      borderColor: "#FFFFFF",
+                      color: actualTheme === 'light' ? '#7c3aed' : "#D8B4FE",
+                      borderColor: actualTheme === 'light' ? '#7c3aed' : "#FFFFFF",
                       borderWidth: "3px",
                     }}
                   >
@@ -228,14 +239,20 @@ const MyGame: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
-                      style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}
+                      style={{
+                        backgroundColor: actualTheme === 'light' ? '#e5e7eb' : "#4A5568",
+                        color: actualTheme === 'light' ? '#1f2937' : "#FFFFFF"
+                      }}
                     >
                       {t("boo.card.codeButton")}
                     </a>
                     <a
                       href="/arcade"
                       className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
-                      style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}
+                      style={{
+                        backgroundColor: actualTheme === 'light' ? '#7c3aed' : "#3B82F6",
+                        color: "#FFFFFF"
+                      }}
                     >
                       {t("boo.card.demoButton")}
                     </a>
@@ -318,20 +335,31 @@ const MyGame: React.FC = () => {
                 </div>
 
                 {/* Área de contenido inferior - más compacta */}
-                <div className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center" style={{ zIndex: 10, backgroundColor: '#1a1a1a' }}>
+                <div
+                  className="relative px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-5 flex flex-col items-center"
+                  style={{
+                    zIndex: 10,
+                    backgroundColor: actualTheme === 'light' ? '#fef3c7' : '#1a1a1a'
+                  }}
+                >
                   <h3
                     className="text-lg sm:text-xl md:text-2xl font-bold mb-2 tracking-wider"
                     style={{
                       fontFamily: "'Courier New', monospace",
-                      color: "#FFD700",
-                      textShadow: "0 0 10px #FFD700, 0 0 20px #FFA500, 2px 2px 0px #000000",
+                      color: actualTheme === 'light' ? '#f59e0b' : "#FFD700",
+                      textShadow: actualTheme === 'light'
+                        ? "2px 2px 4px rgba(245,158,11,0.3)"
+                        : "0 0 10px #FFD700, 0 0 20px #FFA500, 2px 2px 0px #000000",
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
                     }}
                   >
                     {t("pacman.card.title")}
                   </h3>
-                  <p className="text-gray-400 text-center text-xs sm:text-sm mb-3 sm:mb-4 max-w-md">
+                  <p
+                    className="text-center text-xs sm:text-sm mb-3 sm:mb-4 max-w-md"
+                    style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}
+                  >
                     {t("pacman.card.description")}
                   </p>
 
@@ -343,8 +371,8 @@ const MyGame: React.FC = () => {
                     style={{
                       fontFamily: "monospace",
                       backgroundColor: "transparent",
-                      color: "#FFD700",
-                      borderColor: "#FFFFFF",
+                      color: actualTheme === 'light' ? '#f59e0b' : "#FFD700",
+                      borderColor: actualTheme === 'light' ? '#f59e0b' : "#FFFFFF",
                       borderWidth: "3px",
                     }}
                   >
@@ -358,14 +386,20 @@ const MyGame: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
-                      style={{ backgroundColor: "#4A5568", color: "#FFFFFF" }}
+                      style={{
+                        backgroundColor: actualTheme === 'light' ? '#e5e7eb' : "#4A5568",
+                        color: actualTheme === 'light' ? '#1f2937' : "#FFFFFF"
+                      }}
                     >
                       {t("pacman.card.codeButton")}
                     </a>
                     <a
                       href="/arcade"
                       className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all hover:opacity-80"
-                      style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}
+                      style={{
+                        backgroundColor: actualTheme === 'light' ? '#f59e0b' : "#3B82F6",
+                        color: "#FFFFFF"
+                      }}
                     >
                       {t("pacman.card.demoButton")}
                     </a>

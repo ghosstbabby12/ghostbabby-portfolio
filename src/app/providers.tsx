@@ -201,14 +201,14 @@ const DICTIONARY = {
       cta: "¿Tienes una idea, proyecto o colaboración? Escríbeme y lo hablamos 🚀"
     },
     projects: {
-      tittle: "Una selección de proyectos que demuestran mis habilidades en desarrollo web, desde aplicaciones empresariales hasta experiencias interactivas creativas.",
-      id : 1,
-      title: "Manejo de Integración Continua",
-      description:
-        "Este proyecto consiste en una aplicación React sencilla que consume la API pública de usuarios aleatorios y muestra información básica de los usuarios",
-    
-    
-    
+      description: "Una selección de proyectos que demuestran mis habilidades en desarrollo web, desde aplicaciones empresariales hasta experiencias interactivas creativas.",
+      personalProjects: "🎨 Proyectos Personales",
+      academicProjects: "🎓 Proyectos Académicos",
+      featured: "Destacado",
+      code: "Código",
+      demo: "Demo",
+      cta: "¿Interesado en ver más de mi trabajo?",
+      viewMore: "Ver más en GitHub"
     },
     about: {
       title: "Sobre Mí",
@@ -289,8 +289,22 @@ const DICTIONARY = {
       }
     },
     gallery: {
-      title: "🎭 Galería secreta",
-      description: "Aquí puedes ver las imágenes, recuerdos y momentos desbloqueados al completar el juego.",
+      title: "Galería Interactiva",
+      unlockTitle: "Desbloquea mi galería personal de dos formas",
+      option1: "Demuestra que sabes ejecutar mi proyecto en local",
+      option2: "Juega Pac-Man y recolecta 3 cerezas 🍒",
+      locked: "Galería Bloqueada",
+      question: "Pregunta",
+      of: "de",
+      installDeps: "Instala las dependencias:",
+      runLocal: "Ejecuta el proyecto en local:",
+      placeholder: "Escribe el comando aquí",
+      next: "▶ Siguiente",
+      unlock: "🔓 Desbloquear Galería",
+      wrongAnswer: "❌ Respuesta incorrecta. ¡Inténtalo de nuevo!",
+      or: "O",
+      playPacman: "🍒 Jugar Pac-Man",
+      collectCherries: "Recolecta 3 cerezas para desbloquear",
       back: "Volver al inicio"
     },
     interactiveGallery: {
@@ -425,7 +439,14 @@ const DICTIONARY = {
     cta: "Got an idea, project or collaboration? Write to me and let's talk 🚀"
   },
   projects: {
-    description: "A selection of projects that showcase my web development skills, from enterprise apps to interactive creative experiences."
+    description: "A selection of projects that showcase my web development skills, from enterprise apps to interactive creative experiences.",
+    personalProjects: "🎨 Personal Projects",
+    academicProjects: "🎓 Academic Projects",
+    featured: "Featured",
+    code: "Code",
+    demo: "Demo",
+    cta: "Interested in seeing more of my work?",
+    viewMore: "View more on GitHub"
   },
   about: {
     title: "About Me",
@@ -504,8 +525,22 @@ const DICTIONARY = {
     }
   },
   gallery: {
-    title: "🎭 Secret gallery",
-    description: "Here you can see images, memories and moments unlocked after finishing the game.",
+    title: "Interactive Gallery",
+    unlockTitle: "Unlock my personal gallery in two ways",
+    option1: "Prove you know how to run my project locally",
+    option2: "Play Pac-Man and collect 3 cherries 🍒",
+    locked: "Gallery Locked",
+    question: "Question",
+    of: "of",
+    installDeps: "Install dependencies:",
+    runLocal: "Run the project locally:",
+    placeholder: "Type the command here",
+    next: "▶ Next",
+    unlock: "🔓 Unlock Gallery",
+    wrongAnswer: "❌ Wrong answer. Try again!",
+    or: "OR",
+    playPacman: "🍒 Play Pac-Man",
+    collectCherries: "Collect 3 cherries to unlock",
     back: "Back to home"
   },
   interactiveGallery: {

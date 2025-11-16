@@ -32,12 +32,12 @@ html {
      Tailwind utility classes also become light-friendly. Use !important to
      ensure these override inline utility classes from components. */
 
-  /* Replace dark site gradient with a subtle light gradient - Rosa pastel suave */
+  /* Replace dark site gradient with a subtle light gradient - Violeta/Lila suave */
   html.light .bg-ghost-gradient,
   html.light .min-h-screen.bg-ghost-gradient,
   html.light main.bg-ghost-gradient {
-    background: linear-gradient(135deg, #fefefe 0%, #fff9fa 40%, #fff0f3 100%) !important;
-    background-image: linear-gradient(135deg, #fefefe 0%, #fff9fa 40%, #fff0f3 100%) !important;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #ddd6fe 100%) !important;
+    background-image: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #ddd6fe 100%) !important;
   }
 
   /* Common dark background utilities -> light surfaces */
@@ -53,7 +53,7 @@ html {
 
   /* translucent white overlays used as dark glass -> light subtle surfaces */
   html.light .bg-white\/5 {
-    background-color: rgba(255,240,245,0.15) !important;
+    background-color: rgba(237,233,254,0.15) !important;
   }
 
   /* Make text that was white become dark for readability */
@@ -65,90 +65,90 @@ html {
     color: #1a1a1a !important;
   }
 
-  /* Borders and subtle accents - Rosa pastel muy suave */
+  /* Borders and subtle accents - Violeta/Lila muy suave */
   html.light .border-white\/10 {
-    border-color: rgba(245,220,230,0.25) !important;
+    border-color: rgba(196,181,253,0.25) !important;
   }
 
-  /* Reemplazar colores ghost-purple/pink/blue con rosa delicado en light mode */
+  /* Reemplazar colores ghost-purple/pink/blue con violeta en light mode */
   html.light .text-ghost-purple,
   html.light .text-ghost-pink,
   html.light .text-ghost-blue {
-    color: #c2185b !important; /* Rosa profundo pero suave */
+    color: #7c3aed !important; /* Violeta profundo */
   }
 
   html.light .bg-ghost-purple,
   html.light .bg-ghost-pink,
   html.light .bg-ghost-blue {
-    background-color: #fce4ec !important; /* Rosa muy claro para fondos */
+    background-color: #f5f3ff !important; /* Violeta muy claro para fondos */
   }
 
   html.light .border-ghost-purple,
   html.light .border-ghost-pink,
   html.light .border-ghost-blue {
-    border-color: #d8497c !important;
+    border-color: #a78bfa !important;
   }
 
-  /* Gradientes de texto en modo light - Rosa suave y delicado */
+  /* Gradientes de texto en modo light - Violeta/Lila suave */
   html.light .bg-text-gradient {
-    background-image: linear-gradient(45deg, #d5748e 0%, #eaa4ba 50%, #f5c5d5 100%) !important;
+    background-image: linear-gradient(45deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%) !important;
   }
 
-  /* Gradientes de tarjetas y botones - Rosa equilibrado */
+  /* Gradientes de tarjetas y botones - Violeta equilibrado */
   html.light .bg-card-gradient {
-    background-image: linear-gradient(45deg, #8d6977, #d994af) !important;
+    background-image: linear-gradient(45deg, #7c3aed, #a78bfa) !important;
   }
 
-  /* Sombras en modo light - Rosa muy suave */
+  /* Sombras en modo light - Violeta muy suave */
   html.light .shadow-ghost-purple\/20,
   html.light .shadow-ghost-purple\/30 {
-    box-shadow: 0 10px 15px -3px rgba(245,220,230,0.25), 0 4px 6px -2px rgba(245,220,230,0.12) !important;
+    box-shadow: 0 10px 15px -3px rgba(196,181,253,0.25), 0 4px 6px -2px rgba(196,181,253,0.12) !important;
   }
 
-  /* Colores amarillos para acentos */
+  /* Colores amarillos para acentos - Ahora violeta */
   html.light .text-yellow-400 {
-    color: #b67a8e !important;
+    color: #8b5cf6 !important;
   }
 
   /* Colores de botones hover */
   html.light .hover\:bg-ghost-purple:hover {
-    background-color: #d994af !important;
+    background-color: #a78bfa !important;
   }
 
-  /* Backdrop blur con tinte rosa muy suave */
+  /* Backdrop blur con tinte violeta muy suave */
   html.light .backdrop-blur-xl {
     backdrop-filter: blur(24px);
-    background-color: rgba(255,253,254,0.85) !important;
+    background-color: rgba(245,243,255,0.85) !important;
   }
 
   /* Glass effect en modo light con profundidad suave */
   html.light .glass-effect {
-    background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,250,252,0.9) 100%) !important;
-    border: 1.5px solid rgba(230,190,205,0.3) !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.9) 100%) !important;
+    border: 1.5px solid rgba(196,181,253,0.3) !important;
     box-shadow:
-      0 3px 10px rgba(230,190,205,0.15),
-      0 6px 20px rgba(230,190,205,0.1),
+      0 3px 10px rgba(196,181,253,0.15),
+      0 6px 20px rgba(196,181,253,0.1),
       inset 0 1px 0 rgba(255,255,255,0.9),
-      inset 0 -1px 0 rgba(245,220,230,0.15) !important;
+      inset 0 -1px 0 rgba(221,214,254,0.15) !important;
     backdrop-filter: blur(10px) !important;
     transform: translateY(0) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
   html.light .glass-effect:hover {
-    background: linear-gradient(145deg, rgba(255,250,252,0.98) 0%, rgba(252,235,243,0.35) 100%) !important;
-    border-color: rgba(220,170,190,0.45) !important;
+    background: linear-gradient(145deg, rgba(255,255,255,0.98) 0%, rgba(237,233,254,0.95) 100%) !important;
+    border-color: rgba(167,139,250,0.45) !important;
     box-shadow:
-      0 6px 16px rgba(220,170,190,0.25),
-      0 10px 28px rgba(230,190,205,0.18),
+      0 6px 16px rgba(167,139,250,0.25),
+      0 10px 28px rgba(196,181,253,0.18),
       inset 0 1px 0 rgba(255,255,255,1),
-      inset 0 -1px 0 rgba(230,190,205,0.25) !important;
+      inset 0 -1px 0 rgba(196,181,253,0.25) !important;
     transform: translateY(-2px) scale(1.01) !important;
   }
 
   /* Bordes específicos */
   html.light .border-ghost-purple\/30 {
-    border-color: rgba(240,215,225,0.3) !important;
+    border-color: rgba(196,181,253,0.3) !important;
   }
 
   /* Colores grises para mejor contraste */
@@ -157,17 +157,17 @@ html {
     color: #5a5a5a !important;
   }
 
-  /* Colores de botones específicos -> rosa equilibrado */
+  /* Colores de botones específicos -> violeta equilibrado */
   html.light .bg-blue-600 {
-    background-color: #e591b8 !important;
+    background-color: #a78bfa !important;
   }
 
   html.light .hover\:bg-blue-700:hover {
-    background-color: #b66990 !important;
+    background-color: #8b5cf6 !important;
   }
 
   html.light .border-blue-600 {
-    border-color: #d88aaf !important;
+    border-color: #a78bfa !important;
   }
 
   /* Asegurar que elementos no se queden con estilos de light mode en dark mode */
@@ -208,27 +208,27 @@ html {
 
   /* Partículas y elementos decorativos */
   html.light .animate-glow {
-    filter: drop-shadow(0 0 8px rgba(240,210,225,0.5)) !important;
+    filter: drop-shadow(0 0 8px rgba(196,181,253,0.5)) !important;
   }
 
-  /* Elementos decorativos con colores ghost en modo light -> rosa pastel */
+  /* Elementos decorativos con colores ghost en modo light -> violeta pastel */
   html.light .bg-ghost-purple\/10,
   html.light .bg-ghost-purple\/5 {
-    background-color: rgba(250,235,242,0.2) !important;
+    background-color: rgba(237,233,254,0.2) !important;
   }
 
   html.light .bg-ghost-pink\/10,
   html.light .bg-ghost-pink\/5 {
-    background-color: rgba(252,235,243,0.2) !important;
+    background-color: rgba(221,214,254,0.2) !important;
   }
 
   html.light .bg-ghost-blue\/10,
   html.light .bg-ghost-blue\/5 {
-    background-color: rgba(255,245,248,0.2) !important;
+    background-color: rgba(245,243,255,0.2) !important;
   }
 
   html.light .bg-ghost-purple\/20 {
-    background-color: rgba(245,225,235,0.3) !important;
+    background-color: rgba(196,181,253,0.3) !important;
   }
 
   /* Gradientes de fondo decorativos */
@@ -236,80 +236,84 @@ html {
 
   /* Partículas dinámicas */
   html.light .bg-white\/10 {
-    background-color: rgba(245,225,235,0.25) !important;
+    background-color: rgba(196,181,253,0.25) !important;
   }
 
-  /* Colores rojos y rosas - Más suaves */
+  /* Colores rojos y violetas - Más suaves */
   html.light .text-red-400,
   html.light .text-red-500 {
-    color: #d5748e !important;
+    color: #8b5cf6 !important;
   }
 
   html.light .text-pink-400,
   html.light .text-pink-500,
   html.light .text-pink-600 {
-    color: #c2185b !important;
+    color: #7c3aed !important;
   }
 
   /* Hover states */
   html.light .hover\:text-ghost-purple:hover {
-    color: #c2185b !important;
+    color: #7c3aed !important;
   }
 
   /* Scroll to top button */
   html.light .bg-ghost-purple\/20 {
-    background-color: rgba(240,210,225,0.35) !important;
+    background-color: rgba(196,181,253,0.35) !important;
   }
 
-  /* Colores específicos de cyan y azul -> rosa equilibrado */
+  /* Colores específicos de cyan y azul -> violeta equilibrado */
   html.light .text-cyan-400,
   html.light .text-blue-400,
   html.light .text-blue-500 {
-    color: #c2185b !important;
+    color: #7c3aed !important;
   }
 
   html.light .border-blue-500 {
-    border-color: #c2185b !important;
+    border-color: #7c3aed !important;
   }
 
   html.light .border-pink-400 {
-    border-color: #8d6977 !important;
+    border-color: #a78bfa !important;
   }
 
-  /* Mejorar títulos y encabezados en modo light - Rosa pastel uniforme */
+  /* Mejorar títulos y encabezados en modo light - Violeta suave con borde */
   html.light h1,
   html.light h2,
   html.light h3 {
     font-weight: 800 !important;
     letter-spacing: -0.025em !important;
-    color: #d5748e !important;
+    color: #9333ea !important;
+    -webkit-text-stroke: 0.5px rgba(124,58,237,0.3);
+    text-stroke: 0.5px rgba(124,58,237,0.3);
     text-shadow:
       0 1px 2px rgba(0,0,0,0.08),
-      0 2px 3px rgba(213,116,142,0.12) !important;
+      0 2px 3px rgba(124,58,237,0.12) !important;
   }
 
-  /* Títulos sin degradado - Rosa pastel uniforme */
+  /* Títulos con degradado - Violeta a rosa suave con borde */
   html.light .text-gradient {
-    background-image: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-    -webkit-text-fill-color: unset !important;
-    color: #d5748e !important;
+    background-image: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 30%, #ec4899 70%, #a78bfa 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
     font-weight: 800 !important;
-    text-shadow:
-      0 1px 2px rgba(0,0,0,0.08),
-      0 2px 3px rgba(213,116,142,0.12) !important;
+    -webkit-text-stroke: 0.5px rgba(124,58,237,0.2);
+    text-stroke: 0.5px rgba(124,58,237,0.2);
+    text-shadow: none !important;
+    filter: drop-shadow(0 2px 4px rgba(124,58,237,0.15));
   }
 
-  /* Encabezados grandes - Rosa pastel uniforme */
+  /* Encabezados grandes - Violeta suave con borde */
   html.light .text-4xl,
   html.light .text-5xl,
   html.light .text-6xl {
-    color: #d5748e !important;
+    color: #9333ea !important;
     font-weight: 800 !important;
+    -webkit-text-stroke: 0.5px rgba(124,58,237,0.3);
+    text-stroke: 0.5px rgba(124,58,237,0.3);
     text-shadow:
       0 1px 2px rgba(0,0,0,0.08),
-      0 2px 3px rgba(213,116,142,0.12) !important;
+      0 2px 3px rgba(124,58,237,0.12) !important;
   }
 
   /* Colores grises suaves para mejor armonía */
@@ -340,45 +344,45 @@ html {
     background: linear-gradient(
       145deg,
       rgba(255,255,255,0.96) 0%,
-      rgba(255,250,252,0.92) 100%
+      rgba(245,243,255,0.92) 100%
     ) !important;
     backdrop-filter: blur(12px) saturate(150%) !important;
-    border: 1px solid rgba(213,116,142,0.12) !important;
+    border: 1px solid rgba(124,58,237,0.12) !important;
     box-shadow:
-      0 3px 12px rgba(213,116,142,0.06),
-      0 6px 20px rgba(213,116,142,0.04),
+      0 3px 12px rgba(124,58,237,0.06),
+      0 6px 20px rgba(124,58,237,0.04),
       inset 0 1px 0 rgba(255,255,255,0.95) !important;
   }
 
   /* Tarjetas con efecto elevación en modo light */
   html.light .card-hover {
-    background: linear-gradient(145deg, #ffffff 0%, #fffbfc 100%) !important;
-    border: 1.5px solid rgba(213,116,142,0.18) !important;
+    background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%) !important;
+    border: 1.5px solid rgba(124,58,237,0.18) !important;
     box-shadow:
-      0 2px 6px rgba(213,116,142,0.06),
-      0 4px 12px rgba(213,116,142,0.04),
+      0 2px 6px rgba(124,58,237,0.06),
+      0 4px 12px rgba(124,58,237,0.04),
       inset 0 1px 0 rgba(255,255,255,0.9) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
   html.light .card-hover:hover {
-    border-color: rgba(194,24,91,0.3) !important;
+    border-color: rgba(124,58,237,0.3) !important;
     box-shadow:
-      0 6px 20px rgba(213,116,142,0.12),
-      0 10px 28px rgba(213,116,142,0.08),
+      0 6px 20px rgba(124,58,237,0.12),
+      0 10px 28px rgba(124,58,237,0.08),
       inset 0 1px 0 rgba(255,255,255,1) !important;
     transform: translateY(-3px) scale(1.01) !important;
   }
 
-  /* Botones principales con degradado gris y rosa */
+  /* Botones principales con degradado violeta */
   html.light .ghost-btn {
-    border: 2px solid #d5748e !important;
-    color: #8d2356 !important;
+    border: 2px solid #7c3aed !important;
+    color: #6d28d9 !important;
     font-weight: 600 !important;
-    background: linear-gradient(145deg, #ffffff 0%, #fffbfc 100%) !important;
+    background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%) !important;
     box-shadow:
-      0 2px 6px rgba(213,116,142,0.15),
-      0 3px 10px rgba(213,116,142,0.1),
+      0 2px 6px rgba(124,58,237,0.15),
+      0 3px 10px rgba(124,58,237,0.1),
       inset 0 1px 0 rgba(255,255,255,0.98) !important;
     text-align: center !important;
     display: inline-block !important;
@@ -386,12 +390,12 @@ html {
   }
 
   html.light .ghost-btn:hover {
-    background: linear-gradient(135deg, #8d6977 0%, #d994af 100%) !important;
-    border-color: #c2185b !important;
+    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%) !important;
+    border-color: #7c3aed !important;
     color: #ffffff !important;
     box-shadow:
-      0 5px 16px rgba(141,105,119,0.3),
-      0 7px 24px rgba(217,148,175,0.25) !important;
+      0 5px 16px rgba(124,58,237,0.3),
+      0 7px 24px rgba(167,139,250,0.25) !important;
     transform: translateY(-2px) !important;
   }
 
@@ -415,7 +419,7 @@ html {
   }
 
   html.light .nav-link:hover {
-    color: #8d2356 !important;
+    color: #7c3aed !important;
   }
 
   /* Mejorar texto en general para mejor legibilidad */
@@ -429,11 +433,13 @@ html {
   html.light .text-2xl,
   html.light .text-3xl {
     font-weight: 800 !important;
-    color: #d5748e !important;
+    color: #9333ea !important;
     letter-spacing: -0.025em !important;
+    -webkit-text-stroke: 0.5px rgba(124,58,237,0.3);
+    text-stroke: 0.5px rgba(124,58,237,0.3);
     text-shadow:
       0 1px 2px rgba(0,0,0,0.08),
-      0 2px 3px rgba(213,116,142,0.12) !important;
+      0 2px 3px rgba(124,58,237,0.12) !important;
   }
 
   /* Revertir cambios de párrafos en dark mode */
@@ -454,15 +460,15 @@ html {
     filter: saturate(1.05) !important;
   }
 
-  /* Scroll to top button mejorado con rosa suave */
+  /* Scroll to top button mejorado con violeta suave */
   html.light .fixed.bottom-8 {
-    background-color: rgba(213,116,142,0.15) !important;
-    border-color: rgba(194,24,91,0.4) !important;
-    color: #c2185b !important;
+    background-color: rgba(124,58,237,0.15) !important;
+    border-color: rgba(124,58,237,0.4) !important;
+    color: #7c3aed !important;
   }
 
   html.light .fixed.bottom-8:hover {
-    background-color: #c2185b !important;
+    background-color: #7c3aed !important;
     color: white !important;
   }
 

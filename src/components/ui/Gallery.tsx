@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { Lock, Sparkles } from 'lucide-react'
-import { useTheme } from '../../app/providers'
+import { useTheme, useI18n } from '../../app/providers'
 
 export default function Galeria() {
   const { actualTheme } = useTheme()
+  const { t } = useI18n()
 
   // TODAS las imágenes del proyecto en un array desordenado
   const allImages = [
@@ -56,15 +57,28 @@ export default function Galeria() {
     '/images/me13.jpeg',
     '/images/me14.jpeg',
     '/images/me15.jpeg',
+    // Nuevas imágenes de comida
+    '/images/bowlGreek.jpeg',
+    '/images/choco.jpeg',
+    '/images/food44.jpeg',
+    '/images/games44.jpeg',
+    '/images/panqueques.jpeg',
+    '/images/panquequesbanano.jpeg',
+    '/images/pizza.jpeg',
+    '/images/ramen.jpeg',
+    '/images/rollitosCanela.jpeg',
+    '/images/waffles.jpeg',
+    '/images/wafflesproteicos.jpeg',
+    '/projects/blog.png',
   ]
 
   const unlockQuestions = [
     {
-      question: 'Instala las dependencias:',
+      question: t('gallery.installDeps'),
       answer: 'npm install',
     },
     {
-      question: 'Ejecuta el proyecto en local:',
+      question: t('gallery.runLocal'),
       answer: 'npm run dev',
     }
   ]
@@ -96,7 +110,7 @@ export default function Galeria() {
         setInput('')
       }
     } else {
-      alert('❌ Respuesta incorrecta. ¡Inténtalo de nuevo!')
+      alert(t('gallery.wrongAnswer'))
     }
   }
 
@@ -117,23 +131,23 @@ export default function Galeria() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <Sparkles className={`w-8 h-8 animate-pulse ${actualTheme === 'light' ? 'text-purple-600' : 'text-yellow-400'}`} />
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              Galería Interactiva
+              {t('gallery.title')}
             </h1>
             <Sparkles className={`w-8 h-8 animate-pulse ${actualTheme === 'light' ? 'text-purple-600' : 'text-yellow-400'}`} />
           </div>
           <p className="text-lg md:text-xl max-w-3xl mx-auto"
              style={{ color: actualTheme === 'light' ? '#4b5563' : '#d1d5db' }}>
-            Desbloquea mi galería personal de dos formas
+            {t('gallery.unlockTitle')}
           </p>
           <div className="mt-4 text-base md:text-lg max-w-2xl mx-auto space-y-2"
                style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>
             <p className="flex items-center justify-center gap-2">
               <span className={`font-bold ${actualTheme === 'light' ? 'text-purple-600' : 'text-cyan-400'}`}>1.</span>
-              Demuestra que sabes ejecutar mi proyecto en local
+              {t('gallery.option1')}
             </p>
             <p className="flex items-center justify-center gap-2">
               <span className={`font-bold ${actualTheme === 'light' ? 'text-purple-600' : 'text-cyan-400'}`}>2.</span>
-              Juega Pac-Man y recolecta 3 cerezas 🍒
+              {t('gallery.option2')}
             </p>
           </div>
         </div>
@@ -162,7 +176,7 @@ export default function Galeria() {
                 className="text-2xl md:text-3xl font-semibold"
                 style={{ color: actualTheme === 'light' ? '#1f2937' : '#ffffff' }}
               >
-                Galería Bloqueada
+                {t('gallery.locked')}
               </h3>
 
               {/* Progress indicator */}
@@ -172,7 +186,7 @@ export default function Galeria() {
                   className="font-bold"
                   style={{ color: actualTheme === 'light' ? '#7c3aed' : '#22d3ee' }}
                 >
-                  Pregunta {currentQuestion + 1} de {unlockQuestions.length}
+                  {t('gallery.question')} {currentQuestion + 1} {t('gallery.of')} {unlockQuestions.length}
                 </span>
               </div>
 
@@ -200,7 +214,7 @@ export default function Galeria() {
                     color: actualTheme === 'light' ? '#059669' : '#34d399',
                     caretColor: actualTheme === 'light' ? '#059669' : '#34d399'
                   }}
-                  placeholder="Escribe el comando aquí"
+                  placeholder={t('gallery.placeholder')}
                 />
                 <button
                   onClick={() => handleAnswer(input)}
@@ -214,7 +228,7 @@ export default function Galeria() {
                       : '0 10px 15px -3px rgba(16, 185, 129, 0.3)'
                   }}
                 >
-                  {currentQuestion < unlockQuestions.length - 1 ? '▶ Siguiente' : '🔓 Desbloquear Galería'}
+                  {currentQuestion < unlockQuestions.length - 1 ? t('gallery.next') : t('gallery.unlock')}
                 </button>
               </div>
 
@@ -238,7 +252,7 @@ export default function Galeria() {
               <div className="w-full max-w-md my-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-1 h-px" style={{ backgroundColor: actualTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }}></div>
-                  <span className="text-sm" style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>O</span>
+                  <span className="text-sm" style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>{t('gallery.or')}</span>
                   <div className="flex-1 h-px" style={{ backgroundColor: actualTheme === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }}></div>
                 </div>
               </div>
@@ -257,11 +271,11 @@ export default function Galeria() {
                       : '0 10px 15px -3px rgba(168, 85, 247, 0.3)'
                   }}
                 >
-                  🍒 Jugar Pac-Man
+                  {t('gallery.playPacman')}
                 </a>
                 <p className="text-xs mt-2"
                    style={{ color: actualTheme === 'light' ? '#6b7280' : '#9ca3af' }}>
-                  Recolecta 3 cerezas para desbloquear
+                  {t('gallery.collectCherries')}
                 </p>
               </div>
             </div>

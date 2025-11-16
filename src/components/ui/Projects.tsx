@@ -24,7 +24,7 @@ const Projects = () => {
       title: "Blog de Recetas",
       description: "Blog personal con mis recetas favoritas, tips de cocina y fotografía gastronómica.",
       technologies: ["Next.js", "MDX", "Image Optimization"],
-      image: "/projects/recetas.png",
+      image: "/projects/blog.png",
       githubUrl: "https://github.com/ghosstbabby12/healthy-recipes-blog.git",
       liveUrl: "https://healthy-recipes-blog.vercel.app",
       featured: false,
@@ -193,7 +193,7 @@ const Projects = () => {
                 />
                 {project.featured && (
                   <div className="absolute top-4 right-4 bg-ghost-purple/90 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Destacado
+                    {t('projects.featured')}
                   </div>
                 )}
               </div>
@@ -231,11 +231,7 @@ const Projects = () => {
                   >
                     <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     <Github size={18} />
-                    <span>
-                      {t("actions.viewProjects") === "View Projects"
-                        ? "Código"
-                        : "Code"}
-                    </span>
+                    <span>{t('projects.code')}</span>
                   </motion.a>
                   <motion.a
                     href={project.liveUrl}
@@ -247,7 +243,7 @@ const Projects = () => {
                   >
                     <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     <ExternalLink size={18} />
-                    <span>Demo</span>
+                    <span>{t('projects.demo')}</span>
                   </motion.a>
                 </div>
               </div>
@@ -277,10 +273,10 @@ const Projects = () => {
         </motion.div>
 
         {/* Proyectos Personales */}
-        {renderProjectGrid(personalProjects, "🎨 Proyectos Personales")}
+        {renderProjectGrid(personalProjects, t('projects.personalProjects'))}
 
         {/* Proyectos Académicos */}
-        {renderProjectGrid(academicProjects, "🎓 Proyectos Académicos")}
+        {renderProjectGrid(academicProjects, t('projects.academicProjects'))}
 
         {/* CTA GitHub */}
         <motion.div
@@ -291,7 +287,7 @@ const Projects = () => {
           viewport={{ once: true }}
         >
           <p className="text-white/70 mb-6">
-            ¿Interesado en ver más de mi trabajo?
+            {t('projects.cta')}
           </p>
           <motion.a
             href="https://github.com/ghosstbabby12"
@@ -302,9 +298,7 @@ const Projects = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Github size={20} />
-            {t("actions.viewProjects") === "View Projects"
-              ? "Ver más en GitHub"
-              : "View more on GitHub"}
+            {t('projects.viewMore')}
           </motion.a>
         </motion.div>
       </div>
