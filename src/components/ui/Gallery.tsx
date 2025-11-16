@@ -57,11 +57,10 @@ export default function Galeria() {
     '/images/me13.jpeg',
     '/images/me14.jpeg',
     '/images/me15.jpeg',
-    // Nuevas imágenes de comida
+    // Imágenes de comida
     '/images/bowlGreek.jpeg',
     '/images/choco.jpeg',
     '/images/food44.jpeg',
-    '/images/games44.jpeg',
     '/images/panqueques.jpeg',
     '/images/panquequesbanano.jpeg',
     '/images/pizza.jpeg',
@@ -70,6 +69,23 @@ export default function Galeria() {
     '/images/waffles.jpeg',
     '/images/wafflesproteicos.jpeg',
     '/projects/blog.png',
+    // Nuevas imágenes personales
+    '/images/me22.jpg',
+    '/images/me33.jpg',
+    '/images/me41.jpg',
+    '/images/me44.jpg',
+    '/images/me54.jpg',
+    '/images/me555.jpeg',
+    '/images/me66.jpg',
+    '/images/me68.jpg',
+    '/images/me77.jpg',
+    '/images/me81.jpg',
+    '/images/me88.jpg',
+    '/images/me91.jpg',
+    '/images/me123.jpg',
+    '/images/me199.jpg',
+    '/images/me213.jpg',
+    '/images/games44.jpeg',
   ]
 
   const unlockQuestions = [

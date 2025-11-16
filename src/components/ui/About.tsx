@@ -73,26 +73,27 @@ const About = () => {
             className="glass-effect rounded-3xl p-8 md:p-12 mb-12"
           >
             <div className="flex flex-col md:flex-row items-center gap-8">
-              {/* Avatar o decoración */}
+              {/* Avatar con imagen */}
               <motion.div
                 className="relative"
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div
-                  className="w-32 h-32 md:w-40 md:h-40 rounded-full flex items-center justify-center"
+                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 shadow-2xl"
                   style={{
-                    background: actualTheme === 'light'
-                      ? 'linear-gradient(to bottom right, #d5748e, #eaa4ba)'
-                      : 'linear-gradient(to bottom right, #667eea, #764ba2)'
+                    borderColor: actualTheme === 'light' ? '#a78bfa' : '#764ba2'
                   }}
                 >
-                  <Sparkles className="w-16 h-16 md:w-20 md:h-20 text-white" />
+                  <img
+                    src="/images/me555.jpeg"
+                    alt="Camila Bastidas"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <motion.div
                   className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center"
                   style={{
-                    background: actualTheme === 'light' ? '#eaa4ba' : '#764ba2'
+                    background: actualTheme === 'light' ? '#a78bfa' : '#764ba2'
                   }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}

@@ -69,7 +69,7 @@ const Contact = () => {
         viewport={{ once: true }}
         className="max-w-2xl mx-auto"
       >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-ghost-purple via-ghost-pink to-ghost-blue bg-clip-text text-transparent">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gradient">
           {t('contact.title')}
         </h2>
         <p className={`text-center mb-12 ${

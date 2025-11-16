@@ -162,7 +162,7 @@ const Projects = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h3 className="text-3xl md:text-4xl font-bold text-white/90 mb-4">
+        <h3 className="text-3xl md:text-4xl font-bold text-gradient mb-4">
           {sectionTitle}
         </h3>
         <div className="w-24 h-1 bg-gradient-to-r from-ghost-purple to-pink-500 mx-auto rounded-full"></div>
@@ -200,7 +200,7 @@ const Projects = () => {
 
               {/* Contenido */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-xl font-bold text-gradient mb-3">
                   {project.title}
                 </h3>
                 <p className="text-white/70 mb-4 leading-relaxed">
