@@ -50,6 +50,7 @@ const Header = () => {
     { href: '#experience', label: t('nav.experience') },
     { href: '#mygame', label: t('nav.mygame') },
     { href: '#galeria', label: t('nav.gallery') },
+    { href: '#testimonials', label: t('nav.testimonials') || 'Testimonios' },
     { href: '#contact', label: t('nav.contact') },
   ]
 

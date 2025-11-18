@@ -113,6 +113,7 @@ const DICTIONARY = {
       experience: "Experiencia",
       mygame: "Juego",
       gallery: "Galería",
+      testimonials: "Testimonios",
       contact: "Contacto",
     },
     actions: {
@@ -307,6 +308,13 @@ const DICTIONARY = {
       collectCherries: "Recolecta 3 cerezas para desbloquear",
       back: "Volver al inicio"
     },
+    testimonials: {
+      title: "Testimonios",
+      subtitle: "Lo que dicen quienes han trabajado conmigo",
+      locked: "Testimonios Bloqueados",
+      unlockMessage: "Completa uno de los juegos en la sección Arcade para desbloquear los testimonios",
+      goToGames: "Ir a Arcade"
+    },
     interactiveGallery: {
       title: "Galería Interactiva",
       subtitle: "Explora mi lado más personal 💫 — cada categoría revela momentos de mi vida si respondes correctamente las preguntas de desarrollo web.",
@@ -353,6 +361,7 @@ const DICTIONARY = {
     experience: "Experience",
     mygame: "Game",
     gallery: "Gallery",
+    testimonials: "Testimonials",
     contact: "Contact",
   },
   actions: {
@@ -542,6 +551,13 @@ const DICTIONARY = {
     playPacman: "🍒 Play Pac-Man",
     collectCherries: "Collect 3 cherries to unlock",
     back: "Back to home"
+  },
+  testimonials: {
+    title: "Testimonials",
+    subtitle: "What people who have worked with me say",
+    locked: "Testimonials Locked",
+    unlockMessage: "Complete one of the games in the Arcade section to unlock testimonials",
+    goToGames: "Go to Arcade"
   },
   interactiveGallery: {
     title: "Interactive Gallery",

@@ -11,6 +11,7 @@ import Contact from '@/components/ui/Contact'
 import Experience from '@/components/ui/Experience'
 import MyGame from '@/components/ui/MyGame'
 import Gallery from '@/components/ui/Gallery'
+import Testimonials from '@/components/ui/Testimonials'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -45,6 +46,7 @@ export default function Home() {
           <Experience />
           <MyGame />
           <Gallery />
+          <Testimonials />
           <Contact />
         </motion.div>
       </div>
