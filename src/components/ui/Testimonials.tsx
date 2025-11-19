@@ -22,28 +22,28 @@ export default function Testimonials() {
   const defaultTestimonials: Testimonial[] = [
     {
       id: 1,
-      name: 'María González',
-      role: 'CEO',
-      company: 'Tech Innovations',
-      message: 'Trabajar con Camila fue una experiencia increíble. Su atención al detalle y creatividad superaron nuestras expectativas.',
+      name: 'DANIEL FERNANDO ARTEAGA FAJARDO',
+      role: 'Docente',
+      company: 'Contexto de la Ingeniería de Software',
+      message: 'Camila se caracterizó por ser una joven aplicada, respetuosa y creativa. Demostró gran habilidad analítica, capacidad de autogestión y perseverancia ante las dificultades. Sus entregas destacaron por su calidad y originalidad. Es una estudiante disciplinada con gran potencial en ingeniería de software.',
       rating: 5,
-      avatar: '/images/avatar.png'
+      avatar: '/images/Avatar.png'
     },
     {
       id: 2,
-      name: 'Carlos Rodríguez',
-      role: 'Product Manager',
-      company: 'Digital Solutions',
-      message: 'Profesional, creativa y con una gran capacidad para resolver problemas complejos. Altamente recomendada.',
+      name: 'CRISTIAN CAMILO ORTIZ',
+      role: 'Docente',
+      company: 'Electiva I',
+      message: 'El portafolio de Camila evidencia un código bien estructurado y un diseño cuidadosamente elaborado de cada uno de sus componentes. Cada elemento refleja atención al detalle y calidad de trabajo es un excelente portafolio, felicitaciones.',
       rating: 5,
-      avatar: '/images/avatar.png'
+      avatar: '/images/Avatar.png'
     },
     {
       id: 3,
-      name: 'Ana Martínez',
-      role: 'Lead Developer',
-      company: 'StartupHub',
-      message: 'Su código es limpio, eficiente y bien documentado. Una desarrolladora excepcional con gran sentido del diseño.',
+      name: 'MIGUEL ANGEL TOVAR ',
+      role: 'Docente',
+      company: 'Diseño de Software',
+      message: ' Tuve la oportunidad de trabajar con Camila en el desarrollo de proyectos de software y puedo afirmar con total convicción que es una profesional en formación con un gran potencial. Camila es una persona altamente responsable, siempre comprometida con sus tareas y con un enfoque claro hacia la calidad. Se esmera por entregar resultados bien hechos, revisa cada detalle y se asegura de que el software desarrollado funcione correctamente y cumpla con los requisitos establecidos.Además de su dedicación técnica, Camila demuestra un sólido trabajo en equipo: escucha, propone, colabora y mantiene una actitud positiva que aporta significativamente al avance del proyecto. Su interés genuino por construir soluciones confiables y de calidad la convierte en una estudiante destacada y en una futura ingeniera de software con excelentes perspectivas.',
       rating: 5,
       avatar: '/images/avatar.png'
     }
@@ -54,15 +54,27 @@ export default function Testimonials() {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editForm, setEditForm] = useState<Testimonial | null>(null)
 
-  // Cargar testimonios guardados
+  // Cargar testimonios guardados o usar los valores por defecto
   useEffect(() => {
     const savedTestimonials = localStorage.getItem('customTestimonials')
     if (savedTestimonials) {
       try {
-        setTestimonials(JSON.parse(savedTestimonials))
+        const parsed = JSON.parse(savedTestimonials)
+        // Solo cargar si hay más de 0 testimonios guardados
+        if (parsed && parsed.length > 0) {
+          setTestimonials(parsed)
+        } else {
+          // Si no hay testimonios guardados, usar los por defecto
+          setTestimonials(defaultTestimonials)
+        }
       } catch (e) {
         console.error('Error loading testimonials:', e)
+        // En caso de error, usar los testimonios por defecto
+        setTestimonials(defaultTestimonials)
       }
+    } else {
+      // Si no hay nada en localStorage, asegurar que se muestren los por defecto
+      setTestimonials(defaultTestimonials)
     }
   }, [])
 

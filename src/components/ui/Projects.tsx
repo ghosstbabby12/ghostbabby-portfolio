@@ -41,96 +41,67 @@ const Projects = () => {
     },
   ];
 
-  // Proyectos Académicos
+  // Proyectos Académicos - Orden personalizado
   const academicProjects = [
     {
       id: 1,
-      title: "Manejo de Integración Continua",
-      description: t('projects.description'),
-      technologies: ["React 18", "Axios", "Jest + React Testing Library", "Jenkins (CI/CD)"],
-      image: "/projects/ReactApp.jpg",
-      githubUrl: "https://github.com/ghosstbabby12/Calidad-de-Software-P2.git",
-      liveUrl: "https://calidad-de-software-p2.vercel.app",
+      title: "Unity 3D",
+      description: "ZombieGame es un videojuego de terror y supervivencia en primera persona (FPS / Survival Horror) desarrollado en el motor Unity 2021.3.45f1.",
+      technologies: ["Unity", "C#", "3D Game Development"],
+      image: "/projects/Unity3D.png",
+      githubUrl: "https://github.com/ghosstbabby12/Integracion-escenarios3D.git",
+      liveUrl: "",
       featured: true,
     },
     {
       id: 2,
-      title: "Task Management App",
-      description: "Aplicación web para gestión de tareas con autenticación, colaboración en tiempo real y notificaciones push.",
-      technologies: ["React", "Node.js", "Socket.io", "MongoDB", "JWT"],
-      image: "/projects/TaskManager.png",
-      githubUrl: "https://github.com/migueltovarb/ISWDISENO10196-4.git",
-      liveUrl: "https://taskmanager-demo.vercel.app",
-      featured: true,
-    },
-    {
-      id: 3,
-      title: "Creative Portfolio",
-      description: "Sitio web interactivo para artista con galería, efectos 3D, animaciones avanzadas y sistema de contacto.",
-      technologies: ["Next.js", "Three.js", "Framer Motion", "GSAP"],
-      image: "/projects/Dark-light.png",
-      githubUrl: "https://github.com/ghosstbabby12/Responsive-Dark-Light.git",
-      liveUrl: "https://responsive-dark-light.vercel.app/es",
-      featured: false,
-    },
-    {
-      id: 4,
-      title: "JuegoBricks",
-      description: "🧪 Pruebas Unitarias con Pytest",
-      technologies: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind"],
-      image: "/projects/JuegoBricks.png",
-      githubUrl: "https://github.com/ghosstbabby12/JuegoBricks.git",
-      liveUrl: "https://juego-bricks-tau.vercel.app",
-      featured: false,
-    },
-    {
-      id: 5,
       title: "Login Personalizado",
       description: "Herramienta de análisis de redes sociales con métricas detalladas, reportes automáticos y visualización de datos.",
       technologies: ["React", "D3.js", "Python", "FastAPI", "Redis"],
       image: "/projects/LoginPersonal.png",
       githubUrl: "https://github.com/ghosstbabby12/LoginPerzonalizado.git",
       liveUrl: "https://login-perzonalizado.vercel.app",
-      featured: true,
-    },
-    {
-      id: 6,
-      title: "GestorLab",
-      description: "El sistema implementa autenticación y control de roles, donde los docentes pueden crear, editar y cancelar sus propias reservas, mientras que los administradores tienen la capacidad de aprobar o rechazar solicitudes, visualizar estadísticas de uso y exportar reportes en formato CSV.",
-      technologies: ["Next.js", "Supabase", "Stripe", "Video.js", "PDF.js"],
-      image: "projects/GestorLab.png",
-      githubUrl: "https://github.com/ghosstbabby12/GestorLab.git",
-      liveUrl: "https://gestorlab.onrender.com/accounts/login/",
       featured: false,
     },
     {
-      id: 7,
+      id: 3,
+      title: "JuegoBricks",
+      description: "🧪 Pruebas Unitarias con Pytest",
+      technologies: ["Python", "Pytest", "Game Development"],
+      image: "/projects/JuegoBricks.png",
+      githubUrl: "https://github.com/ghosstbabby12/JuegoBricks.git",
+      liveUrl: "https://juego-bricks-tau.vercel.app",
+      featured: true,
+    },
+    {
+      id: 4,
       title: "Security Network",
-      description: "Análisis de URL maliciosas usando machine learning",
-      technologies: ["Python", "Machine Learning", "Security"],
+      description: "Demostración del Patrón Decorator en Java/Spring Boot. Cada capa de seguridad (ej. SafeBrowsing, DNS) se aplica como un decorador a la URL base.",
+      technologies: ["Java", "Spring Boot", "Patrón Decorator", "Security API"],
       image: "/projects/SecurityNetwork.png",
       githubUrl: "https://github.com/ghosstbabby12/PatronesDeSofware.git",
       liveUrl: "",
       featured: false,
     },
+    
     {
-      id: 8,
-      title: "Unity 3D",
-      description: "Juego de plataformas en Unity 3D",
-      technologies: ["Unity", "C#", "3D Game Development"],
-      image: "/projects/Unity3D.png",
-      githubUrl: "",
-      liveUrl: "",
-      featured: false,
+      id: 5,
+      title: "GestorLab",
+      description: "El sistema implementa autenticación y control de roles, donde los docentes pueden crear, editar y cancelar sus propias reservas, mientras que los administradores tienen la capacidad de aprobar o rechazar solicitudes, visualizar estadísticas de uso y exportar reportes en formato CSV.",
+      technologies: ["Django", "Python", "PostgreSQL", "Bootstrap"],
+      image: "projects/GestorLab.png",
+      githubUrl: "https://github.com/ghosstbabby12/GestorLab.git",
+      liveUrl: "https://gestorlab.onrender.com/accounts/login/",
+      featured: true,
     },
     {
-      id: 9,
-      title: "Sistema de Gestión de Formularios",
-      description: "Aplicación web desarrollada en Django que permite registrar y gestionar formularios de solicitudes y asistencias, almacenando los datos en una base de datos SQLite. Incluye validación de formularios, confirmación visual tras el envío y una interfaz clara y moderna para el usuario.",
-      technologies: ["Django", "SQLite", "Python"],
-      image: "/projects/DjangoForm.png",
-      githubUrl: "https://github.com/ghosstbabby12/Formularios_Cami.git",
-      liveUrl: "",
+      id: 6,
+      title: "Manejo de Integración Continua",
+      description: t('projects.description'),
+      technologies: ["React 18", "Axios", "Jest + React Testing Library", "Jenkins (CI/CD)"],
+      image: "/projects/ReactApp.jpg",
+      githubUrl: "https://github.com/ghosstbabby12/Calidad-de-Software-P2.git",
+      liveUrl: "https://calidad-de-software-p2.vercel.app",
       featured: false,
     },
   ];
@@ -233,18 +204,20 @@ const Projects = () => {
                     <Github size={18} />
                     <span>{t('projects.code')}</span>
                   </motion.a>
-                  <motion.a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-ghost-purple text-ghost-purple hover:text-white transition-all duration-300 overflow-hidden"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                    <ExternalLink size={18} />
-                    <span>{t('projects.demo')}</span>
-                  </motion.a>
+                  {project.liveUrl && (
+                    <motion.a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-ghost-purple text-ghost-purple hover:text-white transition-all duration-300 overflow-hidden"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <div className="absolute inset-0 bg-card-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                      <ExternalLink size={18} />
+                      <span>{t('projects.demo')}</span>
+                    </motion.a>
+                  )}
                 </div>
               </div>
             </motion.div>
