@@ -209,7 +209,8 @@ const DICTIONARY = {
       code: "Código",
       demo: "Demo",
       cta: "¿Interesado en ver más de mi trabajo?",
-      viewMore: "Ver más en GitHub"
+      viewMore: "Ver más en GitHub",
+      items: {}
     },
     about: {
       title: "Sobre Mí",
