@@ -12,6 +12,7 @@ import Experience from '@/components/ui/Experience'
 import MyGame from '@/components/ui/MyGame'
 import Gallery from '@/components/ui/Gallery'
 import Testimonials from '@/components/ui/Testimonials'
+import ScrollToTopButton from '@/components/shared/ScrollToTopButton'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -52,31 +53,7 @@ export default function Home() {
       </div>
 
       {/* Botón Scroll To Top */}
-      <motion.button
-        type="button"
-        aria-label="Volver arriba"
-        className="fixed bottom-8 right-8 bg-ghost-purple/20 backdrop-blur-xl border 
-                   border-ghost-purple/30 rounded-full p-3 text-ghost-purple 
-                   hover:bg-ghost-purple hover:text-white transition-all 
-                   duration-300 z-50"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 10l7-7m0 0l7 7m-7-7v18"
-          />
-        </svg>
-      </motion.button>
+      <ScrollToTopButton />
     </main>
   )
 }

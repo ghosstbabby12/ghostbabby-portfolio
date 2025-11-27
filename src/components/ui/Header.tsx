@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import { Menu, X, Sun, Moon, Globe } from 'lucide-react'
 import { useTheme, useI18n } from '../../app/providers'
 import Image from 'next/image'
+import { NAV_ITEMS, PROFILE_IMAGE } from '@/lib/constants'
+import { scrollToElement } from '@/lib/helpers/scroll'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -43,24 +45,14 @@ const Header = () => {
     }
   }, [isMobileMenuOpen])
 
-  const navItems = [
-    { href: '#home', label: t('nav.home') },
-    { href: '#about', label: t('nav.about') },
-    { href: '#projects', label: t('nav.projects') },
-    { href: '#experience', label: t('nav.experience') },
-    { href: '#mygame', label: t('nav.mygame') },
-    { href: '#galeria', label: t('nav.gallery') },
-    { href: '#testimonials', label: t('nav.testimonials') || 'Testimonios' },
-    { href: '#contact', label: t('nav.contact') },
-  ]
+  const navItems = NAV_ITEMS.map(item => ({
+    href: item.href,
+    label: t(item.labelKey)
+  }))
 
   const handleNavClick = (href: string) => {
-    // Para todos los enlaces, hacer scroll suave
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setIsMobileMenuOpen(false)
-    }
+    scrollToElement(href)
+    setIsMobileMenuOpen(false)
   }
 
   return (
@@ -88,7 +80,7 @@ const Header = () => {
               transition={{ duration: 0.5 }}
             >
               <Image
-                src="https://media.tenor.com/cl2Xs1LDULsAAAAi/balls.gif"
+                src={PROFILE_IMAGE.avatar}
                 alt="Camila Bastidas Avatar"
                 width={40}
                 height={40}

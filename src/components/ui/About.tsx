@@ -2,9 +2,12 @@
 
 import { motion, useInView, Variants } from 'framer-motion'
 import { useRef } from 'react'
-import { Code2, Music, Gamepad2, Coffee, Dumbbell, Palette, Sparkles, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { useI18n, useTheme } from '../../app/providers'
 import { useRouter } from 'next/navigation'
+import { interests, techCategories, stats, cards } from '@/lib/data/about'
+import { PROFILE_IMAGE } from '@/lib/constants'
+import { scrollToElement } from '@/lib/helpers/scroll'
 
 const About = () => {
   const { t } = useI18n()
@@ -12,15 +15,6 @@ const About = () => {
   const router = useRouter()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-
-  const interests = [
-    { icon: Music, label: t('about.interests.music'), gradient: "from-purple-500 to-pink-500", link: "/strudel" },
-    { icon: Palette, label: t('about.interests.art'), gradient: "from-pink-500 to-red-500", link: null },
-    { icon: Coffee, label: t('about.interests.cooking'), gradient: "from-amber-500 to-orange-500", link: null },
-    { icon: Gamepad2, label: t('about.interests.gaming'), gradient: "from-blue-500 to-purple-500", link: "#mygame" },
-    { icon: Dumbbell, label: t('about.interests.sports'), gradient: "from-green-500 to-emerald-500", link: null },
-    { icon: Code2, label: t('about.interests.coding'), gradient: "from-cyan-500 to-blue-500", link: "#projects" },
-  ]
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -85,7 +79,7 @@ const About = () => {
                   }}
                 >
                   <img
-                    src="/images/me555.jpeg"
+                    src={PROFILE_IMAGE.about}
                     alt="Camila Bastidas"
                     className="w-full h-full object-cover"
                   />
@@ -133,21 +127,18 @@ const About = () => {
                   onClick={() => {
                     if (interest.link) {
                       if (interest.link.startsWith('#')) {
-                        const element = document.querySelector(interest.link)
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' })
-                        }
+                        scrollToElement(interest.link)
                       } else {
                         router.push(interest.link)
                       }
                     }
                   }}
                 >
-                  <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${interest.gradient} flex items-center justify-center group-hover:shadow-lg group-hover:shadow-${interest.gradient.split(' ')[1]}/50 transition-all duration-300`}>
+                  <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${interest.gradient} flex items-center justify-center group-hover:shadow-lg transition-all duration-300`}>
                     <interest.icon className="w-7 h-7 text-white" />
                   </div>
                   <span className="text-sm text-white/80 group-hover:text-white transition-colors text-center">
-                    {interest.label}
+                    {t(interest.labelKey)}
                   </span>
                 </motion.div>
               ))}
@@ -161,112 +152,28 @@ const About = () => {
             </h3>
 
             <div className="glass-effect rounded-3xl p-6 md:p-8">
-              {/* Languages */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Languages</h4>
-                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#b07219' }}>
-                    Java
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#3776ab' }}>
-                    🐍 Python
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#00599c' }}>
-                    C++
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#239120' }}>
-                    C#
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-black shadow-lg text-sm" style={{ backgroundColor: '#f7df1e' }}>
-                    JavaScript
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#3178c6' }}>
-                    TypeScript
-                  </motion.div>
+              {techCategories.map((category, categoryIndex) => (
+                <div key={category.titleKey} className={categoryIndex < techCategories.length - 1 ? "mb-6" : ""}>
+                  <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">{category.titleKey}</h4>
+                  <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                    {category.items.map((tech) => (
+                      <motion.div
+                        key={tech.name}
+                        whileHover={tech.specialAnimation ? { scale: 1.1, rotate: 360 } : { scale: 1.1 }}
+                        transition={tech.specialAnimation ? { duration: 0.5 } : undefined}
+                        className={`px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm ${tech.borderColor ? 'border-2' : ''}`}
+                        style={{
+                          backgroundColor: tech.color,
+                          color: tech.textColor || '#ffffff',
+                          borderColor: tech.borderColor
+                        }}
+                      >
+                        {tech.name}
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* Frontend */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Frontend</h4>
-                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#e34f26' }}>
-                    HTML5
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#1572b6' }}>
-                    CSS3
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1, rotate: 360 }} transition={{ duration: 0.5 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm" style={{ backgroundColor: '#61dafb', color: '#282c34' }}>
-                    ⚛️ React
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#7952b3' }}>
-                    Bootstrap
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Backend & Database */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Backend & Database</h4>
-                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#339933' }}>
-                    Node.js
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#4479a1' }}>
-                    MySQL
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#336791' }}>
-                    PostgreSQL
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#47A248' }}>
-                    🍃 MongoDB
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#003B57' }}>
-                    SQLite
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Game Development */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Game Development</h4>
-                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#222222', color: '#ffffff', borderColor: '#ffffff' }}>
-                    🎮 Unity
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#5a5a5a' }}>
-                    Canvas API
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Tools & Platform */}
-              <div>
-                <h4 className="text-sm font-semibold text-white/60 mb-3 text-center">Tools & Platform</h4>
-                <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#f05032' }}>
-                    Git
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#24292e', color: '#ffffff', borderColor: '#ffffff' }}>
-                    GitHub
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold shadow-lg text-sm border-2" style={{ backgroundColor: '#000000', color: '#ffffff', borderColor: '#ffffff' }}>
-                    ▲ Vercel
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#46E3B7' }}>
-                    Render
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#430098' }}>
-                    Heroku
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#4285f4' }}>
-                    Google Cloud
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.1 }} className="px-3 py-1.5 rounded-lg font-bold text-white shadow-lg text-sm" style={{ backgroundColor: '#ff6c37' }}>
-                    Postman
-                  </motion.div>
-                </div>
-              </div>
+              ))}
             </div>
           </motion.div>
 
@@ -277,12 +184,7 @@ const About = () => {
             </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { number: "21", label: t('about.stats.age') },
-                { number: "2+", label: t('about.stats.exp') },
-                { number: "15+", label: t('about.stats.projects') },
-                { number: "10+", label: t('about.stats.tech') },
-              ].map((stat, index) => (
+              {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   className="glass-effect rounded-2xl p-6 text-center group cursor-pointer card-hover"
@@ -304,7 +206,7 @@ const About = () => {
                     {stat.number}
                   </div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors duration-300">
-                    {stat.label}
+                    {t(stat.labelKey)}
                   </div>
                 </motion.div>
               ))}
@@ -313,23 +215,7 @@ const About = () => {
 
           {/* Misión y valores */}
           <motion.div variants={itemVariants} className="mt-16 grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: t('about.cards.mission.title'),
-                description: t('about.cards.mission.description'),
-                emoji: "🎯"
-              },
-              {
-                title: t('about.cards.approach.title'),
-                description: t('about.cards.approach.description'),
-                emoji: "💡"
-              },
-              {
-                title: t('about.cards.passion.title'),
-                description: t('about.cards.passion.description'),
-                emoji: "🚀"
-              },
-            ].map((card, index) => (
+            {cards.map((card, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
@@ -338,10 +224,10 @@ const About = () => {
               >
                 <div className="text-4xl mb-4">{card.emoji}</div>
                 <h4 className="text-xl font-bold text-gradient mb-3">
-                  {card.title}
+                  {t(card.titleKey)}
                 </h4>
                 <p className="text-white/70 text-sm leading-relaxed">
-                  {card.description}
+                  {t(card.descriptionKey)}
                 </p>
               </motion.div>
             ))}

@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useI18n } from '../../app/providers'
+import { TECH_STACK, PROFILE_IMAGE } from '@/lib/constants'
+import { scrollToElement } from '@/lib/helpers/scroll'
 
 const Hero = () => {
   const { t } = useI18n()
@@ -15,22 +17,6 @@ const Hero = () => {
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
-
-  const techStack = [
-    'Next.js',
-    'TypeScript',
-    'Tailwind CSS',
-    'Vercel',
-    'React',
-    'Node.js'
-  ]
-
-  const handleScrollToProjects = () => {
-    const element = document.querySelector('#projects')
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
 
   return (
     <section
@@ -62,15 +48,11 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.preventDefault()
-                const element = document.querySelector('#about')
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth' })
-                }
+                scrollToElement('#about')
               }}
             >
-              {/* eslint-disable-net-line @next/next/no-img-element */}
               <img
-                src="/images/me15.jpeg"
+                src={PROFILE_IMAGE.hero}
                 alt="Camila Bastidas"
                 className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full shadow-2xl border-4 border-purple-500/50 hover:border-pink-500/70 transition-all object-cover"
               />
@@ -111,7 +93,7 @@ const Hero = () => {
                 {t('hero.builtWith')}
               </h3>
               <div className="flex flex-wrap gap-3 justify-center">
-                {techStack.map((tech, index) => (
+                {TECH_STACK.map((tech, index) => (
                   <motion.div
                     key={tech}
                     className="glass-effect rounded-full px-5 py-2 cursor-pointer group"
@@ -140,7 +122,7 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 1.0 }}
             >
               <motion.button
-                onClick={handleScrollToProjects}
+                onClick={() => scrollToElement('#projects')}
                 className="ghost-btn text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -155,10 +137,7 @@ const Hero = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
                   e.preventDefault()
-                  const element = document.querySelector('#contact')
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' })
-                  }
+                  scrollToElement('#contact')
                 }}
               >
                 {t('actions.contactMe')}
